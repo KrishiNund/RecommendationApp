@@ -3,78 +3,127 @@
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Menu, LogIn, LogOut, UserPlus } from "lucide-react"
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
+import { useEffect, useState } from "react"
+import type { User } from '@supabase/supabase-js'
+
+// importing google font for logo/brand name
+import { Bebas_Neue } from 'next/font/google'
+
+const logo_font = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 
 export default function Navbar() {
+    const [user, setUser] = useState<User | null>(null)
+
+    useEffect(() => {
+        // checking if someone is logged in, if yes store user in user state
+        const getUser = async() => {
+            const {data, error} = await supabase.auth.getUser()
+            if (data?.user){
+                setUser(data.user)
+            } else {
+                setUser(null)
+            }
+        }
+        
+        getUser()
+
+        //sets up a listener that waits for changes in login state
+        const {data: listener} = supabase.auth.onAuthStateChange(() => {
+            getUser()
+        })
+
+        //cleanup in case component is removed
+        return() => listener?.subscription.unsubscribe()
+    }, [])
+
     const router = useRouter()
 
+    // when logged out, return to landing page
     const handleLogout = async () => {
         await supabase.auth.signOut()
-        router.push('/') // or landing page
+        router.push('/')
     }
 
     return(
-        <nav className="w-full px-4 py-3 bg-white border-b shadow-sm flex items-center justify-between">
-            {/* Left: The logo name */}
-            <Link href={"/"}>
-                <div className="text-xl font-bold text-black">Recco</div>
-            </Link>
+        <nav className="w-full px-4 py-3 bg-white">
+          <div className="grid grid-cols-2 md:grid-cols-3  items-center w-full">
             
-
-            {/* Center: Nav Links on Desktop screen */}
-            <div className="hidden md:flex space-x-4">
-                <Button variant="ghost">About</Button>
-                <Button variant="ghost">Features</Button>
-                <Button variant="ghost">Pricing</Button>
+            {/* LEFT: Logo aligned to left */}
+            <div className="justify-self-start">
+              <Link href="/">
+                <div className={`${logo_font.className} text-2xl font-bold text-black`}>RecThis</div>
+              </Link>
             </div>
 
-            {/* Right: Login and Hamburger */}
-            <div className="flex items-center space-x-2"> 
-                <Link href={"/login"}>
-                    <Button variant="outline" className="hidden md:flex">
-                        <LogIn/> Login
-                    </Button>
+            {/* CENTER: Nav Links aligned center */}
+            <div className="justify-self-center hidden md:flex space-x-4">
+              {user ? (
+                <Link href="/myboards">
+                  <Button variant="ghost">My Boards</Button>
                 </Link>
-                
-                <Link href={"/signup"}>
-                    <Button variant="default" className="hidden md:flex">
-                        <UserPlus /> Signup
-                    </Button>
-                </Link>
+              ) : (
+                <>
+                  <Button variant="ghost" className="hover:bg-[#faedcd]">About</Button>
+                  <Button variant="ghost" className="hover:bg-[#faedcd]">Features</Button>
+                  <Button variant="ghost" className="hover:bg-[#faedcd]">Pricing</Button>
+                </>
+              )}
+            </div>
 
-                <Button variant="default" className="hidden md:flex" onClick={handleLogout}>
-                    <LogOut /> LogOut
+            {/* RIGHT: Action Buttons aligned to right */}
+            <div className="justify-self-end flex items-center space-x-2">
+              {!user ? (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" className="hidden md:flex cursor-pointer hover:bg-[#faedcd]">
+                      Log In
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button variant="default" className="hidden md:flex bg-[#bc6c25] hover:bg-[#d4a373] text-black cursor-pointer">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Button variant="destructive" onClick={handleLogout}>
+                  <LogOut /> Logout
                 </Button>
+              )}
 
-
-                {/* Mobile Hamburger Menu */}
-                <div className="md:hidden"> 
-                    <Popover>
-                        {/* The dropdown menu */}
-                        <PopoverTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <Menu className="w-5 h-5" />
-                            </Button>
-                        </PopoverTrigger>
-
-                        {/* The contents of the dropdown menu */}
-                        <PopoverContent className="w-40 flex flex-col space-y-1">
-                            <Link href={"/signup"}>
-                                <Button variant="ghost" className="w-full justify-start flex"> <UserPlus /> Signup</Button>
-                            </Link>
-                            <Link href={"/login"}>
-                                <Button variant="ghost" className="w-full justify-start flex"> <LogIn />Login</Button>
-                            </Link>
-                            
-                            
-                        </PopoverContent>
-                    </Popover>
-                </div>
+              {/* Hamburger (for mobile only) */}
+              <div className="md:hidden">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Menu className="w-5 h-5" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 flex flex-col space-y-1">
+                    <Link href="/signup">
+                      <Button variant="ghost" className="w-full justify-start">
+                        <UserPlus /> Signup
+                      </Button>
+                    </Link>
+                    <Link href="/login">
+                      <Button variant="ghost" className="w-full justify-start">
+                        <LogIn /> Login
+                      </Button>
+                    </Link>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
 
+          </div>
         </nav>
+
     )
 }
