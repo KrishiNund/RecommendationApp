@@ -1,18 +1,20 @@
-'use client';
+'use client'
 
-import React from 'react';
+import Link from 'next/link'
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white py-4">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex flex-col md:flex-row items-center justify-center md:justify-center gap-4 text-xs text-gray-500">
-          {/* Copyright */}
-          <span>© {currentYear} Recco. All rights reserved.</span>
+    <footer className="bg-white py-6 text-center text-sm text-gray-500">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+        <span>© {currentYear} RECTHIS. All rights reserved.</span>
+        
+        <div className="flex gap-4">
+          <Link href="/privacy-policy" className="hover:text-black transition">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-black transition">Terms of Service</Link>
         </div>
       </div>
     </footer>
-  );
+  )
 }

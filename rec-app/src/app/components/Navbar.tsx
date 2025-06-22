@@ -70,9 +70,9 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <>
-                  <Button variant="ghost" className="hover:bg-[#faedcd]">About</Button>
-                  <Button variant="ghost" className="hover:bg-[#faedcd]">Features</Button>
-                  <Button variant="ghost" className="hover:bg-[#faedcd]">Pricing</Button>
+                  <Button variant="ghost" className="hover:bg-[#faedcd] cursor-pointer">About</Button>
+                  <Button variant="ghost" className="hover:bg-[#faedcd] cursor-pointer">Features</Button>
+                  <Button variant="ghost" className="hover:bg-[#faedcd] cursor-pointer">Pricing</Button>
                 </>
               )}
             </div>
@@ -87,7 +87,7 @@ export default function Navbar() {
                     </Button>
                   </Link>
                   <Link href="/signup">
-                    <Button variant="default" className="hidden md:flex bg-[#bc6c25] hover:bg-[#d4a373] text-black cursor-pointer">
+                    <Button variant="default" className="hidden md:flex bg-[#a05a1f] hover:bg-[#8a4e1a] text-white cursor-pointer">
                       Get Started
                     </Button>
                   </Link>

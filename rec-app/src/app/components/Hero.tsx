@@ -1,10 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="px-6 py-24 bg-gradient-to-br from-white to-gray-50 max-w-6xl mx-auto rounded-lg">
+    <section className="px-6 py-24 bg-white max-w-6xl mx-auto rounded-lg">
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -26,7 +27,7 @@ export default function Hero() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              for <span className="text-[#bc6c25] bg-clip-text bg-gradient-to-r from-[#d4a373] to-[#bc6c25]">lists</span> people
+              for <span className="text-[#bc6c25] bg-clip-text bg-[#a05a1f]">lists</span> people
             </motion.span>
             <motion.span 
               className="block"
@@ -57,18 +58,14 @@ export default function Hero() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Button 
-                className="bg-[#bc6c25] text-black px-8 py-4 rounded-lg cursor-pointer shadow-lg hover:shadow-xl hover:bg-[#d4a373]"
-              >
-                Get Started Free
-              </Button>
+              <Link href="/signup">
+                <Button 
+                  className="bg-[#a05a1f] text-white px-8 py-4 rounded-lg cursor-pointer shadow-lg hover:shadow-xl hover:bg-[#8a4e1a]"
+                >
+                  Get Started Free
+                </Button>
+              </Link>
             </motion.div>
-            {/* <Button 
-              variant="outline" 
-              className="px-8 py-4 rounded-lg border-gray-300 hover:bg-gray-50 transition-all duration-300 cursor-pointer"
-            >
-              See Examples
-            </Button> */}
           </motion.div>
         </motion.div>
 
