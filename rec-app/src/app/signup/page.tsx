@@ -5,10 +5,14 @@ import { supabase } from '@/lib/supabase'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { FcGoogle } from 'react-icons/fc'
+import { Eye, EyeOff } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -16,53 +20,173 @@ export default function SignUpPage() {
   const router = useRouter()
 
   const handleSignUp = async () => {
-        setLoading(true)
-        setError('')
-        setSuccess(false)
+    setLoading(true)
+    setError('')
+    setSuccess(false)
 
-        // creates a user with the email and password input
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        })
+    const { error } = await supabase.auth.signUp({ email, password })
 
-        if (error) {
-            setError(error.message)
-        } else {
-            setSuccess(true)
-            // Optional: slight delay before redirect (so user can see success msg)
-            setTimeout(() => {
-                router.push('/login')
-            }, 1000)
-        }
-        setLoading(false)
-    } 
+    if (error) {
+      setError(error.message)
+    } else {
+      setSuccess(true)
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000)
+    }
+    setLoading(false)
+  }
+
+  const handleGoogleSignUp = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+  }
 
   return (
-    <div className="flex flex-col gap-4 max-w-sm mx-auto mt-20 p-4">
-      <h1 className="text-xl font-bold text-center">Create an Account</h1>
-      
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      
-      <Input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#fef8f4] to-[#f5ebe1] px-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg border border-gray-100"
+      >
+        <div className="text-center mb-8">
+          <motion.h1 
+            className="text-3xl font-bold text-gray-900 mb-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+          >
+            Create Your Account
+          </motion.h1>
+          <motion.p 
+            className="text-gray-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Start building your recommendation boards today
+          </motion.p>
+        </div>
 
-    {/* temporaily disables the button when it is clicked */}
-      <Button onClick={handleSignUp} disabled={loading}>
-        {loading ? 'Creating account...' : 'Sign Up'}
-      </Button>
+        <motion.div 
+          className="space-y-5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373]"
+            />
+          </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {success && <p className="text-green-600 text-sm">Check your email to confirm your account!</p>}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="pr-10 focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              className="w-full bg-[#bc6c25] hover:bg-[#a05a1f] text-white py-5 text-base font-medium shadow-sm hover:shadow-md transition-all"
+              onClick={handleSignUp}
+              disabled={loading}
+            >
+              {loading ? 'Creating account...' : 'Sign Up'}
+            </Button>
+          </motion.div>
+
+          {error && (
+            <motion.p 
+              className="text-sm text-red-500 text-center"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.p>
+          )}
+
+          {success && (
+            <motion.p 
+              className="text-sm text-green-600 text-center"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              Check your email to confirm your account!
+            </motion.p>
+          )}
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div 
+          className="my-6 flex items-center justify-center gap-4 text-sm text-gray-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <hr className="flex-grow border-gray-200" />
+          OR
+          <hr className="flex-grow border-gray-200" />
+        </motion.div>
+
+        {/* Google sign up button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all"
+            onClick={handleGoogleSignUp}
+          >
+            <FcGoogle size={20} />
+            <span>Sign up with Google</span>
+          </Button>
+        </motion.div>
+
+        <motion.p 
+          className="mt-6 text-center text-sm text-gray-500"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          Already have an account?{' '}
+          <span
+            onClick={() => router.push('/login')}
+            className="cursor-pointer text-[#bc6c25] hover:underline font-medium"
+          >
+            Log in
+          </span>
+        </motion.p>
+      </motion.div>
     </div>
   )
 }
