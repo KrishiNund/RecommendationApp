@@ -8,6 +8,15 @@ import { useRouter } from 'next/navigation'
 import { FcGoogle } from 'react-icons/fc'
 import { Eye, EyeOff } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
+
+// importing google font for logo/brand name
+import { Bebas_Neue } from 'next/font/google'
+
+const logo_font = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -44,12 +53,24 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#fef8f4] to-[#f5ebe1] px-4">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-br from-[#fef8f4] to-[#f5ebe1] px-4">
+      {/* logo */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="justify-self-center p-8"
+      >
+        <Link href="/">
+          <div className={`${logo_font.className} text-5xl font-bold text-black`}>RecThis</div>
+        </Link>
+      </motion.div>
+      
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg border border-gray-100"
+        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg"
       >
         <div className="text-center mb-8">
           <motion.h1 
@@ -83,10 +104,8 @@ export default function SignUpPage() {
             <Input
               id="email"
               type="email"
-              placeholder="your@email.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373]"
             />
           </div>
 
@@ -98,7 +117,6 @@ export default function SignUpPage() {
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="pr-10 focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373]"
@@ -106,7 +124,7 @@ export default function SignUpPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(prev => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -115,11 +133,11 @@ export default function SignUpPage() {
 
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
-              className="w-full bg-[#bc6c25] hover:bg-[#a05a1f] text-white py-5 text-base font-medium shadow-sm hover:shadow-md transition-all"
+              className="w-full bg-[#bc6c25] hover:bg-[#a05a1f] text-white py-5 text-base font-medium shadow-sm hover:shadow-md transition-all cursor-pointer"
               onClick={handleSignUp}
               disabled={loading}
             >
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? 'Creating account...' : 'Sign up'}
             </Button>
           </motion.div>
 
@@ -164,7 +182,7 @@ export default function SignUpPage() {
         >
           <Button
             variant="outline"
-            className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer"
             onClick={handleGoogleSignUp}
           >
             <FcGoogle size={20} />

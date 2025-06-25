@@ -52,7 +52,7 @@ export default function Navbar() {
     }
 
     return(
-        <nav className="w-full px-4 py-3 bg-white">
+        <nav className="w-full px-4 py-3 bg-transparent">
           <div className="grid grid-cols-2 md:grid-cols-3  items-center w-full">
             
             {/* LEFT: Logo aligned to left */}
@@ -83,7 +83,7 @@ export default function Navbar() {
                 <>
                   <Link href="/login">
                     <Button variant="ghost" className="hidden md:flex cursor-pointer hover:bg-[#faedcd]">
-                      Log In
+                      Log in
                     </Button>
                   </Link>
                   <Link href="/signup">
@@ -109,12 +109,12 @@ export default function Navbar() {
                   <PopoverContent className="w-40 flex flex-col space-y-1">
                     <Link href="/signup">
                       <Button variant="ghost" className="w-full justify-start">
-                        <UserPlus /> Signup
+                        <UserPlus /> Sign up
                       </Button>
                     </Link>
                     <Link href="/login">
                       <Button variant="ghost" className="w-full justify-start">
-                        <LogIn /> Login
+                        <LogIn /> Log in
                       </Button>
                     </Link>
                   </PopoverContent>

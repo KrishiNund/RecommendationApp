@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter_Tight } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import AppLayout from "./components/AppLayout";
 
 const body_font = Inter_Tight({
   subsets: ["latin"],
@@ -20,11 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={body_font.className}
-      >
-        <Navbar />
-        {children}
+      <body className={body_font.className}>
+        <AppLayout>{children}</AppLayout>
         <Footer />
       </body>
     </html>
