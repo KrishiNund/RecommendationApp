@@ -51,24 +51,31 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-br from-[#fef8f4] to-[#f5ebe1] px-4">
-        {/* logo */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="justify-self-center p-8"
+    <div className="flex flex-col min-h-screen items-center justify-center bg-[#f5ebe1] px-4">
+      {/* logo */}
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6 flex flex-col items-center"
       >
-        <Link href="/">
-          <div className={`${logo_font.className} text-5xl font-bold text-black`}>RecThis</div>
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <h1
+            className={`${logo_font.className} text-5xl tracking-wide text-[#bc6c25] drop-shadow-sm`}
+          >
+            RecThis
+          </h1>
         </Link>
-      </motion.div>
+        <p className="text-sm text-gray-600 mt-2">
+          Your personalized recommendation board
+        </p>
+      </motion.header>
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg border border-gray-100"
+        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg"
       >
         <div className="text-center mb-8">
           <motion.h1 
@@ -131,7 +138,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -152,7 +159,7 @@ export default function LoginPage() {
                   </svg>
                   Authenticating...
                 </span>
-              ) : 'Log In'}
+              ) : 'Log in'}
             </Button>
           </motion.div>
 
