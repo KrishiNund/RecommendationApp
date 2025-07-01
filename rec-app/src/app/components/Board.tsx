@@ -26,19 +26,25 @@ const categoryColors = {
   other: "bg-gray-100 text-gray-800"
 }
 
+// all parameters that can be passed to the board component
 type BoardProps = {
+  id: string;
   name: string;
   description: string;
   category: string;
+  onDelete: () => void;
+  onEdit: () => void;
   items?: number;
   updatedAt?: string;
   variant?: "grid" | "list";
 };
 
-export default function Board({ 
+export default function Board({
   name, 
   description, 
   category, 
+  onDelete,
+  onEdit,
   items = 0,
   updatedAt = "",
   variant = "grid" 
@@ -80,9 +86,10 @@ export default function Board({
     )
   }
 
+  // by default, if variant is not specified, grid display will be used
   return (
     <motion.div whileHover={{ y: -5 }}>
-      <Card className="group h-full flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100">
+      <Card className="group h-90 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100">
         <Link href={`/board/${name.toLowerCase().replace(/\s+/g, '-')}`} className="block flex-grow">
           <CardHeader className="p-0">
             <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
@@ -101,8 +108,18 @@ export default function Board({
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit();
+                    }}>
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-red-600" onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}>
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -110,7 +127,7 @@ export default function Board({
           </CardHeader>
           
           <CardContent className="p-4 flex-grow">
-            <CardTitle className="text-lg font-semibold mb-1 line-clamp-1">{name}</CardTitle>
+            <CardTitle className="text-lg font-semibold mb-1 truncate">{name}</CardTitle>
             <CardDescription className="text-gray-600 text-sm line-clamp-2 mb-3">
               {description}
             </CardDescription>
