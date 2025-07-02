@@ -32,6 +32,7 @@ type BoardProps = {
   name: string;
   description: string;
   category: string;
+  thumbnail?: string;
   onDelete: () => void;
   onEdit: () => void;
   items?: number;
@@ -40,9 +41,11 @@ type BoardProps = {
 };
 
 export default function Board({
+  id,
   name, 
   description, 
-  category, 
+  category,
+  thumbnail = "", 
   onDelete,
   onEdit,
   items = 0,
@@ -56,9 +59,13 @@ export default function Board({
           <CardContent className="p-0">
             <div className="flex items-center p-4">
               <div className={`flex-shrink-0 h-16 w-16 rounded-lg ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center mr-4`}>
-                <span className="text-xl font-medium">
-                  {category.charAt(0).toUpperCase()}
-                </span>
+                {thumbnail ? (
+                  <img src={thumbnail} alt="Board Thumbnail" className="w-full h-full object-cover rounded-lg" />
+                ): (
+                  <span className="text-xl font-medium">
+                    {category.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
               
               <div className="flex-grow min-w-0">
@@ -90,12 +97,17 @@ export default function Board({
   return (
     <motion.div whileHover={{ y: -5 }}>
       <Card className="group h-90 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100">
-        <Link href={`/board/${name.toLowerCase().replace(/\s+/g, '-')}`} className="block flex-grow">
+        <Link href={`/board/${id}`} className="block flex-grow">
           <CardHeader className="p-0">
             <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
-              <span className="text-4xl font-medium text-white/80">
-                {category.charAt(0).toUpperCase()}
-              </span>
+              {thumbnail ? (
+                  <img src={thumbnail} alt="Board Thumbnail" className="w-full h-full object-cover" />
+                ): (
+                  <span className="text-4xl font-medium text-white/80">
+                    {category.charAt(0).toUpperCase()}
+                  </span>
+                )}
+
               
               <div className="absolute top-3 right-3">
                 <DropdownMenu>

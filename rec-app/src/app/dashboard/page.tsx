@@ -35,11 +35,12 @@ export default function Dashboard() {
   const [boardName, setBoardName] = useState("")
   const [boardDescription, setBoardDescription] = useState("")
   const [boardCategory, setBoardCategory] = useState("")
+  const [boardThumbnail, setBoardThumbnail] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [parent] = useAutoAnimate()
   const [editingBoard, setEditingBoard] = useState<BoardType | null>(null)
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // board object properties
   type BoardType = {
@@ -47,6 +48,7 @@ export default function Dashboard() {
     name: string;
     description: string;
     category: string;
+    thumbnail?: string;
   }
   
   // array that contains board objects
@@ -65,16 +67,22 @@ export default function Dashboard() {
       id:uuidv4(),
       name: boardName,
       description: boardDescription,
-      category: boardCategory
+      category: boardCategory,
+      thumbnail: boardThumbnail,
     }
     
+    console.log(newBoard)
     // create new boards array with new board object added to it
     setBoards([...boards, newBoard])
+
+    // reset form when dialog is closed
+    setBoardName("");
+    setBoardDescription("");
+    setBoardCategory("");
+    setBoardThumbnail("");
     
-    // reset form
-    setBoardName("")
-    setBoardDescription("")
-    setBoardCategory("")
+    // close dialog after successful creation
+    setIsDialogOpen(false); 
   }
   
   // delete a board
@@ -99,6 +107,24 @@ export default function Dashboard() {
     board.category.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  // handle uploading of an image for the thumnail of the board
+  // either when creating a board or editing its contents
+  const handleThumbnailUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onThumbnailSet: (base64: string) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        onThumbnailSet(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white px-4 py-8 sm:px-6 lg:px-8">
@@ -121,9 +147,18 @@ export default function Dashboard() {
                 />
               </div>
               {/* create board dialog to enter details of board to be created */}
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                setIsDialogOpen(open);
+                if (!open) {
+                  // reset form when dialog is closed
+                  setBoardName("");
+                  setBoardDescription("");
+                  setBoardCategory("");
+                  setBoardThumbnail("");
+                }
+              }}>
                 <DialogTrigger asChild>
-                  <Button className="bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm">
+                  <Button onClick={() => setIsDialogOpen(true)} className="bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm">
                     <Plus className="mr-2 h-4 w-4" /> Create Board
                   </Button>
                 </DialogTrigger>
@@ -175,6 +210,37 @@ export default function Dashboard() {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
+                    </div>
+
+                    {/* thumbnail image input */}
+                    <div className="grid gap-2">
+                      <Label htmlFor="thumbnail" className="text-sm font-medium text-gray-700">
+                        Thumbnail
+                      </Label>
+
+                      <div
+                        className="relative border-2 border-dashed border-gray-300 rounded-lg h-40 w-full flex items-center justify-center cursor-pointer hover:border-[#bc6c25] transition"
+                        onClick={() => document.getElementById("thumbnailInput")?.click()}
+                      >
+                        {boardThumbnail ? (
+                          <img
+                            src={boardThumbnail}
+                            alt="Thumbnail Preview"
+                            className="h-full w-full object-cover rounded-md"
+                          />
+                        ) : (
+                          <span className="text-gray-400 text-sm">Click to upload thumbnail</span>
+                        )}
+                        <Input
+                          id="thumbnailInput"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            handleThumbnailUpload(e, (base64) => setBoardThumbnail(base64))
+                          }}
+                          className="hidden"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -243,6 +309,40 @@ export default function Dashboard() {
                           </SelectContent>
                         </Select>
                       </div>
+                      {/* edit thumbnail image */}
+                      <div className="grid gap-2">
+                        <Label htmlFor="thumbnail" className="text-sm font-medium text-gray-700">
+                          Thumbnail
+                        </Label>
+
+                        <div
+                          className="relative border-2 border-dashed border-gray-300 rounded-lg h-40 w-full flex items-center justify-center cursor-pointer hover:border-[#bc6c25] transition"
+                          onClick={() => document.getElementById("thumbnailInput")?.click()}
+                        >
+                          {editingBoard.thumbnail ? (
+                            <img
+                              src={editingBoard.thumbnail}
+                              alt="Thumbnail Preview"
+                              className="h-full w-full object-cover rounded-md"
+                            />
+                          ) : (
+                            <span className="text-gray-400 text-sm">Click to upload thumbnail</span>
+                          )}
+                          <Input
+                            id="thumbnailInput"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              handleThumbnailUpload(e, (base64) =>
+                                setEditingBoard(prev=>
+                                  prev? {...prev, thumbnail: base64}: null
+                                )
+                              )
+                            }}
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <DialogFooter>
@@ -281,6 +381,7 @@ export default function Dashboard() {
 
           {/* Boards Display */}
           <div ref={parent}>
+            {/* if no boards, display message */}
             {filteredBoards.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -297,6 +398,7 @@ export default function Dashboard() {
                     : "Create your first board to get started"}
                 </p>
               </motion.div>
+              // if view mode is grid, display boards in grid layout
             ) : viewMode === "grid" ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredBoards.map((board, idx) => (
@@ -312,6 +414,7 @@ export default function Dashboard() {
                       name={board.name}
                       description={board.description}
                       category={board.category}
+                      thumbnail={board.thumbnail}
                       onDelete={() => deleteBoard(board.id)}
                       onEdit={() => setEditingBoard(board)}
                     />
@@ -319,6 +422,7 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
+              // else display in list layout
               <div className="space-y-4">
                 {filteredBoards.map((board, idx) => (
                   <motion.div
@@ -333,6 +437,7 @@ export default function Dashboard() {
                       name={board.name}
                       description={board.description}
                       category={board.category}
+                      thumbnail={board.thumbnail}
                       onDelete={() => deleteBoard(board.id)}
                       onEdit={() => setEditingBoard(board)}
                       variant="list" 
