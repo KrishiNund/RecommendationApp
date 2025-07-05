@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Plus, Search, LayoutGrid, List, CircleSlash2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Board from "../components/Board"
 import {
   Dialog,
@@ -30,6 +30,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { motion } from "framer-motion"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { v4 as uuidv4 } from 'uuid'
+import { supabase } from '@/lib/supabase'
+
 
 export default function Dashboard() {
   const [boardName, setBoardName] = useState("")
@@ -41,6 +43,15 @@ export default function Dashboard() {
   const [parent] = useAutoAnimate()
   const [editingBoard, setEditingBoard] = useState<BoardType | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchBoards() {
+      const boards = await getBoards();
+      setBoards(boards ?? []); // ensure boards is never undefined
+  }
+
+   fetchBoards();
+  }, []);
   
   // board object properties
   type BoardType = {
@@ -49,31 +60,83 @@ export default function Dashboard() {
     description: string;
     category: string;
     thumbnail?: string;
+    created_at: string;
   }
   
   // array that contains board objects
   const [boards, setBoards] = useState<BoardType[]>([])
 
+  // get boards
+  const getBoards = async () => {
+    // getting the current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (!user || userError) {
+      // Optionally, show an error or return early
+      alert("You must be logged in to create a board.");
+      return;
+    }
+
+    const userId = user.id;
+
+    // fetch boards where user_id = current user
+    const { data: boards, error } = await supabase
+      .from("boards")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching boards:", error.message);
+      return [];
+    }
+
+    return boards || [];
+  }
+
   // add a recommendation board
-  const addBoard = (e?: React.MouseEvent) => {
+  const addBoard = async (e?: React.MouseEvent) => {
     // prevent submitting of board details form
     if (e) e.preventDefault()
     
     // don't create board if no board name entered
     if (!boardName.trim()) return
 
-    // new board component details
-    const newBoard = {
-      id:uuidv4(),
-      name: boardName,
-      description: boardDescription,
-      category: boardCategory,
-      thumbnail: boardThumbnail,
+    // getting the current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (!user || userError) {
+      // Optionally, show an error or return early
+      alert("You must be logged in to create a board.");
+      return;
     }
-    
-    console.log(newBoard)
+
+    // inserting board details into boards table
+    const {data, error} = await supabase.from("boards").insert(
+      {
+        name:boardName,
+        description: boardDescription,
+        category: boardCategory,
+        thumbnail: boardThumbnail,
+        user_id: user.id, // foreign key --> board is associated with the user logged in
+      }
+    )
+    .select()
+    .single()
+
+    if (error) {
+      console.error("Failed to insert board:", error.message);
+      return;
+    }
+
     // create new boards array with new board object added to it
-    setBoards([...boards, newBoard])
+    setBoards([...boards, data])
 
     // reset form when dialog is closed
     setBoardName("");

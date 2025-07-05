@@ -6,15 +6,15 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+} from "../../components/ui/card"
+import { Badge } from "../../components/ui/badge"
 import { MoreHorizontal, Star, ChevronRight } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../components/ui/dropdown-menu"
 import { motion } from "framer-motion"
 import Link from "next/link"
 

@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
+import { Skeleton } from '../../components/ui/skeleton'
+import { Button } from '../../components/ui/button'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Lock, LogIn, UserPlus } from 'lucide-react'

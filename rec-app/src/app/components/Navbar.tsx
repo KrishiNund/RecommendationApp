@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -8,15 +8,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "../../components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { Menu, LogIn, LogOut, UserPlus, LayoutDashboard, ChevronDown } from "lucide-react"
-import { supabase } from '@/lib/supabase'
+import { supabase } from '../../lib/supabase'
 import Link from 'next/link'
 import { usePathname } from "next/navigation"
 import { useAuth } from "../hooks/useAuth"
 import { useRouter } from "next/navigation"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "../../components/ui/skeleton"
 import { Bebas_Neue } from 'next/font/google'
 
 const logo_font = Bebas_Neue({
