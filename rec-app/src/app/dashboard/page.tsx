@@ -31,6 +31,7 @@ import { motion } from "framer-motion"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '@/lib/supabase'
+import { User } from "@supabase/supabase-js"
 
 
 export default function Dashboard() {
@@ -43,14 +44,37 @@ export default function Dashboard() {
   const [parent] = useAutoAnimate()
   const [editingBoard, setEditingBoard] = useState<BoardType | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [boards, setBoards] = useState<BoardType[]>([])
 
+  // on page load, fetch the boards for the current logged in user
   useEffect(() => {
-    async function fetchBoards() {
-      const boards = await getBoards();
-      setBoards(boards ?? []); // ensure boards is never undefined
-  }
+    async function getCurrentUserAndBoards() {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
-   fetchBoards();
+      if (sessionError || !sessionData.session?.user) {
+        console.log("User not found:", sessionData.session);
+        return;
+      }
+      // sessionData.session.user is the current user
+      const currentUser = sessionData.session.user;
+      setUser(currentUser);
+
+      // fetch boards where user_id = current user id
+      const { data: boards, error } = await supabase
+        .from("boards")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
+
+      if (error){
+        console.error("Error fetching the boards: ", error.message)
+      } else {
+        setBoards(boards ?? [])
+      }
+    }
+    getCurrentUserAndBoards();
   }, []);
   
   // board object properties
@@ -62,103 +86,104 @@ export default function Dashboard() {
     thumbnail?: string;
     created_at: string;
   }
-  
-  // array that contains board objects
-  const [boards, setBoards] = useState<BoardType[]>([])
-
-  // get boards
-  const getBoards = async () => {
-    // getting the current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (!user || userError) {
-      // Optionally, show an error or return early
-      alert("You must be logged in to create a board.");
-      return;
-    }
-
-    const userId = user.id;
-
-    // fetch boards where user_id = current user
-    const { data: boards, error } = await supabase
-      .from("boards")
-      .select("*")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching boards:", error.message);
-      return [];
-    }
-
-    return boards || [];
-  }
 
   // add a recommendation board
   const addBoard = async (e?: React.MouseEvent) => {
+    setIsLoading(true);
     // prevent submitting of board details form
     if (e) e.preventDefault()
     
     // don't create board if no board name entered
     if (!boardName.trim()) return
 
-    // getting the current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    if (user){
+      // inserting board details into boards table
+      const {data, error} = await supabase.from("boards").insert(
+        {
+          name:boardName,
+          description: boardDescription,
+          category: boardCategory,
+          thumbnail: boardThumbnail,
+          user_id: user.id, // foreign key --> board is associated with the user logged in
+        }
+      )
+      .select()
+      .single()
 
-    if (!user || userError) {
-      // Optionally, show an error or return early
-      alert("You must be logged in to create a board.");
-      return;
-    }
-
-    // inserting board details into boards table
-    const {data, error} = await supabase.from("boards").insert(
-      {
-        name:boardName,
-        description: boardDescription,
-        category: boardCategory,
-        thumbnail: boardThumbnail,
-        user_id: user.id, // foreign key --> board is associated with the user logged in
+      if (error) {
+        console.error("Failed to insert board:", error.message);
+        return;
       }
-    )
-    .select()
-    .single()
 
-    if (error) {
-      console.error("Failed to insert board:", error.message);
+      // create new boards array with new board object added to it
+      // add board to display instantly
+      setBoards([...boards, data])
+
+      // reset form when dialog is closed
+      setBoardName("");
+      setBoardDescription("");
+      setBoardCategory("");
+      setBoardThumbnail("");
+      setIsLoading(false);
+      
+      // close dialog after successful creation
+      setIsDialogOpen(false); 
+    } else {
+      console.log("Error occurred! User couldn't be found!")
+
+      // reset form when dialog is closed
+      setBoardName("");
+      setBoardDescription("");
+      setBoardCategory("");
+      setBoardThumbnail("");
+      setIsLoading(false);
+
+      // close dialog after successful creation
+      setIsDialogOpen(false); 
       return;
     }
-
-    // create new boards array with new board object added to it
-    setBoards([...boards, data])
-
-    // reset form when dialog is closed
-    setBoardName("");
-    setBoardDescription("");
-    setBoardCategory("");
-    setBoardThumbnail("");
-    
-    // close dialog after successful creation
-    setIsDialogOpen(false); 
   }
   
   // delete a board
-  const deleteBoard = (id:string) => {
-    setBoards(prevBoards => prevBoards.filter(board => board.id !== id));
-  }
+  const deleteBoard = async(id:string) => {
+    // remove board from database itself
+    const {error} = await supabase
+      .from("boards")
+      .delete()
+      .eq("id", id);
+      
+    if (error){
+      console.log("Failed to delete board: ", error.message)
+      return;
+    }
+
+    //remove board from display
+    setBoards(prevBoards => prevBoards.filter(board => board.id !== id));  
+  };
 
   // edit board details
-  const editBoard = (updatedBoard: BoardType) => {
+  const editBoard = async (updatedBoard: BoardType) => {
+    // Update board details in database
+    const { error } = await supabase
+      .from("boards")
+      .update({
+        name: updatedBoard.name,
+        description: updatedBoard.description,
+        category: updatedBoard.category,
+        thumbnail: updatedBoard.thumbnail,
+      })
+      .eq("id", updatedBoard.id);
+
+    if (error) {
+      console.error("Failed to update board:", error.message);
+      return;
+    }
+
+    //update board visually
     setBoards(prevBoards =>
       prevBoards.map(board =>
         board.id === updatedBoard.id ? updatedBoard : board
-      )
+      ) 
     )
     setEditingBoard(null) // close the modal
   }
@@ -313,7 +338,7 @@ export default function Dashboard() {
                     </DialogClose>
                     <Button 
                       onClick={addBoard}
-                      disabled={!boardName.trim() || !boardCategory}
+                      disabled={!boardName.trim() || !boardCategory || isLoading}
                     >
                       Create Board
                     </Button>
