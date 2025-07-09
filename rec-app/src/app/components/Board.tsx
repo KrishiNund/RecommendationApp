@@ -55,7 +55,7 @@ export default function Board({
   if (variant === "list") {
     return (
       <Card className="group hover:shadow-sm transition-all duration-300 rounded-lg overflow-hidden">
-        <Link href={`/board/${name.toLowerCase().replace(/\s+/g, '-')}`} className="block">
+        <Link href={`/board/${id}`} className="block">
           <CardContent className="p-0">
             <div className="flex items-center p-4">
               <div className={`flex-shrink-0 h-16 w-16 rounded-lg ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center mr-4`}>

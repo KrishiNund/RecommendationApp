@@ -29,9 +29,9 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { motion } from "framer-motion"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
-import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '@/lib/supabase'
 import { User } from "@supabase/supabase-js"
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function Dashboard() {
@@ -84,7 +84,7 @@ export default function Dashboard() {
     description: string;
     category: string;
     thumbnail?: string;
-    created_at: string;
+    user_id:string
   }
 
   // add a recommendation board
@@ -100,6 +100,7 @@ export default function Dashboard() {
       // inserting board details into boards table
       const {data, error} = await supabase.from("boards").insert(
         {
+          id: uuidv4(),
           name:boardName,
           description: boardDescription,
           category: boardCategory,
