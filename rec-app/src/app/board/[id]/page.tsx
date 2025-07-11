@@ -24,6 +24,18 @@ import { User } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from 'uuid';
 
 export default function BoardPage() {
+    // types of a recommendation object
+  type RecType = {
+    id: string;
+    board_id: string;
+    name: string;
+    description: string;
+    comment: string;
+    rating: number;
+    thumbnail?: string;
+    created_at: string;
+  };
+
   const [boardName, setBoardName] = useState("Loading...");
   const { id } = useParams();
   const board_id = id;
@@ -34,7 +46,9 @@ export default function BoardPage() {
   const [thumbnail, setThumbnail] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [editingRec, setEditingRec] = useState<RecType | null>(null);
+  const [recommendations, setRecommendations] = useState<RecType[]>([]);
 
   useEffect(() => {
     const fetchBoard = async () => {
@@ -83,19 +97,7 @@ export default function BoardPage() {
     getCurrentUserAndRecs();
   }, []);
   
-  // types of a recommendation object
-  type RecType = {
-    id: string;
-    board_id: string;
-    name: string;
-    description: string;
-    comment: string;
-    rating: string;
-    thumbnail?: string;
-    created_at: string;
-  };
 
-  const [recommendations, setRecommendations] = useState<RecType[]>([]);
 
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
@@ -156,6 +158,54 @@ export default function BoardPage() {
       return;
     }
   }
+
+   // edit recommendation details
+  const editRec = async (updatedRec: RecType) => {
+    setIsLoading(true);
+    // if (!editingRec.name.trim()) return
+    // Update rec details in database
+    const { error } = await supabase
+      .from("recommendations")
+      .update({
+        name: updatedRec.name,
+        description: updatedRec.description,
+        comment: updatedRec.comment,
+        rating: updatedRec.rating,
+        thumbnail: updatedRec.thumbnail,
+      })
+      .eq("id", updatedRec.id);
+
+    if (error) {
+      console.error("Failed to update recommendation:", error.message);
+      return;
+    }
+
+    //update recommendation visually
+    setRecommendations(prevRecs =>
+      prevRecs.map(rec =>
+        rec.id === updatedRec.id ? updatedRec : rec
+      ) 
+    )
+    setIsLoading(false);
+    setEditingRec(null) // close the modal
+  }
+
+  // delete a recommendation
+  const deleteRec = async(id:string) => {
+    // remove rec from database itself
+    const {error} = await supabase
+      .from("recommendations")
+      .delete()
+      .eq("id", id);
+      
+    if (error){
+      console.log("Failed to delete recommendation: ", error.message)
+      return;
+    }
+
+    //remove rec from display
+    setRecommendations(prevRecs => prevRecs.filter(rec => rec.id !== id));  
+  };
 
   // handle uploading of an image for the thumnail of the board
   // either when creating a board or editing its contents
@@ -318,6 +368,119 @@ export default function BoardPage() {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+
+                {/* editing board dialog with pre filled details */}
+                {editingRec && (
+                  <Dialog open={true} onOpenChange={() => setEditingRec(null)}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Edit Board</DialogTitle>
+                        <DialogDescription>Update your board details</DialogDescription>
+                      </DialogHeader>
+
+                      {/* Form pre-filled with editingBoard */}
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="editName">Name</Label>
+                          <Input
+                            id="editName"
+                            value={editingRec.name}
+                            onChange={(e) =>
+                              setEditingRec({ ...editingRec, name: e.target.value })
+                            }
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="editDescription">Description</Label>
+                          <Input
+                            id="editDescription"
+                            value={editingRec.description}
+                            onChange={(e) =>
+                              setEditingRec({ ...editingRec, description: e.target.value })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="comment" className="text-gray-700">Personal Note</Label>
+                          <Input
+                            id="comment"
+                            placeholder="Your thoughts (optional)"
+                            maxLength={40}
+                            value={editingRec.comment}
+                            onChange={(e) => 
+                              setEditingRec({...editingRec, comment: e.target.value})
+                            }
+                            className="rounded-lg"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="rating" className="text-gray-700">Rating</Label>
+                          <div className="flex items-center gap-4">
+                            <Slider
+                              id="rating"
+                              min={0}
+                              max={10}
+                              step={0.1}
+                              value={[editingRec.rating || 0]}
+                              onValueChange={(val) =>
+                                setEditingRec({ ...editingRec, rating: val[0] })
+                              }
+                              className="w-full"
+                            />
+                            <span className="text-sm font-medium text-gray-700 w-12">
+                              {editingRec.rating.toFixed(1)}/10
+                            </span>
+                          </div>
+                        </div>
+                       
+                        {/* edit thumbnail image */}
+                        <div className="grid gap-2">
+                          <Label htmlFor="thumbnail" className="text-sm font-medium text-gray-700">
+                            Thumbnail
+                          </Label>
+
+                          <div
+                            className="relative border-2 border-dashed border-gray-300 rounded-lg h-40 w-full flex items-center justify-center cursor-pointer hover:border-[#bc6c25] transition"
+                            onClick={() => document.getElementById("thumbnailInput")?.click()}
+                          >
+                            {editingRec.thumbnail ? (
+                              <img
+                                src={editingRec.thumbnail}
+                                alt="Thumbnail Preview"
+                                className="h-full w-full object-cover rounded-md"
+                              />
+                            ) : (
+                              <div className="text-center p-4">
+                                <Upload className="w-6 h-6 mx-auto text-gray-400 mb-2" />
+                                <span className="text-gray-500 text-sm">Click to upload image</span>
+                              </div>
+                            )}
+                            <Input
+                              id="thumbnailInput"
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                handleThumbnailUpload(e, (base64) =>
+                                  setEditingRec(prev=>
+                                    prev? {...prev, thumbnail: base64}: null
+                                  )
+                                )
+                              }}
+                              className="hidden"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button onClick={() => editRec(editingRec)} disabled={!editingRec.name.trim() || isLoading}>Save Changes</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </div>
           </div>
@@ -342,6 +505,8 @@ export default function BoardPage() {
                     comment={rec.comment}
                     rating={rec.rating}
                     thumbnail={rec.thumbnail}
+                    onEdit= {() => setEditingRec(rec)}
+                    onDelete= {() => deleteRec(rec.id)}
                   />
                 ))}
               </div>

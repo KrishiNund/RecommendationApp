@@ -13,8 +13,10 @@ type RecProps = {
   name: string;
   description: string;
   comment: string;
-  rating: string;
+  rating: number;
   thumbnail?: string;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
 export default function Recommendation({
@@ -25,14 +27,9 @@ export default function Recommendation({
   comment,
   rating,
   thumbnail,
+  onEdit,
+  onDelete
 }: RecProps) {
-  const handleEdit = () => {
-    console.log("Edit recommendation:", id);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete recommendation:", id);
-  };
 
   return (
     <div className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
@@ -55,13 +52,19 @@ export default function Recommendation({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
                   <DropdownMenuItem 
-                    onClick={handleEdit}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit();
+                    }}
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
                   >
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem 
-                    onClick={handleDelete} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }} 
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
                   >
                     Delete
@@ -81,13 +84,19 @@ export default function Recommendation({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
                   <DropdownMenuItem 
-                    onClick={handleEdit}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit();
+                    }}
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
                   >
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem 
-                    onClick={handleDelete} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }} 
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
                   >
                     Delete
