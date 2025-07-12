@@ -67,6 +67,7 @@ export default function BoardPage() {
     };
 
     async function getCurrentUserAndRecs() {
+      setIsLoading(true);
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError || !sessionData.session?.user) {
@@ -88,6 +89,7 @@ export default function BoardPage() {
         console.error("Error fetching the boards: ", error.message)
       } else {
         setRecommendations(recs ?? [])
+        setIsLoading(false);
       }
     }
 
@@ -487,7 +489,16 @@ export default function BoardPage() {
 
           {/* Recommendations Grid */}
           <div>
-            {recommendations.length === 0 ? (
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse bg-gray-100 h-60 rounded-2xl"
+                  ></div>
+                ))}
+              </div>
+            ) : recommendations.length === 0 ? (
               <div className="text-center py-20 space-y-2">
                 <FolderOpen className="w-12 h-12 mx-auto text-gray-300" />
                 <p className="text-lg font-medium text-gray-500">Your board is empty</p>

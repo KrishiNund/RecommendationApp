@@ -5,7 +5,7 @@ import ProtectedRoute from "../components/ProtectedRoute"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Search, LayoutGrid, List, CircleSlash2 } from "lucide-react"
+import { Plus, Search, LayoutGrid, List, CircleSlash2, Upload} from "lucide-react"
 import { useState, useEffect } from "react"
 import Board from "../components/Board"
 import {
@@ -51,6 +51,7 @@ export default function Dashboard() {
   // on page load, fetch the boards for the current logged in user
   useEffect(() => {
     async function getCurrentUserAndBoards() {
+      setIsLoading(true);
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError || !sessionData.session?.user) {
@@ -72,6 +73,7 @@ export default function Dashboard() {
         console.error("Error fetching the boards: ", error.message)
       } else {
         setBoards(boards ?? [])
+        setIsLoading(false);
       }
     }
     getCurrentUserAndBoards();
@@ -164,6 +166,7 @@ export default function Dashboard() {
 
   // edit board details
   const editBoard = async (updatedBoard: BoardType) => {
+    setIsLoading(true);
     // Update board details in database
     const { error } = await supabase
       .from("boards")
@@ -186,6 +189,7 @@ export default function Dashboard() {
         board.id === updatedBoard.id ? updatedBoard : board
       ) 
     )
+    setIsLoading(false);
     setEditingBoard(null) // close the modal
   }
 
@@ -318,7 +322,10 @@ export default function Dashboard() {
                             className="h-full w-full object-cover rounded-md"
                           />
                         ) : (
-                          <span className="text-gray-400 text-sm">Click to upload thumbnail</span>
+                          <div className="text-center p-4">
+                              <Upload className="w-6 h-6 mx-auto text-gray-400 mb-2" />
+                              <span className="text-gray-500 text-sm">Click to upload image</span>
+                            </div>
                         )}
                         <Input
                           id="thumbnailInput"
@@ -415,7 +422,10 @@ export default function Dashboard() {
                               className="h-full w-full object-cover rounded-md"
                             />
                           ) : (
-                            <span className="text-gray-400 text-sm">Click to upload thumbnail</span>
+                            <div className="text-center p-4">
+                              <Upload className="w-6 h-6 mx-auto text-gray-400 mb-2" />
+                              <span className="text-gray-500 text-sm">Click to upload image</span>
+                            </div>
                           )}
                           <Input
                             id="thumbnailInput"
@@ -438,7 +448,12 @@ export default function Dashboard() {
                       <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
                       </DialogClose>
-                      <Button onClick={() => editBoard(editingBoard)}>Save Changes</Button>
+                      <Button 
+                        onClick={() => editBoard(editingBoard)} 
+                        disabled={!editingBoard.name.trim() || !editingBoard.category || isLoading}
+                      >
+                        Save Changes
+                      </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -470,8 +485,18 @@ export default function Dashboard() {
 
           {/* Boards Display */}
           <div ref={parent}>
-            {/* if no boards, display message */}
-            {filteredBoards.length === 0 ? (
+            {/* if boards are still being fetched show skeletons in their place */}
+            {isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {[...Array(3)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse bg-gray-100 h-40 rounded-xl"
+                    ></div>
+                  ))}
+                </div>
+            // if no boards, display message
+            ) : filteredBoards.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
