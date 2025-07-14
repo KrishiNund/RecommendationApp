@@ -46,10 +46,6 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  const handleGoogleSignIn = async () => {
-    await supabase.auth.signInWithOAuth({ provider: 'google' })
-  }
-
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-[#f5ebe1] px-4">
       {/* logo */}
@@ -192,22 +188,6 @@ export default function LoginPage() {
             <hr className="flex-grow border-gray-200" />
             OR
             <hr className="flex-grow border-gray-200" />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Button
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <FcGoogle size={20} />
-              <span>Continue with Google</span>
-            </Button>
           </motion.div>
         </motion.div>
 

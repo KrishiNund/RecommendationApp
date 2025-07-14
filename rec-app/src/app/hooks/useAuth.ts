@@ -1,32 +1,40 @@
-// hooks/useAuth.ts
 'use client'
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
 
-
 export function useAuth() {
-    const [user, setUser] = useState<User | null | undefined>(undefined)
+  const [user, setUser] = useState<User | null | undefined>(undefined)
 
-    // Checking if user is logged in
-    useEffect(() => {
-        const getUser = async () => {
-            const { data } = await supabase.auth.getUser()
-            setUser(data.user ?? null)
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data, error } = await supabase.auth.getUser()
+
+        if (error) {
+          console.warn("Auth check error:", error.message)
+          setUser(null)
+        } else {
+          setUser(data.user ?? null)
         }
-
-        getUser()
-
-        const { data: listener } = supabase.auth.onAuthStateChange(() => {
-            getUser()
-        })
-
-        return () => listener?.subscription.unsubscribe()
-    }, [])
-
-    return {
-        user,
-        isLoading: user === undefined,
+      } catch (err) {
+        console.error("Unexpected auth check error:", err)
+        setUser(null)
+      }
     }
+
+    getUser()
+
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      getUser()
+    })
+
+    return () => listener?.subscription.unsubscribe()
+  }, [])
+
+  return {
+    user,
+    isLoading: user === undefined,
+  }
 }

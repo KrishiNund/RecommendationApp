@@ -46,12 +46,6 @@ export default function SignUpPage() {
     setLoading(false)
   }
 
-  const handleGoogleSignUp = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    })
-  }
-
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-[#f5ebe1] px-4">
       <motion.header
@@ -178,22 +172,6 @@ export default function SignUpPage() {
           <hr className="flex-grow border-gray-200" />
           OR
           <hr className="flex-grow border-gray-200" />
-        </motion.div>
-
-        {/* Google sign up button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2 py-5 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all cursor-pointer"
-            onClick={handleGoogleSignUp}
-          >
-            <FcGoogle size={20} />
-            <span>Sign up with Google</span>
-          </Button>
         </motion.div>
 
         <motion.p 

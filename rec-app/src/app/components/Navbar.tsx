@@ -92,7 +92,7 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none group">
                       <Avatar className="h-9 w-9 border border-[#d4a373] group-hover:border-[#bc6c25] transition-colors">
-                        <AvatarImage src={user.user_metadata?.avatar_url || "https://github.com/shadcn.png"} />
+                        {/* <AvatarImage src={user.user_metadata?.avatar_url} /> */}
                         <AvatarFallback className="bg-[#faedcd] text-[#bc6c25]">
                           {user.email?.charAt(0).toUpperCase()}
                         </AvatarFallback>
