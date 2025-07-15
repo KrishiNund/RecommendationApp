@@ -8,7 +8,7 @@ import {
   CardDescription,
 } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
-import { MoreHorizontal, Star, ChevronRight } from "lucide-react"
+import { MoreHorizontal, Star, ChevronRight, LinkIcon } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +17,7 @@ import {
 } from "../../components/ui/dropdown-menu"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { toast } from "sonner"
 
 const categoryColors = {
   anime: "bg-pink-100 text-pink-800",
@@ -29,6 +30,7 @@ const categoryColors = {
 // all parameters that can be passed to the board component
 type BoardProps = {
   id: string;
+  public_id: string;
   name: string;
   description: string;
   category: string;
@@ -42,6 +44,7 @@ type BoardProps = {
 
 export default function Board({
   id,
+  public_id,
   name, 
   description, 
   category,
@@ -112,25 +115,51 @@ export default function Board({
               <div className="absolute top-3 right-3">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button 
+                    <button
                       className="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 transition-colors shadow-sm"
                       onClick={(e) => e.preventDefault()}
                     >
                       <MoreHorizontal className="w-4 h-4" />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit();
-                    }}>
+
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit();
+                      }}
+                    >
                       Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600" onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}>
+
+                    <DropdownMenuItem
+                      className="text-red-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete();
+                      }}
+                    >
                       Delete
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const link = `${window.location.origin}/public/${public_id}`;
+                        navigator.clipboard.writeText(link);
+                        toast.success("Link copied to clipboard!", {
+                          style: {
+                            background: "#fef6e4",
+                            color: "#4a2e00",
+                            border: "1px solid #fae1c3",
+                          },
+                        });
+                      }}
+                    >
+                      <LinkIcon className="w-4 h-4 mr-2 text-gray-500" />
+                      Copy Link
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

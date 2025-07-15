@@ -22,6 +22,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { User } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from "next/navigation";
 
 export default function BoardPage() {
     // types of a recommendation object
@@ -35,7 +36,7 @@ export default function BoardPage() {
     thumbnail?: string;
     created_at: string;
   };
-
+  const router = useRouter();
   const [boardName, setBoardName] = useState("Loading...");
   const { id } = useParams();
   const board_id = id;
@@ -50,56 +51,71 @@ export default function BoardPage() {
   const [editingRec, setEditingRec] = useState<RecType | null>(null);
   const [recommendations, setRecommendations] = useState<RecType[]>([]);
 
+  // getting current logged in user first
   useEffect(() => {
-    const fetchBoard = async () => {
-      const { data, error } = await supabase
-        .from("boards")
-        .select("name")
-        .eq("id", board_id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching board:", error);
-        setBoardName("Untitled Board");
-      } else {
-        setBoardName(data.name);
-      }
-    };
-
     async function getCurrentUserAndRecs() {
       setIsLoading(true);
+
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError || !sessionData.session?.user) {
         console.log("User not found:", sessionData.session);
         return;
       }
-      // sessionData.session.user is the current user
+
+      // Set user for ownership check
       const currentUser = sessionData.session.user;
       setUser(currentUser);
+    }
 
-      // fetch recs where board_id = current board id
-      const { data: recs, error } = await supabase
+    getCurrentUserAndRecs();
+  }, []);
+
+  // check if the board is actually owned by the logged in user
+  //  if not, redirect to landing page 
+  useEffect(() => {
+    if (!user || !board_id) return;
+
+    async function fetchBoard() {
+      const { data, error } = await supabase
+        .from("boards")
+        .select("name, user_id")
+        .eq("id", board_id)
+        .single();
+
+      if (error || !data) {
+        console.error("Board not found or error:", error?.message);
+        router.replace("/");
+        return;
+      }
+
+      if (data.user_id !== user?.id) {
+        console.warn("Unauthorized access to this board.");
+        router.replace("/");
+        return;
+      }
+
+      setBoardName(data.name);
+
+      // Fetch recommendations only if authorized
+      const { data: recs, error: recsError } = await supabase
         .from("recommendations")
         .select("*")
         .eq("board_id", board_id)
         .order("created_at", { ascending: false });
 
-      if (error){
-        console.error("Error fetching the boards: ", error.message)
+      if (recsError) {
+        console.error("Error fetching the recommendations:", recsError.message);
       } else {
-        setRecommendations(recs ?? [])
-        setIsLoading(false);
+        setRecommendations(recs ?? []);
       }
+
+      setIsLoading(false);
     }
 
-    if (board_id) {
-      fetchBoard();
-    }
-    getCurrentUserAndRecs();
-  }, []);
+    fetchBoard();
+  }, [user, board_id]);
   
-
 
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
@@ -518,6 +534,7 @@ export default function BoardPage() {
                     thumbnail={rec.thumbnail}
                     onEdit= {() => setEditingRec(rec)}
                     onDelete= {() => deleteRec(rec.id)}
+                    isPublic= {false}
                   />
                 ))}
               </div>

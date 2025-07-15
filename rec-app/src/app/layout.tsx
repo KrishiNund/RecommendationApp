@@ -3,6 +3,7 @@ import { Inter_Tight } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import AppLayout from "./components/AppLayout";
+import { Toaster } from "@/components/ui/sonner";
 
 const body_font = Inter_Tight({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={body_font.className}>
         <AppLayout>{children}</AppLayout>
+        <Toaster richColors position="top-right" />
         <Footer />
       </body>
     </html>

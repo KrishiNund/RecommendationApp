@@ -15,8 +15,9 @@ type RecProps = {
   comment: string;
   rating: number;
   thumbnail?: string;
-  onEdit: () => void;
-  onDelete: () => void;
+  isPublic:boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 export default function Recommendation({
@@ -27,6 +28,7 @@ export default function Recommendation({
   comment,
   rating,
   thumbnail,
+  isPublic = false,
   onEdit,
   onDelete
 }: RecProps) {
@@ -43,67 +45,71 @@ export default function Recommendation({
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-102"
             />
-            <div className="absolute top-3 right-3 z-10">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit();
-                    }}
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }} 
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            {isPublic !== true && (
+              <div className="absolute top-3 right-3 z-10">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
+                    <DropdownMenuItem 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit?.();
+                      }}
+                      className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete?.();
+                      }} 
+                      className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}   
           </>
         ) : (
           <div className="relative h-full bg-gray-50">
-            <div className="absolute top-3 right-3 z-10">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit();
-                    }}
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }} 
-                    className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            {isPublic !== true && (
+              <div className="absolute top-3 right-3 z-10">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40 rounded-lg shadow-md border border-gray-100">
+                    <DropdownMenuItem 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit?.();
+                      }}
+                      className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete?.();
+                      }} 
+                      className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
             <div className="flex flex-col items-center justify-center h-full text-gray-300">
               <MessageSquare className="w-8 h-8 mb-2" />
               <p className="text-sm font-medium text-gray-400">No image</p>

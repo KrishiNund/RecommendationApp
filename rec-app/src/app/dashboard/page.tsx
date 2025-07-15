@@ -82,6 +82,7 @@ export default function Dashboard() {
   // board object properties
   type BoardType = {
     id: string;
+    public_id: string;
     name: string;
     description: string;
     category: string;
@@ -103,6 +104,7 @@ export default function Dashboard() {
       const {data, error} = await supabase.from("boards").insert(
         {
           id: uuidv4(),
+          public_id: uuidv4(),
           name:boardName,
           description: boardDescription,
           category: boardCategory,
@@ -525,6 +527,7 @@ export default function Dashboard() {
                     <Board
                       key={board.id}
                       id={board.id}
+                      public_id={board.public_id}
                       name={board.name}
                       description={board.description}
                       category={board.category}
@@ -548,6 +551,7 @@ export default function Dashboard() {
                     <Board
                       key={board.id}
                       id={board.id}
+                      public_id={board.public_id}
                       name={board.name}
                       description={board.description}
                       category={board.category}
