@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from "framer-motion"
+import { easeOut, motion } from "framer-motion"
 
 const features = [
   {
@@ -44,7 +44,7 @@ export default function Features() {
           className="text-4xl font-bold text-gray-900 mb-4 text-left md:text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           viewport={{ once: true, margin: "-100px" }}
         >
           Built for Sharing Recommendations
@@ -55,7 +55,7 @@ export default function Features() {
           className="text-md text-gray-600 max-w-2xl mx-auto mb-12 text-left md:text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
           viewport={{ once: true, margin: "-100px" }}
         >
           Whether it's anime, games, music, or movies — Recco helps you create interactive, shareable lists that look great and feel personal.
