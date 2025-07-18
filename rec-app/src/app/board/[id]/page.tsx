@@ -50,6 +50,7 @@ export default function BoardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [editingRec, setEditingRec] = useState<RecType | null>(null);
   const [recommendations, setRecommendations] = useState<RecType[]>([]);
+  const [boardCreatedAt, setBoardCreatedAt] = useState<string>("");
 
   // getting current logged in user first
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function BoardPage() {
     async function fetchBoard() {
       const { data, error } = await supabase
         .from("boards")
-        .select("name, user_id")
+        .select("name, user_id, created_at")
         .eq("id", board_id)
         .single();
 
@@ -96,6 +97,7 @@ export default function BoardPage() {
       }
 
       setBoardName(data.name);
+      setBoardCreatedAt(data.created_at)
 
       // Fetch recommendations only if authorized
       const { data: recs, error: recsError } = await supabase
@@ -144,11 +146,14 @@ export default function BoardPage() {
       if (error) {
         console.error("Failed to insert board:", error.message);
         return;
+      } else {
+        console.log("Recommendation added successfully");
+        setRecommendations(prev => {
+          const newRecs = [...prev, data];
+          updateNumItems(newRecs.length);
+          return newRecs;
+        });
       }
-
-      // create new boards array with new board object added to it
-      // add board to display instantly
-      setRecommendations([...recommendations, data])
 
       // reset form when dialog is closed
       setRecName("");
@@ -219,10 +224,14 @@ export default function BoardPage() {
     if (error){
       console.log("Failed to delete recommendation: ", error.message)
       return;
+    } else {
+      console.log("Recommendation deleted successfully");
+      setRecommendations(prevRecs => {
+        const newRecs = prevRecs.filter(rec => rec.id !== id);
+        updateNumItems(newRecs.length);
+        return newRecs;
+      });
     }
-
-    //remove rec from display
-    setRecommendations(prevRecs => prevRecs.filter(rec => rec.id !== id));  
   };
 
   // handle uploading of an image for the thumnail of the board
@@ -243,6 +252,18 @@ export default function BoardPage() {
     reader.readAsDataURL(file);
   };
 
+  // update num_items in boards table
+  const updateNumItems = async (count: number) => {
+    const {error} = await supabase
+      .from("boards")
+      .update({num_items: count})
+      .eq("id", board_id);
+
+    if (error) {
+      console.error("Failed to update num_items:", error.message);
+    }
+  }
+
 
   return (
     <ProtectedRoute>
@@ -260,7 +281,7 @@ export default function BoardPage() {
                     </h1>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>Created on {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                    <span>Created on {boardCreatedAt.split('T')[0]}</span>
                     <span>•</span>
                     <span>{recommendations.length} {recommendations.length === 1 ? 'recommendation' : 'recommendations'}</span>
                   </div>
@@ -521,7 +542,7 @@ export default function BoardPage() {
                 <p className="text-sm text-gray-400">Add your first recommendation to get started</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 {recommendations.map((rec, idx) => (
                   <Recommendation
                     key={idx}

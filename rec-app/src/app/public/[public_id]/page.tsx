@@ -22,6 +22,7 @@ export default function PublicBoardPage() {
   const { public_id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<RecType[]>([]);
+  const [boardCreatedAt, setBoardCreatedAt] = useState<string>("");
 
   useEffect(() => {
     async function getCurrentRecs() {
@@ -43,7 +44,7 @@ export default function PublicBoardPage() {
 
         const { data, error: boardNameError } = await supabase
         .from("boards")
-        .select("name")
+        .select("name, created_at")
         .eq("id", board_id)
         .single();
 
@@ -52,6 +53,7 @@ export default function PublicBoardPage() {
             setBoardName("Untitled Board");
         } else {
             setBoardName(data.name);
+            setBoardCreatedAt(data.created_at)
         }
 
         // fetch recs where board_id = current board id
@@ -87,7 +89,7 @@ export default function PublicBoardPage() {
                     </h1>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>Created on {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                    <span>Created on {boardCreatedAt.split('T')[0]}</span>
                     <span>•</span>
                     <span>{recommendations.length} {recommendations.length === 1 ? 'recommendation' : 'recommendations'}</span>
                   </div>

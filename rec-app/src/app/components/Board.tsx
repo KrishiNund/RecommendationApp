@@ -8,7 +8,7 @@ import {
   CardDescription,
 } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
-import { MoreHorizontal, Star, ChevronRight, LinkIcon } from "lucide-react"
+import { MoreHorizontal, Star, ChevronRight, LinkIcon, FileHeart } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,16 @@ const categoryColors = {
   manga: "bg-purple-100 text-purple-800",
   games: "bg-blue-100 text-blue-800",
   music: "bg-green-100 text-green-800",
+  movies: "bg-yellow-100 text-yellow-800",
+  books: "bg-orange-100 text-orange-800",
+  podcasts: "bg-cyan-100 text-cyan-800",
+  tech: "bg-slate-100 text-slate-800",
+  food: "bg-red-100 text-red-800",
+  travel: "bg-teal-100 text-teal-800",
+  fitness: "bg-lime-100 text-lime-800",
+  fashion: "bg-fuchsia-100 text-fuchsia-800",
+  art: "bg-indigo-100 text-indigo-800",
+  science: "bg-emerald-100 text-emerald-800",
   other: "bg-gray-100 text-gray-800"
 }
 
@@ -38,7 +48,6 @@ type BoardProps = {
   onDelete: () => void;
   onEdit: () => void;
   items?: number;
-  updatedAt?: string;
   variant?: "grid" | "list";
 };
 
@@ -52,7 +61,6 @@ export default function Board({
   onDelete,
   onEdit,
   items = 0,
-  updatedAt = "",
   variant = "grid" 
 }: BoardProps) {
   if (variant === "list") {
@@ -84,7 +92,6 @@ export default function Board({
                     {category}
                   </Badge>
                   <span className="text-xs text-gray-500">{items} items</span>
-                  <span className="text-xs text-gray-500">Updated {updatedAt}</span>
                 </div>
               </div>
               
@@ -99,7 +106,7 @@ export default function Board({
   // by default, if variant is not specified, grid display will be used
   return (
     <motion.div whileHover={{ y: -5 }}>
-      <Card className="group h-90 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100">
+      <Card className="group h-80 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100 p-0">
         <Link href={`/board/${id}`} className="block flex-grow">
           <CardHeader className="p-0">
             <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
@@ -173,7 +180,7 @@ export default function Board({
               {description}
             </CardDescription>
             
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-6">
               <Badge 
                 variant="outline" 
                 className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other}`}
@@ -182,17 +189,11 @@ export default function Board({
               </Badge>
               
               <div className="flex items-center space-x-1 text-xs text-gray-500">
-                <Star className="h-3 w-3" />
+                <FileHeart className="h-4 w-4 text-yellow-500" />
                 <span>{items}</span>
               </div>
             </div>
           </CardContent>
-          
-          <CardFooter className="px-4 pb-4 pt-0">
-            <div className="w-full text-xs text-gray-500">
-              Updated {updatedAt}
-            </div>
-          </CardFooter>
         </Link>
       </Card>
     </motion.div>

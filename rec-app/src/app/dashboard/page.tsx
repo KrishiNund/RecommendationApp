@@ -87,7 +87,8 @@ export default function Dashboard() {
     description: string;
     category: string;
     thumbnail?: string;
-    user_id:string
+    user_id:string;
+    num_items: number;
   }
 
   // add a recommendation board
@@ -301,6 +302,16 @@ export default function Dashboard() {
                             <SelectItem value="manga">Manga/Manhwa</SelectItem>
                             <SelectItem value="games">Games</SelectItem>
                             <SelectItem value="music">Music</SelectItem>
+                            <SelectItem value="movies">Movies</SelectItem>
+                            <SelectItem value="books">Books</SelectItem>
+                            <SelectItem value="podcasts">Podcasts</SelectItem>
+                            <SelectItem value="tech">Tech</SelectItem>
+                            <SelectItem value="food">Food</SelectItem>
+                            <SelectItem value="travel">Travel</SelectItem>
+                            <SelectItem value="fitness">Fitness</SelectItem>
+                            <SelectItem value="fashion">Fashion</SelectItem>
+                            <SelectItem value="art">Art</SelectItem>
+                            <SelectItem value="science">Science</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                           </SelectGroup>
                         </SelectContent>
@@ -403,6 +414,16 @@ export default function Dashboard() {
                             <SelectItem value="manga">Manga/Manhwa</SelectItem>
                             <SelectItem value="games">Games</SelectItem>
                             <SelectItem value="music">Music</SelectItem>
+                            <SelectItem value="movies">Movies</SelectItem>
+                            <SelectItem value="books">Books</SelectItem>
+                            <SelectItem value="podcasts">Podcasts</SelectItem>
+                            <SelectItem value="tech">Tech</SelectItem>
+                            <SelectItem value="food">Food</SelectItem>
+                            <SelectItem value="travel">Travel</SelectItem>
+                            <SelectItem value="fitness">Fitness</SelectItem>
+                            <SelectItem value="fashion">Fashion</SelectItem>
+                            <SelectItem value="art">Art</SelectItem>
+                            <SelectItem value="science">Science</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                           </SelectContent>
                         </Select>
@@ -534,6 +555,7 @@ export default function Dashboard() {
                       thumbnail={board.thumbnail}
                       onDelete={() => deleteBoard(board.id)}
                       onEdit={() => setEditingBoard(board)}
+                      items={board.num_items}
                     />
                   </motion.div>
                 ))}
@@ -559,6 +581,7 @@ export default function Dashboard() {
                       onDelete={() => deleteBoard(board.id)}
                       onEdit={() => setEditingBoard(board)}
                       variant="list" 
+                      items={board.num_items}
                     />
                   </motion.div>
                 ))}
