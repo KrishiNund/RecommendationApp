@@ -1,38 +1,33 @@
 'use client'
 
-import { easeOut, motion } from "framer-motion"
-import { List, PlusCircle, Palette, Move, Share2, CheckCircle2 } from "lucide-react"
+import { motion } from "framer-motion"
+import { LayoutGrid, Star, ListChecks, Share2, Sparkles } from "lucide-react"
 
 const features = [
   {
-    icon: <List className="w-8 h-8 text-[#bc6c25]" />, // Create Custom Boards
-    title: "Create Custom Boards",
-    desc: "Organize your recommendations into themed lists like 'Top Anime' or 'Favorite Indie Games'."
+    icon: <LayoutGrid className="w-8 h-8 text-[#bc6c25]" />,
+    title: "Pretty Recommendation Cards",
+    desc: "Display your recommendations with clean, elegant cards that look great at a glance."
+  },  
+  {
+    icon: <Star className="w-8 h-8 text-[#bc6c25]" />, // Personal Ratings & Comments
+    title: "Personal Ratings & Comments",
+    desc: "Add your own ratings and comments to each recommendation."
   },
   {
-    icon: <PlusCircle className="w-8 h-8 text-[#a05a1f]" />, // Add Items Easily
-    title: "Add Items Easily",
-    desc: "Add titles with images, links, and short notes — all under your creative control."
+    icon: <ListChecks className="w-8 h-8 text-[#bc6c25]" />, // Unlimited Recommendations
+    title: "Unlimited Recommendations",
+    desc: "Add as many recommendations as you want to each board."
   },
   {
-    icon: <Palette className="w-8 h-8 text-[#f59e42]" />, // Choose a Style
-    title: "Choose a Style",
-    desc: "Personalize each board with minimalist themes and color palettes that suit your vibe."
+    icon: <Share2 className="w-8 h-8 text-[#bc6c25]" />, // Easy Sharing
+    title: "Easy Sharing",
+    desc: "Share your boards instantly with a public link."
   },
   {
-    icon: <Move className="w-8 h-8 text-[#bc6c25]" />, // Drag & Reorder
-    title: "Drag & Reorder",
-    desc: "Effortlessly reorder items to highlight what matters most to you."
-  },
-  {
-    icon: <Share2 className="w-8 h-8 text-[#a05a1f]" />, // Share Your Board
-    title: "Share Your Board",
-    desc: "Generate a public link to share your curated list with anyone — no login needed."
-  },
-  {
-    icon: <CheckCircle2 className="w-8 h-8 text-green-500" />, // Interactive Viewer Mode
-    title: "Interactive Viewer Mode",
-    desc: "Let others tick off what they’ve already seen — and discover what’s next."
+    icon: <Sparkles className="w-8 h-8 text-[#bc6c25]" />, // Modern, Clean Design
+    title: "Modern, Clean Design",
+    desc: "Enjoy a user-friendly, aesthetic layout for every list."
   }
 ]
 
@@ -82,13 +77,37 @@ export default function Features() {
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, i) => (
+          {features.slice(0, 3).map((feature, i) => (
             <motion.div
               key={i}
               className="bg-white/90 border border-gray-100 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all hover:-translate-y-2 flex flex-col items-center text-center backdrop-blur-sm"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover={{ scale: 1.04 }}
+            >
+              <div className="mb-5 drop-shadow-sm">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">
+                {feature.title}
+              </h3>
+              <p className="text-base text-gray-600 leading-relaxed">
+                {feature.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+        {/* Center last two features on a new row */}
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-8">
+          {features.slice(3).map((feature, i) => (
+            <motion.div
+              key={i + 3}
+              className="bg-white/90 border border-gray-100 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all hover:-translate-y-2 flex flex-col items-center text-center backdrop-blur-sm w-full max-w-sm"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: (i + 3) * 0.1 }}
               viewport={{ once: true, margin: "-50px" }}
               whileHover={{ scale: 1.04 }}
             >

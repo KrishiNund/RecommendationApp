@@ -27,6 +27,7 @@ export default function Pricing() {
       viewport={{ once: true, margin: "-100px" }}
       variants={container}
       className="bg-white py-20 px-4 sm:px-6 lg:px-8"
+      id="pricing"
     >
       <div className="max-w-5xl mx-auto text-center space-y-8">
         <motion.div variants={item} className="space-y-4">

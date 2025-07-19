@@ -60,7 +60,7 @@ export default function Recommendation({
                 <div className="absolute top-3 right-3 z-10">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <motion.button whileTap={{ scale: 0.96 }} className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors shadow border border-gray-200">
+                      <motion.button whileTap={{ scale: 0.96 }} className="bg-white/80 p-2 rounded-full text-gray-600 hover:text-[#a05a1f] transition-colors shadow border border-gray-200 cursor-pointer">
                         <MoreHorizontal className="w-4 h-4" />
                       </motion.button>
                     </DropdownMenuTrigger>
@@ -154,7 +154,7 @@ export default function Recommendation({
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ backgroundColor: "#fff7e6" }}
-                className="flex items-center gap-2 text-xs font-medium text-[#a05a1f] bg-amber-50 border border-amber-100 rounded-full px-3 py-1 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-200"
+                className="flex items-center gap-2 text-xs font-medium text-[#a05a1f] bg-amber-50 border border-amber-100 rounded-full px-3 py-1 shadow-sm transition-colors focus:outline-none focus:ring-1"
                 onClick={() => setShowComment((v) => !v)}
                 aria-expanded={showComment}
                 aria-controls={`comment-${id}`}

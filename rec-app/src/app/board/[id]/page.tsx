@@ -339,7 +339,7 @@ export default function BoardPage() {
                         <Input
                           id="comment"
                           placeholder="Your thoughts (optional)"
-                          maxLength={40}
+                          maxLength={50}
                           value={comment}
                           onChange={e => setComment(e.target.value)}
                           className="rounded-lg"
@@ -444,7 +444,7 @@ export default function BoardPage() {
                           <Input
                             id="comment"
                             placeholder="Your thoughts (optional)"
-                            maxLength={40}
+                            maxLength={50}
                             value={editingRec.comment}
                             onChange={(e) => 
                               setEditingRec({...editingRec, comment: e.target.value})

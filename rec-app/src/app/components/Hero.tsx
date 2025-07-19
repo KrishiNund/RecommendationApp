@@ -59,7 +59,7 @@ export default function Hero() {
             <Link href="/signup" className="block">
               <Button
                 size="lg"
-                className="bg-[#bc6c25] hover:bg-[#a05a1f] text-white px-8 py-5 text-base shadow-lg hover:shadow-xl rounded-xl font-semibold"
+                className="bg-[#bc6c25] hover:bg-[#a05a1f] text-white px-8 py-5 text-base shadow-lg hover:shadow-xl rounded-xl font-semibold cursor-pointer"
               >
                 Start for free
               </Button>

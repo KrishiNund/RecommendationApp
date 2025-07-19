@@ -50,7 +50,7 @@ export default function CTA() {
             >
               <Link href="/signup" className="inline-block">
                 <motion.button
-                  className="relative px-8 py-3.5 text-white bg-gradient-to-br from-[#bc6c25] to-[#a05a1f] rounded-lg font-medium text-base shadow-sm hover:shadow-md transition-all group overflow-hidden"
+                  className="relative px-8 py-3.5 text-white bg-gradient-to-br from-[#bc6c25] to-[#a05a1f] rounded-lg font-medium text-base shadow-sm hover:shadow-md transition-all group overflow-hidden cursor-pointer"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >

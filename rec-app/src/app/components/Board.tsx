@@ -8,7 +8,7 @@ import {
   CardDescription,
 } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
-import { MoreHorizontal, Star, ChevronRight, LinkIcon, FileHeart } from "lucide-react"
+import { MoreHorizontal, ChevronRight, LinkIcon, FileHeart, Edit, Trash2 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,28 @@ import {
 } from "../../components/ui/dropdown-menu"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { toast } from "sonner"
+import { useCopyLinkHandler } from "../../lib/CopyLinkHandler"
+import { Button } from "@/components/ui/button"
+
+// copies link to clipboard if possible else shows a dialog to allow manual copying
+function CopyLinkComponent({ public_id }: { public_id: string }) {
+  const { handleCopy, DialogFallback } = useCopyLinkHandler(public_id)
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        className="w-full h-8 flex items-center space-x-1 text-gray-800 justify-start cursor-pointer"
+        onClick={handleCopy}
+      >
+        <LinkIcon className="w-4 h-4" />
+        <span>Copy Link</span>
+      </Button>
+
+      <DialogFallback />
+    </>
+  )
+}
 
 const categoryColors = {
   anime: "bg-pink-100 text-pink-800",
@@ -137,6 +158,7 @@ export default function Board({
                         onEdit();
                       }}
                     >
+                      <Edit className="w-4 h-4 mr-2 text-gray-500"/>
                       Edit
                     </DropdownMenuItem>
 
@@ -147,27 +169,12 @@ export default function Board({
                         onDelete();
                       }}
                     >
+                      <Trash2 className="w-4 h-4 mr-2 text-gray-500"/>
                       Delete
                     </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const link = `${window.location.origin}/public/${public_id}`;
-                        navigator.clipboard.writeText(link);
-                        toast.success("Link copied to clipboard!", {
-                          style: {
-                            background: "#fef6e4",
-                            color: "#4a2e00",
-                            border: "1px solid #fae1c3",
-                          },
-                        });
-                      }}
-                    >
-                      <LinkIcon className="w-4 h-4 mr-2 text-gray-500" />
-                      Copy Link
-                    </DropdownMenuItem>
+                    {/* adds copy link to clipboard component */}
+                    <CopyLinkComponent public_id={public_id}/>
+                    
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
