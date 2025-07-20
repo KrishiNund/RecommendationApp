@@ -275,8 +275,7 @@ export default function BoardPage() {
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <Sparkles className="w-6 h-6 text-[#bc6c25]" />
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 drop-shadow-sm">
                       {boardName}
                     </h1>
                   </div>
@@ -531,7 +530,7 @@ export default function BoardPage() {
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
-                    className="animate-pulse bg-gray-100 h-60 rounded-2xl"
+                    className="animate-pulse bg-gray-100 h-64 rounded-2xl shadow-md"
                   ></div>
                 ))}
               </div>

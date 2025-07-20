@@ -154,13 +154,13 @@ export default function Recommendation({
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ backgroundColor: "#fff7e6" }}
-                className="flex items-center gap-2 text-xs font-medium text-[#a05a1f] bg-amber-50 border border-amber-100 rounded-full px-3 py-1 shadow-sm transition-colors focus:outline-none focus:ring-1"
+                className="flex items-center gap-2 text-xs font-medium text-[#a05a1f] bg-white border border-amber-50 rounded-full px-2.5 py-1 shadow-sm transition-colors focus:outline-none cursor-pointer"
                 onClick={() => setShowComment((v) => !v)}
                 aria-expanded={showComment}
                 aria-controls={`comment-${id}`}
               >
                 <MessageSquare className="w-4 h-4" />
-                {showComment ? "Hide Comment" : "Show Comment"}
+                {/* {showComment ? "Hide Comment" : "Show Comment"} */}
               </motion.button>
             </div>
           )}
@@ -176,9 +176,9 @@ export default function Recommendation({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.18 }}
-              className="mt-2 px-5 pb-4"
+              className="mt-1 px-5 pb-4"
             >
-              <div className="bg-white/90 border border-amber-100 rounded-xl px-4 py-3 shadow-sm text-sm text-gray-700">
+              <div className="bg-white/90 border border-[#fff7e6] rounded-xl px-4 py-3 shadow-sm text-sm text-gray-700">
                 {comment}
               </div>
             </motion.div>

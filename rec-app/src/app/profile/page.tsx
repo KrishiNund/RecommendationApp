@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, User2, Mail, BarChart2, Zap, ArrowRight} from "lucide-react";
 import { format } from "date-fns";
 import { User } from "@supabase/supabase-js";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation"
+import Link from "next/link";
 
 
 export default function ProfilePage() {
@@ -102,9 +103,10 @@ export default function ProfilePage() {
       <ProtectedRoute>
         <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto space-y-8">
-            <Skeleton className="h-20 w-full rounded-2xl" />
             <Skeleton className="h-40 w-full rounded-2xl" />
-            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
           </div>
         </div>
       </ProtectedRoute>
@@ -133,63 +135,138 @@ export default function ProfilePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="bg-white shadow-sm border border-gray-200 rounded-2xl p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Profile</h1>
-            <p className="text-sm text-gray-500">Manage your account and data</p>
+      <div className="min-h-screen bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Profile Header */}
+          <div className="bg-white rounded-xl p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Account</h1>
+                <p className="text-gray-500 mt-2">Manage your profile and settings</p>
+              </div>
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-[#bc6c25]/10">
+                <User2 className="w-5 h-5 text-[#bc6c25]" />
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white border rounded-2xl shadow-sm p-6 space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">Account Info</h2>
-              <p className="text-sm text-gray-600">Email: {user.email}</p>
-              <p className="text-sm text-gray-600 mt-1">
-                Joined: {format(new Date(user.created_at), "PPP")}
+          {/* Account Info & Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-amber-50">
+                  <Mail className="w-4 h-4 text-[#bc6c25]" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">Account Details</h2>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Email</p>
+                  <p className="text-gray-800 mt-1">{user.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Member since</p>
+                  <p className="text-gray-800 mt-1">
+                    {format(new Date(user.created_at), "MMMM d, yyyy")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-amber-50">
+                  <BarChart2 className="w-4 h-4 text-[#bc6c25]" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">Your Activity</h2>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border border-gray-100 rounded-lg p-3">
+                  <p className="text-xs font-medium text-gray-500">Boards</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{boardCount}</p>
+                </div>
+                <div className="border border-gray-100 rounded-lg p-3">
+                  <p className="text-xs font-medium text-gray-500">Recommendations</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{recCount}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Plan Info */}
+          <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-amber-50">
+                <Zap className="w-4 h-4 text-[#bc6c25]" />
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800">Your Plan</h2>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="text-gray-600">
+                  You're currently on the <span className="font-medium text-[#bc6c25]">Free</span> plan
+                </p>
+                <p className="text-sm text-gray-500 mt-1">Upgrade for unlimited boards and features</p>
+              </div>
+              <Button 
+                asChild
+                className="bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] shadow-sm"
+              >
+                <Link href="/#pricing">
+                  View Plans <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Danger Zone */}
+          <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-red-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-red-50">
+                <AlertTriangle className="w-4 h-4 text-red-500" />
+              </div>
+              <h2 className="text-lg font-semibold text-red-600">Danger Zone</h2>
+            </div>
+            <div className="space-y-4">
+              <p className="text-gray-600">
+                Deleting your account will permanently remove all your data including boards and recommendations.
               </p>
-            </div>
-
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">Your Stats</h2>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>{boardCount} board{boardCount !== 1 && "s"} created</li>
-                <li>{recCount} recommendation{recCount !== 1 && "s"} added</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold flex items-center gap-2 text-rose-600">
-              <AlertTriangle className="w-5 h-5" />
-              Danger Zone
-            </h2>
-            <p className="text-sm text-gray-600 mt-2">
-              Deleting your account will permanently remove all your data including boards and recommendations.
-            </p>
-            <AlertDialog>
+              <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="destructive" className="mt-4 cursor-pointer">
-                      Delete Account
-                    </Button>
+                  <Button 
+                    variant="destructive" 
+                    className="w-full sm:w-auto cursor-pointer"
+                  >
+                    Delete Account
+                  </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will permanently delete your account and all data associated with it. This action cannot be undone.
+                <AlertDialogContent className="max-w-md rounded-xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-lg font-semibold text-gray-900">
+                      Confirm Account Deletion
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-gray-600">
+                      This action cannot be undone. All your data will be permanently removed from our servers.
                     </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDeleteAccount}>
-                      Confirm Deletion
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="border-gray-300 hover:bg-gray-50 cursor-pointer">
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleDeleteAccount}
+                      className="bg-red-600 hover:bg-red-700 focus:ring-red-500 cursor-pointer"
+                    >
+                      Delete Account
                     </AlertDialogAction>
-                    </AlertDialogFooter>
+                  </AlertDialogFooter>
                 </AlertDialogContent>
-            </AlertDialog>
+              </AlertDialog>
+            </div>
           </div>
         </div>
       </div>
     </ProtectedRoute>
   );
+
 }
