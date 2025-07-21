@@ -9,7 +9,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { Eye, EyeOff } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-
+import { toast } from 'sonner'
 // importing google font for logo/brand name
 import { Bebas_Neue } from 'next/font/google'
 
@@ -32,17 +32,41 @@ export default function SignUpPage() {
     setLoading(true)
     setError('')
     setSuccess(false)
-
-    const { error } = await supabase.auth.signUp({ email, password })
+    
+    // signing up user and adding to authentication table
+    const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       setError(error.message)
-    } else {
-      setSuccess(true)
-      setTimeout(() => {
+      toast.error("Something went wrong during signup. Please try again.")
+      setLoading(false)
+      return
+    }
+
+    //adding user to users table (public)
+    const user = data.user
+    if (user) {
+      const {error: insertError} = await supabase.from('users').insert(
+        {
+          id: user.id,
+          plan: "free"
+        }
+      )
+
+      if(insertError){
+        console.error('Failed to insert into users table:', insertError)
+        setError('Something went wrong during signup. Please try again.')
+        toast.error("Something went wrong during signup. Please try again.")
+        setLoading(false)
+        return
+      }
+    }
+    
+    setSuccess(true)
+    toast.success("Sign up successful!")
+    setTimeout(() => {
         router.push('/login')
       }, 1000)
-    }
     setLoading(false)
   }
 
@@ -141,7 +165,7 @@ export default function SignUpPage() {
             </Button>
           </motion.div>
 
-          {error && (
+          {/* {error && (
             <motion.p 
               className="text-sm text-red-500 text-center"
               initial={{ opacity: 0, y: -10 }}
@@ -149,9 +173,9 @@ export default function SignUpPage() {
             >
               {error}
             </motion.p>
-          )}
+          )} */}
 
-          {success && (
+          {/* {success && (
             <motion.p 
               className="text-sm text-green-600 text-center"
               initial={{ opacity: 0, y: -10 }}
@@ -159,7 +183,7 @@ export default function SignUpPage() {
             >
               Check your email to confirm your account!
             </motion.p>
-          )}
+          )} */}
         </motion.div>
 
         {/* Divider */}

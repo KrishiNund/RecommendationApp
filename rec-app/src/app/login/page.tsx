@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FcGoogle } from 'react-icons/fc'
 import { EyeOff, Eye } from 'lucide-react'
+import { toast } from 'sonner'
 
 // importing google font for logo/brand name
 import { Bebas_Neue } from 'next/font/google'
@@ -36,8 +37,10 @@ export default function LoginPage() {
 
     if (error) {
       setError(error.message)
+      toast.error("Something went wrong during login. Please try again.")
     } else {
       setSuccess(true)
+      toast.success("Log in successful!")
       setTimeout(() => {
         router.push('/dashboard')
       }, 1000)
@@ -169,7 +172,7 @@ export default function LoginPage() {
             </motion.p>
           )}
 
-          {success && (
+          {/* {success && (
             <motion.p 
               className="text-sm text-green-600 text-center"
               initial={{ opacity: 0, y: -10 }}
@@ -177,7 +180,7 @@ export default function LoginPage() {
             >
               Login successful! Redirecting...
             </motion.p>
-          )}
+          )} */}
 
           <motion.div 
             className="my-6 flex items-center justify-center gap-4 text-sm text-gray-400"

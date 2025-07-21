@@ -32,6 +32,11 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { supabase } from '@/lib/supabase'
 import { User } from "@supabase/supabase-js"
 import { v4 as uuidv4 } from 'uuid';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 
 export default function Dashboard() {
@@ -47,6 +52,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false)
   const [boards, setBoards] = useState<BoardType[]>([])
+  const [userPlan, setUserPlan] = useState("")
 
   // on page load, fetch the boards for the current logged in user
   useEffect(() => {
@@ -62,6 +68,21 @@ export default function Dashboard() {
       const currentUser = sessionData.session.user;
       setUser(currentUser);
 
+      //fetch user's current plan
+      const {data: userData, error:userError} = await supabase
+      .from("users")
+      .select("plan")
+      .eq("id", currentUser.id)
+      .single()
+
+      if (userError){
+        console.error("Error fetching user plan:", userError.message)
+        return
+      }
+
+      //set user's plan
+      setUserPlan(userData?.plan || "free")
+
       // fetch boards where user_id = current user id
       const { data: boards, error } = await supabase
         .from("boards")
@@ -73,11 +94,14 @@ export default function Dashboard() {
         console.error("Error fetching the boards: ", error.message)
       } else {
         setBoards(boards ?? [])
-        setIsLoading(false);
       }
+      setIsLoading(false);
     }
     getCurrentUserAndBoards();
   }, []);
+
+  // state to check if boards can be created or not
+  const canCreateBoard = userPlan === "pro" || (userPlan === "free" && boards.length < 3);
   
   // board object properties
   type BoardType = {
@@ -253,9 +277,19 @@ export default function Dashboard() {
                   setBoardThumbnail("");
                 }
               }}>
+                
                 <DialogTrigger asChild>
-                  <Button onClick={() => setIsDialogOpen(true)} className="bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm">
-                    <Plus className="mr-2 h-4 w-4" /> Create Board
+                  <Button
+                    onClick={() => {
+                      if (canCreateBoard) setIsDialogOpen(true);
+                    }}
+                    disabled={!canCreateBoard}
+                    className={`bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm w-full ${
+                      !canCreateBoard ? 'cursor-not-allowed opacity-50' : ''
+                    }`}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Board
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[500px] rounded-lg">
