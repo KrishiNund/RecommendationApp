@@ -3,8 +3,75 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Zap, Star, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Pricing() {
+  const [userPlan, setUserPlan] = useState("")
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    // fetch current user and plan on mount
+    const getCurrentUserAndPlan = async () => {
+      setIsLoading(true);
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUser = sessionData.session?.user || null;
+      setUser(currentUser);
+
+      if (currentUser) {
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .select("plan")
+          .eq("id", currentUser.id)
+          .single();
+
+        if (!userError) {
+          setUserPlan(userData?.plan || "free");
+        } else {
+          console.error("Error fetching user plan:", userError.message);
+        }
+      } else {
+        setUserPlan("free");
+      }
+      setIsLoading(false);
+    };
+
+    getCurrentUserAndPlan(); // run once on mount
+
+    // subscribe to auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === "SIGNED_IN") {
+          const currentUser = session?.user || null;
+          setUser(currentUser);
+
+          if (currentUser) {
+            const { data: userData, error: userError } = await supabase
+              .from("users")
+              .select("plan")
+              .eq("id", currentUser.id)
+              .single();
+
+            if (!userError) {
+              setUserPlan(userData?.plan || "free");
+            }
+          }
+          // if logged set user null and plan to "free"
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+          setUserPlan("free");
+        }
+      }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, []);
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -62,12 +129,42 @@ export default function Pricing() {
                 <span className="text-4xl font-bold text-gray-900">$0</span>
                 <span className="text-gray-500"> forever</span>
               </div>
-              <Button 
-                variant="outline" 
-                className="w-full h-12 group-hover:border-[#bc6c25] group-hover:text-[#bc6c25] transition-colors"
-              >
-                Get started
-              </Button>
+              {/* if not logged in, show default get started option */}
+                {isLoading ? (
+                  <Button
+                      variant="outline"
+                      className="w-full h-12 transition-colors"
+                      disabled
+                    >
+                      Loading...
+                    </Button>
+
+                ):!user ? (
+                  <Link href="/signup" passHref>
+                    <Button
+                      variant="outline"
+                      className="w-full h-12 transition-colors hover:border-[#bc6c25] hover:text-[#bc6c25] hover:bg-white cursor-pointer"
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                ) : userPlan === "free" ? (
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 transition-colors"
+                    disabled
+                  >
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 transition-colors"
+                    disabled
+                  >
+                    Already Upgraded
+                  </Button>
+                )}
             </div>
           </motion.div>
 
@@ -103,9 +200,39 @@ export default function Pricing() {
                 <span className="text-4xl font-bold text-gray-900">$9.99</span>
                 <span className="text-gray-500"> one-time payment</span>
               </div>
-              <Button className="w-full h-12 bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] text-white shadow-md hover:shadow-lg transition-all">
-                Upgrade now <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
+              {/* if not logged in, show default option */}
+                {isLoading ? (
+                  <Button
+                      variant="outline"
+                      className="w-full h-12 transition-colors"
+                      disabled
+                    >
+                      Loading...
+                    </Button>
+
+                ): !user ? (
+                    <Link href="/signup" passHref>
+                      <Button
+                        variant="outline"
+                        className="w-full h-12 transition-colors hover:border-[#bc6c25] hover:text-[#bc6c25] hover:bg-white cursor-pointer"
+                      >
+                        Sign Up to upgrade
+                      </Button>
+                    </Link>
+                  ) : userPlan === "free" ? (
+                    // the paypal button to be added
+                    <Button className="w-full h-12 cursor-pointer bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] text-white shadow-md hover:shadow-lg transition-all">
+                      Upgrade now <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="w-full h-12 transition-colors"
+                      disabled
+                    >
+                      Current Plan
+                    </Button>
+                  )}   
             </div>
           </motion.div>
         </div>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Star, MoreHorizontal, MessageSquare } from "lucide-react";
+import { Star, MoreHorizontal, MessageSquare, Trash2, Edit } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +8,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button";
 
 type RecProps = {
   id: string;
@@ -72,9 +84,11 @@ export default function Recommendation({
                         }}
                         className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
                       >
+                        <Edit className="w-4 h-4 mr-1 text-gray-500" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+
+                      {/* <DropdownMenuItem 
                         onClick={(e) => {
                           e.stopPropagation();
                           onDelete?.();
@@ -82,7 +96,34 @@ export default function Recommendation({
                         className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
                       >
                         Delete
+                      </DropdownMenuItem> */}
+                      <DropdownMenuItem asChild>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" className="flex items-center w-full text-red-600 cursor-pointer justify-start">
+                              <Trash2 className="w-4 h-4 mr-1 ml-1 text-gray-500" />
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your recommendation.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={onDelete}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </DropdownMenuItem>
+
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -106,9 +147,11 @@ export default function Recommendation({
                         }}
                         className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50"
                       >
+                        <Edit className="w-4 h-4 mr-1 text-gray-500" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+
+                      {/* <DropdownMenuItem 
                         onClick={(e) => {
                           e.stopPropagation();
                           onDelete?.();
@@ -116,7 +159,35 @@ export default function Recommendation({
                         className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
                       >
                         Delete
+                      </DropdownMenuItem> */}
+
+                      <DropdownMenuItem asChild>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" className="flex items-center w-full text-red-600 cursor-pointer justify-start">
+                              <Trash2 className="w-4 h-4 mr-1 ml-1 text-gray-500" />
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your recommendation.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={onDelete}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </DropdownMenuItem>
+
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>

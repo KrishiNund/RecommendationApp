@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Menu, LogIn, LogOut, UserPlus, LayoutDashboard, ChevronDown } from "lucide-react"
+import { Menu, LogIn, LogOut, UserPlus, LayoutDashboard, ChevronDown, UserRoundCog } from "lucide-react"
 import { supabase } from '../../lib/supabase'
 import Link from 'next/link'
 import { usePathname } from "next/navigation"
@@ -34,6 +34,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
+    // window.location.href = '/'
   }
 
   if (isLoading) {
@@ -111,6 +112,7 @@ export default function Navbar() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-gray-100" />
                     <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50">
+                      <UserRoundCog className="mr-2 h-4 w-4" />
                       <Link href="/profile" className="w-full">
                         Profile
                       </Link>
@@ -171,6 +173,7 @@ export default function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-gray-100" />
                   <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50">
+                    <UserRoundCog className="mr-2 h-4 w-4" />
                     <Link href="/profile" className="w-full">
                       Profile
                     </Link>

@@ -19,6 +19,17 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { useCopyLinkHandler } from "../../lib/CopyLinkHandler"
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 // copies link to clipboard if possible else shows a dialog to allow manual copying
 function CopyLinkComponent({ public_id }: { public_id: string }) {
@@ -31,7 +42,7 @@ function CopyLinkComponent({ public_id }: { public_id: string }) {
         className="w-full h-8 flex items-center space-x-1 text-gray-800 justify-start cursor-pointer"
         onClick={handleCopy}
       >
-        <LinkIcon className="w-4 h-4" />
+        <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
         <span>Copy Link</span>
       </Button>
 
@@ -112,7 +123,10 @@ export default function Board({
                   >
                     {category}
                   </Badge>
-                  <span className="text-xs text-gray-500">{items} items</span>
+                  <div className="flex items-center space-x-1 text-xs text-gray-500">
+                    <FileHeart className="h-4 w-4 text-yellow-500" />
+                    <span>{items}</span>
+                  </div>
                 </div>
               </div>
               
@@ -128,7 +142,7 @@ export default function Board({
   return (
     <motion.div whileHover={{ y: -5 }}>
       <Card className="group h-80 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100 p-0">
-        <Link href={`/board/${id}`} className="block flex-grow">
+        
           <CardHeader className="p-0">
             <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
               {thumbnail ? (
@@ -153,25 +167,45 @@ export default function Board({
 
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem
+                      className="cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         onEdit();
                       }}
                     >
-                      <Edit className="w-4 h-4 mr-2 text-gray-500"/>
+                      <Edit className="w-4 h-4 mr-1 ml-1 text-gray-500"/>
                       Edit
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem
-                      className="text-red-600"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete();
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2 text-gray-500"/>
-                      Delete
+                    <DropdownMenuItem asChild>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" className="flex items-center w-full text-red-600 cursor-pointer justify-start">
+                            <Trash2 className="w-4 h-4 mr-1 text-gray-500" />
+                            Delete
+                          </Button>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete your board
+                              and associated recommendations.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={onDelete}>
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </DropdownMenuItem>
+
+                    
                     {/* adds copy link to clipboard component */}
                     <CopyLinkComponent public_id={public_id}/>
                     
@@ -181,27 +215,28 @@ export default function Board({
             </div>
           </CardHeader>
           
-          <CardContent className="p-4 flex-grow">
-            <CardTitle className="text-lg font-semibold mb-1 truncate">{name}</CardTitle>
-            <CardDescription className="text-gray-600 text-sm line-clamp-2 mb-3">
-              {description}
-            </CardDescription>
-            
-            <div className="flex justify-between items-center mt-6">
-              <Badge 
-                variant="outline" 
-                className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other}`}
-              >
-                {category}
-              </Badge>
+          <Link href={`/board/${id}`} className="block flex-grow">
+            <CardContent className="p-4 flex-grow">
+              <CardTitle className="text-lg font-semibold mb-1 truncate">{name}</CardTitle>
+              <CardDescription className="text-gray-600 text-sm line-clamp-2 mb-3">
+                {description}
+              </CardDescription>
               
-              <div className="flex items-center space-x-1 text-xs text-gray-500">
-                <FileHeart className="h-4 w-4 text-yellow-500" />
-                <span>{items}</span>
+              <div className="flex justify-between items-center mt-6">
+                <Badge 
+                  variant="outline" 
+                  className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other}`}
+                >
+                  {category}
+                </Badge>
+                
+                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                  <FileHeart className="h-4 w-4 text-yellow-500" />
+                  <span>{items}</span>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Link>
+            </CardContent>
+          </Link>
       </Card>
     </motion.div>
   )

@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [boardCount, setBoardCount] = useState(0);
   const [recCount, setRecCount] = useState(0);
+  const [userPlan, setUserPlan] = useState("")
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter()
@@ -51,16 +52,23 @@ export default function ProfilePage() {
           .select("id")
           .eq("user_id", currentUser.id);
 
+        const {data: userPlanData, error: UserPlanError} = await supabase
+          .from("users")
+          .select("plan")
+          .eq("id", currentUser.id)
+          .single()
+
         const { data: recs, error: recsError } = await supabase
           .from("recommendations")
           .select("id")
           .eq("user_id", currentUser.id);
 
-        if (boardsError || recsError) {
+        if (boardsError || recsError || UserPlanError) {
           setError("Failed to fetch user stats");
         } else {
           setBoardCount(boards?.length || 0);
           setRecCount(recs?.length || 0);
+          setUserPlan(userPlanData.plan || "free")
         }
       } catch (err) {
         setError("An unexpected error occurred");
@@ -204,7 +212,7 @@ export default function ProfilePage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p className="text-gray-600">
-                  You're currently on the <span className="font-medium text-[#bc6c25]">Free</span> plan
+                  You're currently on the <span className="font-medium text-[#bc6c25]">{userPlan}</span> plan
                 </p>
                 <p className="text-sm text-gray-500 mt-1">Upgrade for unlimited boards and features</p>
               </div>

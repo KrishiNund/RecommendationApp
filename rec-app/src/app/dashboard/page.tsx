@@ -5,7 +5,7 @@ import ProtectedRoute from "../components/ProtectedRoute"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Search, LayoutGrid, List, CircleSlash2, Upload} from "lucide-react"
+import { Plus, Search, LayoutGrid, List, CircleSlash2, Upload, AlertCircle} from "lucide-react"
 import { useState, useEffect } from "react"
 import Board from "../components/Board"
 import {
@@ -32,11 +32,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { supabase } from '@/lib/supabase'
 import { User } from "@supabase/supabase-js"
 import { v4 as uuidv4 } from 'uuid';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 
 export default function Dashboard() {
@@ -248,7 +244,7 @@ export default function Dashboard() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white px-4 py-8 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto space-y-4">
           {/* Dashboard Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
@@ -283,8 +279,8 @@ export default function Dashboard() {
                     onClick={() => {
                       if (canCreateBoard) setIsDialogOpen(true);
                     }}
-                    disabled={!canCreateBoard}
-                    className={`bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm w-full ${
+                    disabled={!canCreateBoard || isLoading}
+                    className={`bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm cursor-pointer ${
                       !canCreateBoard ? 'cursor-not-allowed opacity-50' : ''
                     }`}
                   >
@@ -518,6 +514,17 @@ export default function Dashboard() {
 
             </div>
           </div>
+
+          {/* place alert here if cannot create boards anymore */}
+          {(!canCreateBoard && !isLoading) && (
+            <Alert>
+              <AlertCircle />
+                <AlertTitle>Board limit reached</AlertTitle>
+                <AlertDescription>
+                You've reached the limit of 3 boards on the free plan. Upgrade to Pro to create more boards.
+                </AlertDescription>
+            </Alert>
+          )}
 
           {/* View Controls */}
           <div className="flex justify-between items-center mb-6">
