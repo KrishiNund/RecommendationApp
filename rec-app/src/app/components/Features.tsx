@@ -72,7 +72,7 @@ export default function Features() {
           transition={{ duration: 0.4, delay: 0.5 }}
           viewport={{ once: true, margin: "-100px" }}
         >
-          Whether it's anime, games, music, or movies — Recco helps you create interactive, shareable lists that look great and feel personal.
+          Whether it's anime, games, music, or movies — Recoards helps you create interactive, shareable lists that look great and feel personal.
         </motion.p>
 
         {/* Feature Cards */}

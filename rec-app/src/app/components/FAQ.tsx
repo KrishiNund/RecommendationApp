@@ -5,26 +5,31 @@ import { motion } from "framer-motion"
 
 const faqs = [
   {
-    q: "Do I need to create an account to view someone's list?",
-    a: "Nope! Lists are public by default — anyone with the link can view them."
+    q: "Do I need to create an account to view a board?",
+    a: "No. Boards are public by default — anyone with the link can view the recommendations without signing up."
   },
   {
-    q: "Can I use Recco to share things other than anime or games?",
-    a: "Yes! You can create boards for books, podcasts, travel spots, or anything else you'd like to recommend."
+    q: "What can I use this app to recommend?",
+    a: "You can create boards for anything you love — from anime, manga, games, music, books, movies, podcasts, to travel spots or niche collections."
   },
   {
-    q: "Is Recco free to use?",
-    a: "Absolutely. You can sign up and create unlimited lists for free."
+    q: "Is the app free to use?",
+    a: "Yes! You can sign up and create up to 3 boards for free, each with unlimited recommendations."
   },
   {
-    q: "Can I customize how my board looks?",
-    a: "Yes — you can choose from clean, simple themes and reorder your list however you like."
+    q: "What do I get with the Pro upgrade?",
+    a: "The Pro plan unlocks the ability to create unlimited boards and gives you early access to upcoming features. It's a one-time upgrade for those who want to support the app."
   },
   {
-    q: "Will people need to sign up to interact with my list?",
-    a: "Nope! Friends can check items off without creating an account."
+    q: "How do I share a board?",
+    a: "Click the three dots on the board, then click 'Copy link'. The public link will be copied to your clipboard, which you can then share with anyone."
+  },
+  {
+    q: "What about privacy?",
+    a: "Your data is never shared with third parties. You can delete your account and all associated data at any time from your account settings."
   }
 ]
+
 
 export default function FAQSection() {
   return (

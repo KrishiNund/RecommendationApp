@@ -42,7 +42,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Create and share beautiful lists for anything you love—anime, games, music, movies, and more.
+          Create and share beautiful boards for anything you love—anime, games, music, movies, and more.
         </motion.p>
 
         {/* CTA Button */}

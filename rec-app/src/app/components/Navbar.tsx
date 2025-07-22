@@ -57,7 +57,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="group flex items-center">
           <h1 className={`${logo_font.className} text-3xl text-[#bc6c25] tracking-wide group-hover:opacity-90 transition-opacity`}>
-            RecThis
+            Recoards
           </h1>
         </Link>
 
