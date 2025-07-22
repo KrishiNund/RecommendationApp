@@ -111,7 +111,7 @@ export default function Navbar() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-gray-100" />
-                    <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50">
+                    <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 cursor-pointer">
                       <UserRoundCog className="mr-2 h-4 w-4" />
                       <Link href="/profile" className="w-full">
                         Profile
@@ -119,7 +119,7 @@ export default function Navbar() {
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={handleLogout}
-                      className="text-red-600 hover:bg-red-50/50 focus:bg-red-50/50"
+                      className="text-red-600 hover:bg-red-50/50 focus:bg-red-50/50 cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
@@ -172,7 +172,7 @@ export default function Navbar() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-gray-100" />
-                  <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50">
+                  <DropdownMenuItem className="hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 cursor-pointer">
                     <UserRoundCog className="mr-2 h-4 w-4" />
                     <Link href="/profile" className="w-full">
                       Profile
@@ -180,7 +180,7 @@ export default function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={handleLogout}
-                    className="text-red-600 hover:bg-red-50/50 focus:bg-red-50/50"
+                    className="text-red-600 hover:bg-red-50/50 focus:bg-red-50/50 cursor-pointer"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
