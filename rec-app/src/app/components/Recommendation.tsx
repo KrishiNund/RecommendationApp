@@ -88,15 +88,6 @@ export default function Recommendation({
                         Edit
                       </DropdownMenuItem>
 
-                      {/* <DropdownMenuItem 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDelete?.();
-                        }} 
-                        className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
-                      >
-                        Delete
-                      </DropdownMenuItem> */}
                       <DropdownMenuItem asChild>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -150,16 +141,6 @@ export default function Recommendation({
                         <Edit className="w-4 h-4 mr-1 text-gray-500" />
                         Edit
                       </DropdownMenuItem>
-
-                      {/* <DropdownMenuItem 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDelete?.();
-                        }} 
-                        className="cursor-pointer px-4 py-2 text-sm hover:bg-amber-50 text-[#bc6c25]"
-                      >
-                        Delete
-                      </DropdownMenuItem> */}
 
                       <DropdownMenuItem asChild>
                         <AlertDialog>

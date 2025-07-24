@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Pricing() {
   const [userPlan, setUserPlan] = useState("")
@@ -26,10 +25,10 @@ export default function Pricing() {
           .from("users")
           .select("plan")
           .eq("id", currentUser.id)
-          .single();
+          .limit(1);
 
         if (!userError) {
-          setUserPlan(userData?.plan || "free");
+          setUserPlan(userData[0]?.plan || "free");
         } else {
           console.error("Error fetching user plan:", userError.message);
         }

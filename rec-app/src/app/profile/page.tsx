@@ -56,7 +56,7 @@ export default function ProfilePage() {
           .from("users")
           .select("plan")
           .eq("id", currentUser.id)
-          .single()
+          .limit(1)
 
         const { data: recs, error: recsError } = await supabase
           .from("recommendations")
@@ -68,7 +68,7 @@ export default function ProfilePage() {
         } else {
           setBoardCount(boards?.length || 0);
           setRecCount(recs?.length || 0);
-          setUserPlan(userPlanData.plan || "free")
+          setUserPlan(userPlanData[0]?.plan || "free")
         }
       } catch (err) {
         setError("An unexpected error occurred");

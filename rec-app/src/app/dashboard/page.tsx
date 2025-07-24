@@ -69,7 +69,7 @@ export default function Dashboard() {
       .from("users")
       .select("plan")
       .eq("id", currentUser.id)
-      .single()
+      .limit(1)
 
       if (userError){
         console.error("Error fetching user plan:", userError.message)
@@ -77,7 +77,7 @@ export default function Dashboard() {
       }
 
       //set user's plan
-      setUserPlan(userData?.plan || "free")
+      setUserPlan(userData[0]?.plan || "free")
 
       // fetch boards where user_id = current user id
       const { data: boards, error } = await supabase
