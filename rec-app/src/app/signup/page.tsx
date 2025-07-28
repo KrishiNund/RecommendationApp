@@ -19,33 +19,33 @@ const logo_font = Bebas_Neue({
 })
 
 export default function SignUpPage() {
-  useEffect(() => {
-    const checkAndInsertUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+  // useEffect(() => {
+  //   const checkAndInsertUser = async () => {
+  //     const { data: { user } } = await supabase.auth.getUser();
 
-      if (user) {
-        // Check if user already exists in 'users' table
-        const { data: existingUser, error: fetchError } = await supabase
-          .from('users')
-          .select('id')
-          .eq('id', user.id)
-          .single();
+  //     if (user) {
+  //       // Check if user already exists in 'users' table
+  //       const { data: existingUser, error: fetchError } = await supabase
+  //         .from('users')
+  //         .select('id')
+  //         .eq('id', user.id)
+  //         .single();
 
-        if (!existingUser) {
-          const { error: insertError } = await supabase.from('users').insert({
-            id: user.id,
-            plan: 'free',
-          });
+  //       if (!existingUser) {
+  //         const { error: insertError } = await supabase.from('users').insert({
+  //           id: user.id,
+  //           plan: 'free',
+  //         });
 
-          if (insertError) {
-            console.error('Failed to insert user:', insertError);
-          }
-        }
-      }
-    };
+  //         if (insertError) {
+  //           console.error('Failed to insert user:', insertError);
+  //         }
+  //       }
+  //     }
+  //   };
 
-    checkAndInsertUser();
-  }, []);
+  //   checkAndInsertUser();
+  // }, []);
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)

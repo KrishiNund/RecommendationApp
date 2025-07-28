@@ -33,6 +33,7 @@ import { supabase } from '@/lib/supabase'
 import { User } from "@supabase/supabase-js"
 import { v4 as uuidv4 } from 'uuid';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useInsertUserOnAuth } from "../hooks/useInsertUserOnAuth"
 
 
 export default function Dashboard() {
@@ -50,6 +51,7 @@ export default function Dashboard() {
   const [boards, setBoards] = useState<BoardType[]>([])
   const [userPlan, setUserPlan] = useState("")
 
+  useInsertUserOnAuth()
   // on page load, fetch the boards for the current logged in user
   useEffect(() => {
     async function getCurrentUserAndBoards() {
