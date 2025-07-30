@@ -118,7 +118,7 @@ export default function SignUpPage() {
           <h1
             className={`${logo_font.className} text-5xl tracking-wide text-[#bc6c25] drop-shadow-sm`}
           >
-            RecThis
+            Recoards
           </h1>
         </Link>
         <p className="text-sm text-gray-600 mt-2">

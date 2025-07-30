@@ -141,7 +141,7 @@ export default function Board({
   // by default, if variant is not specified, grid display will be used
   return (
     <motion.div whileHover={{ y: -5 }}>
-      <Card className="group h-80 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100 p-0">
+      <Card className="group h-82 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100 p-0">
         
           <CardHeader className="p-0">
             <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
@@ -158,7 +158,7 @@ export default function Board({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 transition-colors shadow-sm"
+                      className="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 transition-colors shadow-sm cursor-pointer"
                       onClick={(e) => e.preventDefault()}
                     >
                       <MoreHorizontal className="w-4 h-4" />
@@ -216,7 +216,7 @@ export default function Board({
           </CardHeader>
           
           <Link href={`/board/${id}`} className="block flex-grow">
-            <CardContent className="p-4 flex-grow">
+            <CardContent className="pl-4 pr-4 pb-2 flex-grow">
               <CardTitle className="text-lg font-semibold mb-1 truncate">{name}</CardTitle>
               <CardDescription className="text-gray-600 text-sm line-clamp-2 mb-3">
                 {description}

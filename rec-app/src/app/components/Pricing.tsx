@@ -90,12 +90,12 @@ export default function Pricing() {
       whileInView="show"
       viewport={{ once: true, margin: "-100px" }}
       variants={container}
-      className="bg-white py-24 px-4 sm:px-6 lg:px-8"
+      className="bg-white py-24 px-4 sm:px-6 lg:px-8 bg-[url(/textures/inspiration-geometry.png)]"
       id="pricing"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div variants={item} className="text-center space-y-4 mb-16">
-          <span className="inline-flex items-center rounded-full bg-amber-50 px-4 py-1.5 text-sm font-medium text-[#bc6c25]">
+          <span className="inline-flex items-center rounded-full bg-[#bc6c25]/10 text-[#bc6c25] px-4 py-1.5 text-sm font-medium ">
             Pricing
           </span>
           <h2 className="text-4xl font-bold text-gray-900 tracking-tight">

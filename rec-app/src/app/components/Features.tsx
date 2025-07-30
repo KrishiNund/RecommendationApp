@@ -33,7 +33,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative py-28 bg-white overflow-hidden" id="features">
+    <section className="relative py-28 bg-white overflow-hidden bg-[url(/textures/inspiration-geometry.png)]" id="features">
       {/* Mesh gradient background */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <svg width="100%" height="100%" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -52,7 +52,10 @@ export default function Features() {
           <rect width="1440" height="600" fill="url(#fmesh2)" />
         </svg>
       </div>
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
+        <span className="inline-block bg-[#bc6c25]/10 text-[#bc6c25] px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+            Features
+        </span>
         {/* Section Title */}
         <motion.h2 
           className="text-4xl font-bold text-gray-900 mb-4 text-center"

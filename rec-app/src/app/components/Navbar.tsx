@@ -34,7 +34,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
-    // window.location.href = '/'
+    window.location.href = '/'
   }
 
   if (isLoading) {
@@ -70,6 +70,11 @@ export default function Navbar() {
                   Features
                 </Button>
               </Link>
+              <Link href="#HIW">
+                <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
+                  How It Works
+                </Button>
+              </Link>
               <Link href="#pricing">
                 <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
                   Pricing
@@ -92,7 +97,7 @@ export default function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none group">
-                      <Avatar className="h-9 w-9 border border-[#d4a373] group-hover:border-[#bc6c25] transition-colors">
+                      <Avatar className="h-9 w-9 border  group-hover:border-[#bc6c25] transition-colors">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
                         <AvatarFallback className="bg-[#faedcd] text-[#bc6c25]">
                           {user.email?.charAt(0).toUpperCase()}
@@ -247,6 +252,19 @@ export default function Navbar() {
                     </DropdownMenuItem>
 
                     <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
+                      <Link href="#HIW" className="w-full flex items-center space-x-3">
+                        <div className="p-2 bg-[#f5ebe1] rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bc6c25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <path d="M12 16v-4"></path>
+                              <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                        <span className="font-medium text-gray-900">How It Works</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                       <Link href="#pricing" className="w-full flex items-center space-x-3">
                         <div className="p-2 bg-[#f5ebe1] rounded-lg">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bc6c25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -257,6 +275,7 @@ export default function Navbar() {
                         <span className="font-medium text-gray-900">Pricing</span>
                       </Link>
                     </DropdownMenuItem>
+ 
                   </div>
                 </>
               )}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Star, MoreHorizontal, MessageSquare, Trash2, Edit } from "lucide-react";
+import { Star, MoreHorizontal, MessageSquare, Trash2, Edit, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,10 +52,10 @@ export default function Recommendation({
     <motion.div
       whileHover={{ y: -4, boxShadow: "0 6px 24px rgba(0,0,0,0.10)" }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
-      className="h-full flex flex-col bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
+      className="relative h-full flex flex-col bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
     >
-      {/* Main content (fills height) */}
-      <div className="flex-1 flex flex-col">
+      {/* Main content (fixed height) */}
+      <div className="flex-1 flex flex-col h-full">
         {/* Thumbnail area */}
         <div className="relative aspect-video rounded-t-2xl overflow-hidden">
           {thumbnail ? (
@@ -218,20 +218,32 @@ export default function Recommendation({
           )}
         </div>
       </div>
-      {/* Expandable comment section (outside flex-1) */}
+      
+      {/* Expandable comment section (absolute positioned) */}
       {comment && (
         <AnimatePresence>
           {showComment && (
             <motion.div
               id={`comment-${id}`}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.18 }}
-              className="mt-1 px-5 pb-4"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.1 }}
+              className="absolute bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur-sm border-t border-gray-100 rounded-b-2xl shadow-lg"
             >
-              <div className="bg-white/90 border border-[#fff7e6] rounded-xl px-4 py-3 shadow-sm text-sm text-gray-700">
-                {comment}
+              <div className="p-5">
+                <div className="relative">
+                  <button
+                    onClick={() => setShowComment(false)}
+                    className="absolute -top-2 -right-2 bg-white/90 border border-amber-100 shadow-md rounded-full p-1.5 text-gray-500 hover:bg-amber-50 hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-colors cursor-pointer"
+                    aria-label="Close comment"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                  <div className="bg-white/90 border border-[#fff7e6] rounded-xl px-4 py-3 shadow-sm text-sm text-gray-700">
+                    {comment}
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}

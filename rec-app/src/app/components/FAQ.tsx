@@ -33,7 +33,7 @@ const faqs = [
 
 export default function FAQSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-white bg-[url(/textures/inspiration-geometry.png)]">
       <div className="max-w-4xl mx-auto px-6">
         <motion.h2
           className="text-3xl md:text-4xl font-bold text-gray-900 mb-12 text-center"

@@ -304,7 +304,7 @@ export default function Dashboard() {
                       <Input
                         id="boardName"
                         placeholder="e.g. Best Anime of 2023"
-                        maxLength={50}
+                        maxLength={30}
                         value={boardName}
                         onChange={e => setBoardName(e.target.value)}
                       />
@@ -314,7 +314,7 @@ export default function Dashboard() {
                       <Input
                         id="description"
                         placeholder="What's this board about?"
-                        maxLength={120}
+                        maxLength={80}
                         value={boardDescription}
                         onChange={e => setBoardDescription(e.target.value)}
                       />
@@ -415,6 +415,7 @@ export default function Dashboard() {
                         <Input
                           id="editName"
                           value={editingBoard.name}
+                          maxLength={25}
                           onChange={(e) =>
                             setEditingBoard({ ...editingBoard, name: e.target.value })
                           }
@@ -425,6 +426,7 @@ export default function Dashboard() {
                         <Input
                           id="editDescription"
                           value={editingBoard.description}
+                          maxLength={80}
                           onChange={(e) =>
                             setEditingBoard({ ...editingBoard, description: e.target.value })
                           }

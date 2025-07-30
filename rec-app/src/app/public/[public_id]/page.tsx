@@ -83,7 +83,6 @@ export default function PublicBoardPage() {
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <Sparkles className="w-6 h-6 text-[#bc6c25]" />
                     <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
                       {boardName}
                     </h1>
