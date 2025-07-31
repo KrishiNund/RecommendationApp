@@ -10,8 +10,11 @@ const body_font = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: "Recommendation List App",
-  description: "Make cool and pretty recommendations lists!"
+  title: "Recoards",
+  description: "Make pretty recommendations boards for the things you love!",
+  icons:{
+    icon: "/icon/favicon1.ico"
+  }
 };
 
 export default function RootLayout({

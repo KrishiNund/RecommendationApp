@@ -33,7 +33,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative py-28 bg-white overflow-hidden bg-[url(/textures/inspiration-geometry.png)]" id="features">
+    <section className="relative py-28 bg-white overflow-hidden" id="features">
       {/* Mesh gradient background */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <svg width="100%" height="100%" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">

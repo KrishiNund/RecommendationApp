@@ -90,7 +90,7 @@ export default function Pricing() {
       whileInView="show"
       viewport={{ once: true, margin: "-100px" }}
       variants={container}
-      className="bg-white py-24 px-4 sm:px-6 lg:px-8 bg-[url(/textures/inspiration-geometry.png)]"
+      className="bg-white py-24 px-4 sm:px-6 lg:px-8"
       id="pricing"
     >
       <div className="max-w-6xl mx-auto">

@@ -24,7 +24,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative px-4 py-20 sm:py-28 w-full overflow-hidden bg-white bg-[url(/textures/inspiration-geometry.png)]">
+    <section className="relative px-4 py-20 sm:py-28 w-full h-screen overflow-hidden bg-white bg-[url(/textures/inspiration-geometry.png)]">
 
       <div className="max-w-3xl mx-auto text-center relative z-10">
         {/* Top badge */}
