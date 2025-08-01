@@ -47,11 +47,11 @@ export default function LoginPage() {
   }
 
   const loginWithGoogle = async () => {
-    const redirectTo =
-      process.env.NODE_ENV === 'development'
-        ? 'https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard'
-        : 'https://https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard';
-    // const redirectTo = `${window.location.origin}/dashboard`;
+    // const redirectTo =
+    //   process.env.NODE_ENV === 'development'
+    //     ? 'https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard'
+    //     : 'https://https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard';
+    const redirectTo = `${window.location.origin}/dashboard`;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
