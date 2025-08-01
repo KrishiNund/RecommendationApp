@@ -51,7 +51,7 @@ export default function LoginPage() {
     //   process.env.NODE_ENV === 'development'
     //     ? 'https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard'
     //     : 'https://https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard';
-    const redirectTo = `https://recommendation-app-fawn.vercel.app/dashboard`;
+    const redirectTo = 'https://recommendation-app-fawn.vercel.app/dashboard';
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
