@@ -111,7 +111,7 @@ export default function Hero() {
               // Default "Start for free" CTA
               <Link href="/signup">
                 <button className="bg-[#bc6c25] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl font-medium hover:bg-[#a3581e] shadow-lg transition">
-                  Start for free →
+                  Start for free
                 </button>
               </Link>
             )}
