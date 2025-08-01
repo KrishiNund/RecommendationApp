@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Recoards",
   description: "Make pretty recommendations boards for the things you love!",
   icons:{
-    icon: "/icon/favicon1.ico"
+    icon: "/icon/rounded_favicon.ico"
   }
 };
 

@@ -7,19 +7,19 @@ const steps = [
     title: "Create Your Board",
     description:
       "Start by creating a beautiful recommendation board for your favorite anime, games, music, or anything you love.",
-    image: "/screenshots/create-board2.png",
+    image: "/screenshots/create-board.png",
   },
   {
     title: "Add Recommendations",
     description:
       "Easily add recommendations with ratings and personal notes. Keep everything organized in one place.",
-    image: "/screenshots/add-recommendation4.png",
+    image: "/screenshots/add-recommendation.png",
   },
   {
     title: "Share With Friends",
     description:
       "Share your board with a unique link. No accounts needed to view.",
-    image: "/screenshots/share-board2.png",
+    image: "/screenshots/share-board.png",
   },
 ];
 
