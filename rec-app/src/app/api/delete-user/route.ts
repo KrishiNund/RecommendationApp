@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 // This only runs on the server
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // SECRET, don't expose to client
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function DELETE(req: Request) {

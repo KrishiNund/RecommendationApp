@@ -163,7 +163,7 @@ export default function Navbar() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar className="h-9 w-9 border border-[#d4a373] cursor-pointer">
+                  <Avatar className="h-9 w-9 border hover:border-[#d4a373] cursor-pointer">
                     <AvatarImage src={user.user_metadata?.avatar_url} />
                     <AvatarFallback className="bg-[#faedcd] text-[#bc6c25]">
                       {user.email?.charAt(0).toUpperCase()}
