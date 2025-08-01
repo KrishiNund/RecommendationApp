@@ -5,12 +5,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/(.*)',
-        has: [{ type: 'host', value: 'www.recoards.com' }],
-        destination: 'https://recoards.com/:1',
+        source: '/:path*',
+        has: [{ type: 'host', value: 'recoards.com' }],
+        destination: 'https://www.recoards.com/:path*',
         permanent: true,
       },
-    ]
+    ];
   },
 };
 
