@@ -51,7 +51,13 @@ export default function LoginPage() {
     //   process.env.NODE_ENV === 'development'
     //     ? 'https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard'
     //     : 'https://https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard';
-    const redirectTo = 'https://www.recoards.com/dashboard';
+
+    // const redirectTo = 'https://www.recoards.com/dashboard';
+
+    const redirectTo =
+    typeof window !== 'undefined' && window.location.origin
+      ? `${window.location.origin}/dashboard`
+      : 'https://www.recoards.com/dashboard';
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
