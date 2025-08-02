@@ -54,10 +54,7 @@ export default function LoginPage() {
 
     // const redirectTo = 'https://www.recoards.com/dashboard';
 
-    const redirectTo =
-    typeof window !== 'undefined' && window.location.origin
-      ? `${window.location.origin}/dashboard`
-      : 'https://www.recoards.com/dashboard';
+    const redirectTo = `${window.location.origin}/dashboard`;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
