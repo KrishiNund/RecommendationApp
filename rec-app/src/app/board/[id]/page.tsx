@@ -23,6 +23,7 @@ import { Slider } from "@/components/ui/slider";
 import { User } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation";
+import { toast } from "sonner"
 
 export default function BoardPage() {
     // types of a recommendation object
@@ -51,10 +52,12 @@ export default function BoardPage() {
   const [editingRec, setEditingRec] = useState<RecType | null>(null);
   const [recommendations, setRecommendations] = useState<RecType[]>([]);
   const [boardCreatedAt, setBoardCreatedAt] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedEditFile, setSelectedEditFile] = useState<File | null>(null);
 
   // getting current logged in user first
   useEffect(() => {
-    async function getCurrentUserAndRecs() {
+    async function getCurrentUser() {
       setIsLoading(true);
 
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -69,7 +72,7 @@ export default function BoardPage() {
       setUser(currentUser);
     }
 
-    getCurrentUserAndRecs();
+    getCurrentUser();
   }, []);
 
   // check if the board is actually owned by the logged in user
@@ -78,6 +81,7 @@ export default function BoardPage() {
     if (!user || !board_id) return;
 
     async function fetchBoard() {
+      // fetch board details
       const { data, error } = await supabase
         .from("boards")
         .select("name, user_id, created_at")
@@ -108,10 +112,28 @@ export default function BoardPage() {
 
       if (recsError) {
         console.error("Error fetching the recommendations:", recsError.message);
-      } else {
-        setRecommendations(recs ?? []);
       }
 
+      // Get signed URLs for each thumbnail
+      const recsWithThumbnails = await Promise.all(
+        (recs ?? []).map(async (rec) => {
+          if (rec.thumbnail) {
+            const { data: signedUrlData, error: signedUrlError } = await supabase
+              .storage
+              .from("thumbnails") // replace with your actual bucket name
+              .createSignedUrl(rec.thumbnail, 60 * 60); // valid for 1 hour
+
+            if (signedUrlError) {
+              console.error(`Error getting signed URL for board ${rec.id}:`, signedUrlError.message);
+              return rec;
+            }
+
+            return { ...rec, thumbnail: signedUrlData.signedUrl };
+          }
+          return rec;
+        })
+      );
+      setRecommendations(recsWithThumbnails);
       setIsLoading(false);
     }
 
@@ -122,131 +144,261 @@ export default function BoardPage() {
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
     setIsLoading(true);
-    // prevent submitting of board details form
+    // prevent submitting of rec details form
     if (e) e.preventDefault()
     
-    // don't create board if no board name entered
+    // don't create rec if no rec name entered
     if (!recName.trim()) return
 
-    if (user){
-      // inserting board details into boards table
-      const {data, error} = await supabase.from("recommendations").insert({
-          id: uuidv4(),
-          name: recName,
-          description: recDesc,
-          comment: comment,
-          rating: rating,
-          thumbnail: thumbnail,
-          board_id: board_id, // foreign key --> rec is associated with the board id
-          user_id: user.id
-      })
-      .select()
-      .single()
-
-      if (error) {
-        console.error("Failed to insert board:", error.message);
-        return;
-      } else {
-        console.log("Recommendation added successfully");
-        setRecommendations(prev => {
-          const newRecs = [...prev, data];
-          updateNumItems(newRecs.length);
-          return newRecs;
-        });
-      }
-
-      // reset form when dialog is closed
-      setRecName("");
-      setRecDesc("");
-      setComment("");
-      setRating(0);
-      setThumbnail("");
+    if (!user){
+      toast.error("User not found");
       setIsLoading(false);
-      
-      // close dialog after successful creation
-      setIsDialogOpen(false); 
-    } else {
-      console.log("Error occurred! User couldn't be found!")
-
-      // reset form when dialog is closed
-      setRecName("");
-      setRecDesc("");
-      setComment("");
-      setRating(0);
-      setThumbnail("");
-      setIsLoading(false);
-
-      // close dialog after successful creation
-      setIsDialogOpen(false); 
       return;
     }
+
+    let thumbnailPath = "";
+
+    // Upload file only if a file is selected
+    if (selectedFile) {
+      const fileExt = selectedFile.name.split('.').pop();
+      const path = `recommendations/${uuidv4()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('thumbnails')
+        .upload(path, selectedFile, {
+          cacheControl: '3600',
+          upsert: false, // prevent replacing
+        });
+
+      if (uploadError) {
+        console.error("Image upload failed:", uploadError.message);
+        toast.error("Thumbnail upload failed");
+        setIsLoading(false);
+        return;
+      }
+
+      thumbnailPath = path;
+    }
+    
+    // inserting rec details into recommendations table
+    const {data, error} = await supabase
+    .from("recommendations")
+    .insert({
+        id: uuidv4(),
+        name: recName,
+        description: recDesc,
+        comment: comment,
+        rating: rating,
+        thumbnail: thumbnailPath || null,
+        board_id: board_id, // foreign key --> rec is associated with the board id
+        user_id: user.id
+    })
+    .select()
+    .single()
+
+    if (error) {
+      console.error("Failed to insert board:", error.message);
+      toast.error("Failed to create recommendation!");
+      setIsLoading(false);
+      return;
+    }
+
+    // get signed url of uploaded thumbnail
+    // after uploading thumbnail
+    const { data: signedUrlData, error: signedUrlError } = await supabase
+    .storage
+    .from("thumbnails") // replace with your actual bucket name
+    .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
+
+    if (signedUrlError) {
+      console.error(`Error getting signed URL for board ${data.id}:`, signedUrlError.message);
+    }
+    const thumbnailUrl = signedUrlData?.signedUrl || "";
+
+    // add rec to UI
+    setRecommendations(prev => {
+      const newRecs = [...prev, {...data, thumbnail: thumbnailUrl}];
+      updateNumItems(newRecs.length);
+      return newRecs;
+    });
+
+    console.log("Recommendation added successfully");
+    toast.success("Recommendation added successfully!")
+
+    // reset form when dialog is closed
+    setRecName("");
+    setRecDesc("");
+    setComment("");
+    setRating(0);
+    setThumbnail("");
+    setIsLoading(false);
+    
+    // close dialog after successful creation
+    setIsDialogOpen(false); 
   }
 
    // edit recommendation details
-  const editRec = async (updatedRec: RecType) => {
+  const editRec = async (updatedRec: RecType, selectedEditFile: File | null) => {
     setIsLoading(true);
     // if (!editingRec.name.trim()) return
-    // Update rec details in database
-    const { error } = await supabase
+    let newThumbnailPath = updatedRec.thumbnail || "";
+    let oldThumbnailPath = "";
+
+     // fetch the actual thumbnail path from DB
+    const { data: recFromDB, error: fetchError } = await supabase
+      .from("recommendations")
+      .select("thumbnail")
+      .eq("id", updatedRec.id)
+      .single();
+
+    if (fetchError || !recFromDB) {
+      console.error("Error fetching original recommendation:", fetchError?.message);
+      toast.error("Error updating recommendation");
+      setIsLoading(false);
+      return;
+    }
+
+    oldThumbnailPath = recFromDB.thumbnail;
+
+    // upload new thumbnail if there's a new file
+    if (selectedEditFile) {
+      const fileExt = selectedEditFile.name.split(".").pop();
+      const filePath = `recommendations/${uuidv4()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("thumbnails")
+        .upload(filePath, selectedEditFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Upload failed:", uploadError.message);
+        toast.error("Thumbnail upload failed");
+        setIsLoading(false);
+        return;
+      }
+
+      newThumbnailPath = filePath;
+
+      // delete the old thumbnail (using real path)
+      if (oldThumbnailPath && oldThumbnailPath !== newThumbnailPath) {
+        const { error: deleteError } = await supabase.storage
+          .from("thumbnails")
+          .remove([oldThumbnailPath]);
+
+        if (deleteError) {
+          console.warn("Failed to delete old thumbnail:", deleteError.message);
+        }
+      }
+    }
+
+    // update rec in DB
+    const { error: updateError } = await supabase
       .from("recommendations")
       .update({
         name: updatedRec.name,
         description: updatedRec.description,
         comment: updatedRec.comment,
         rating: updatedRec.rating,
-        thumbnail: updatedRec.thumbnail,
+        thumbnail: newThumbnailPath,
       })
       .eq("id", updatedRec.id);
 
-    if (error) {
-      console.error("Failed to update recommendation:", error.message);
+    if (updateError) {
+      console.error("Update failed:", updateError.message);
+      toast.error("Recommendation update failed");
+      setIsLoading(false);
       return;
     }
 
-    //update recommendation visually
-    setRecommendations(prevRecs =>
-      prevRecs.map(rec =>
-        rec.id === updatedRec.id ? updatedRec : rec
-      ) 
-    )
+    // get signed URL for updated thumbnail (for UI)
+    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+      .from("thumbnails")
+      .createSignedUrl(newThumbnailPath, 60 * 60);
+
+    const thumbnailUrl = signedUrlData?.signedUrl || "";
+
+    // update local state
+    setRecommendations(prev =>
+      prev.map(r =>
+        r.id === updatedRec.id
+          ? { ...updatedRec, thumbnail: thumbnailUrl }
+          : r
+      )
+    );
+
     setIsLoading(false);
-    setEditingRec(null) // close the modal
+    setEditingRec(null);
+    toast.success("Recommendation updated!");
   }
 
   // delete a recommendation
   const deleteRec = async(id:string) => {
-    // remove rec from database itself
-    const {error} = await supabase
+    setIsLoading(true);
+
+    // get the recommendation's thumbnail path
+    const { data: recData, error: fetchError } = await supabase
+      .from("recommendations")
+      .select("thumbnail")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) {
+      console.error("Failed to fetch recommendation before delete:", fetchError.message);
+      setIsLoading(false);
+      return;
+    }
+
+    const thumbnailPath = recData?.thumbnail;
+
+    // delete the rec from the database
+    const { error: deleteRecError } = await supabase
       .from("recommendations")
       .delete()
       .eq("id", id);
-      
-    if (error){
-      console.log("Failed to delete recommendation: ", error.message)
+
+    if (deleteRecError) {
+      console.error("Failed to delete recommendation:", deleteRecError.message);
+      setIsLoading(false);
       return;
-    } else {
-      console.log("Recommendation deleted successfully");
-      setRecommendations(prevRecs => {
-        const newRecs = prevRecs.filter(rec => rec.id !== id);
-        updateNumItems(newRecs.length);
-        return newRecs;
-      });
     }
+
+    // delete the thumbnail from storage (if exists)
+    if (thumbnailPath) {
+      const { error: deleteThumbError } = await supabase.storage
+        .from("thumbnails")
+        .remove([thumbnailPath]);
+
+      if (deleteThumbError) {
+        console.warn("Board deleted but thumbnail not removed:", deleteThumbError.message);
+      }
+    }
+
+    // update local UI state
+    setRecommendations(prevRecs => {
+      const newRecs = prevRecs.filter(rec => rec.id !== id);
+      updateNumItems(newRecs.length);
+      return newRecs;
+    });
+    setIsLoading(false);
+    toast.success("Recommendation deleted!");
   };
 
   // handle uploading of an image for the thumnail of the board
   // either when creating a board or editing its contents
-  const handleThumbnailUpload = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    onThumbnailSet: (base64: string) => void
+  const handleThumbnailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setSelectedFile(file); // Store the file in state
+
+    // For preview purposes
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
-        onThumbnailSet(reader.result);
+        setThumbnail(reader.result); // still show preview
       }
     };
     reader.readAsDataURL(file);
@@ -385,7 +537,7 @@ export default function BoardPage() {
                             id="thumbnailInput"
                             type="file"
                             accept="image/*"
-                            onChange={(e) => handleThumbnailUpload(e, (base64) => setThumbnail(base64))}
+                            onChange={handleThumbnailChange}
                             className="hidden"
                           />
                         </div>
@@ -498,11 +650,21 @@ export default function BoardPage() {
                               type="file"
                               accept="image/*"
                               onChange={(e) => {
-                                handleThumbnailUpload(e, (base64) =>
-                                  setEditingRec(prev=>
-                                    prev? {...prev, thumbnail: base64}: null
-                                  )
-                                )
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+
+                                setSelectedEditFile(file); // save file for later upload
+
+                                // For preview
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                  if (typeof reader.result === "string") {
+                                    setEditingRec(prev =>
+                                      prev ? { ...prev, thumbnail: reader.result as string } : null
+                                    );
+                                  }
+                                };
+                                reader.readAsDataURL(file);
                               }}
                               className="hidden"
                             />
@@ -514,7 +676,7 @@ export default function BoardPage() {
                         <DialogClose asChild>
                           <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button onClick={() => editRec(editingRec)} disabled={!editingRec.name.trim() || isLoading}>Save Changes</Button>
+                        <Button onClick={() => editRec(editingRec, selectedEditFile)} disabled={!editingRec.name.trim() || isLoading}>Save Changes</Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>

@@ -52,7 +52,6 @@ export default function Dashboard() {
   const [boards, setBoards] = useState<BoardType[]>([])
   const [userPlan, setUserPlan] = useState("")
   // const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
-  // State to store selected file
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedEditFile, setSelectedEditFile] = useState<File | null>(null);
 
@@ -64,6 +63,7 @@ export default function Dashboard() {
     async function getCurrentUserAndBoards() {
       setIsLoading(true);
       
+      // get user
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData.session?.user) {
         console.log("User not found:", sessionData.session);
@@ -100,7 +100,7 @@ export default function Dashboard() {
         return;
       }
 
-      // Get signed URLs for each thumbnail
+      // Get signed URLs for each thumbnail of each board
       const boardsWithThumbnails = await Promise.all(
         (boards ?? []).map(async (board) => {
           if (board.thumbnail) {
@@ -119,7 +119,6 @@ export default function Dashboard() {
           return board;
         })
       );
-
       setBoards(boardsWithThumbnails);
       setIsLoading(false);
     }
@@ -194,16 +193,15 @@ export default function Dashboard() {
 
     if (error) {
       console.error("Board creation failed:", error.message);
-      toast.error("Failed to create board");
+      toast.error("Failed to create board!");
       setIsLoading(false);
       return;
     }
 
-    // get signed url of uploaded thumbnail
-    // after uploading thumbnail
+    // get signed url of uploaded thumbnail after uplaoding thumbnail
     const { data: signedUrlData, error: signedUrlError } = await supabase
     .storage
-    .from("thumbnails") // replace with your actual bucket name
+    .from("thumbnails")
     .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
 
     if (signedUrlError) {
@@ -213,7 +211,6 @@ export default function Dashboard() {
 
 
     // Add board to UI
-    // setBoards([...boards, data]);
     setBoards([...boards, { ...data, thumbnail: thumbnailUrl }]);
 
     // Reset
@@ -226,11 +223,11 @@ export default function Dashboard() {
     setIsLoading(false);
   };
   
-  // delete a board (with its thumbnail)
+  // delete a board with its thumbnail as well
   const deleteBoard = async (id: string) => {
     setIsLoading(true);
 
-    // Step 1: Get the board's thumbnail path
+    // get the board's thumbnail path
     const { data: boardData, error: fetchError } = await supabase
       .from("boards")
       .select("thumbnail")
@@ -245,7 +242,7 @@ export default function Dashboard() {
 
     const thumbnailPath = boardData?.thumbnail;
 
-    // Step 2: Delete the board from the database
+    // delete the board from the database
     const { error: deleteBoardError } = await supabase
       .from("boards")
       .delete()
@@ -257,7 +254,7 @@ export default function Dashboard() {
       return;
     }
 
-    // Step 3: Delete the thumbnail from storage (if exists)
+    // delete the thumbnail from storage (if exists)
     if (thumbnailPath) {
       const { error: deleteThumbError } = await supabase.storage
         .from("thumbnails")
@@ -268,7 +265,7 @@ export default function Dashboard() {
       }
     }
 
-    // Step 4: Update local UI state
+    // update local UI state
     setBoards(prevBoards => prevBoards.filter(board => board.id !== id));
     setIsLoading(false);
     toast.success("Board deleted!");
@@ -281,7 +278,7 @@ export default function Dashboard() {
     let newThumbnailPath = updatedBoard.thumbnail || "";
     let oldThumbnailPath = "";
 
-    // ✅ 1. Fetch the actual thumbnail path from DB (not from local state)
+    // fetch the actual thumbnail path from DB 
     const { data: boardFromDB, error: fetchError } = await supabase
       .from("boards")
       .select("thumbnail")
@@ -297,7 +294,7 @@ export default function Dashboard() {
 
     oldThumbnailPath = boardFromDB.thumbnail;
 
-    // ✅ 2. Upload new thumbnail if there's a new file
+    // upload new thumbnail if there's a new file
     if (selectedEditFile) {
       const fileExt = selectedEditFile.name.split(".").pop();
       const filePath = `boards/${uuidv4()}.${fileExt}`;
@@ -318,7 +315,7 @@ export default function Dashboard() {
 
       newThumbnailPath = filePath;
 
-      // ✅ 3. Delete the old thumbnail (using real path)
+      // delete the old thumbnail (using real path)
       if (oldThumbnailPath && oldThumbnailPath !== newThumbnailPath) {
         const { error: deleteError } = await supabase.storage
           .from("thumbnails")
@@ -330,7 +327,7 @@ export default function Dashboard() {
       }
     }
 
-    // ✅ 4. Update board in DB
+    // update board in DB
     const { error: updateError } = await supabase
       .from("boards")
       .update({
@@ -348,14 +345,14 @@ export default function Dashboard() {
       return;
     }
 
-    // ✅ 5. Get signed URL for updated thumbnail (for UI)
+    // get signed URL for updated thumbnail (for UI)
     const { data: signedUrlData, error: signedUrlError } = await supabase.storage
       .from("thumbnails")
       .createSignedUrl(newThumbnailPath, 60 * 60);
 
     const thumbnailUrl = signedUrlData?.signedUrl || "";
 
-    // ✅ 6. Update local state
+    // update local state
     setBoards(prev =>
       prev.map(b =>
         b.id === updatedBoard.id
@@ -376,8 +373,7 @@ export default function Dashboard() {
     board.category.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  // handle uploading of an image for the thumnail of the board
-  // either when creating a board or editing its contents
+  // handle uploading of an image for the thumnail of the board when creating board
   // Updated thumbnail input handler (just previews and stores file)
   const handleThumbnailChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -387,7 +383,7 @@ export default function Dashboard() {
 
     setSelectedFile(file); // Store the file in state
 
-    // For preview purposes
+    // For preview purposes (image appears as preview)
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === "string") {

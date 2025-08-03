@@ -61,11 +61,11 @@ export default function Recommendation({
           {thumbnail ? (
             <>
               <motion.div whileHover={{ scale: 1.02 }} className="h-full w-full">
-                <Image
+                <img
                   src={thumbnail}
                   alt={name}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
+                  style={{ position: "absolute", inset: 0 }}
                 />
               </motion.div>
               {isPublic !== true && (
