@@ -60,14 +60,14 @@ export default function Recommendation({
         <div className="relative aspect-video rounded-t-2xl overflow-hidden">
           {thumbnail ? (
             <>
-              <motion.div whileHover={{ scale: 1.02 }} className="h-full w-full">
+              <div className="h-full w-full">
                 <img
                   src={thumbnail}
                   alt={name}
-                  className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
+                  className="object-cover transition-transform duration-300 w-full h-full"
                   style={{ position: "absolute", inset: 0 }}
                 />
-              </motion.div>
+              </div>
               {isPublic !== true && (
                 <div className="absolute top-3 right-3 z-10">
                   <DropdownMenu>

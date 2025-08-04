@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Recommendation from "@/app/components/Recommendation";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export default function PublicBoardPage() {
     // types of a recommendation object
@@ -16,6 +17,7 @@ export default function PublicBoardPage() {
     rating: number;
     thumbnail?: string;
     created_at: string;
+    public_thumbnail: string;
   };
 
   const [boardName, setBoardName] = useState("Loading...");
@@ -65,10 +67,30 @@ export default function PublicBoardPage() {
 
         if (recsError){
             console.error("Error fetching the boards: ", recsError.message)
-        } else {
-            setRecommendations(recs ?? [])
-            setIsLoading(false);
+            toast.error("Error loading recommendations!");
+            return;
         }
+        // // Get signed URLs for each thumbnail
+        // const recsWithThumbnails = await Promise.all(
+        //   (recs ?? []).map(async (rec) => {
+        //     if (rec.thumbnail) {
+        //       const { data: signedUrlData, error: signedUrlError } = await supabase
+        //         .storage
+        //         .from("thumbnails") // replace with your actual bucket name
+        //         .createSignedUrl(rec.thumbnail, 60 * 60); // valid for 1 hour
+
+        //       if (signedUrlError) {
+        //         console.error(`Error getting signed URL for recommendation ${rec.id}:`, signedUrlError.message);
+        //         return rec;
+        //       }
+
+        //       return { ...rec, thumbnail: signedUrlData.signedUrl };
+        //     }
+        //     return rec;
+        //   })
+        // );
+        setRecommendations(recs || []);
+        setIsLoading(false);
     }
 
     getCurrentRecs();
@@ -125,7 +147,7 @@ export default function PublicBoardPage() {
                     description={rec.description}
                     comment={rec.comment}
                     rating={rec.rating}
-                    thumbnail={rec.thumbnail}
+                    thumbnail={rec.public_thumbnail}
                     isPublic={true}
                   />
                 ))}

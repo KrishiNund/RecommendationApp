@@ -24,6 +24,7 @@ import { User } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"
+import imageCompression from 'browser-image-compression';
 
 export default function BoardPage() {
     // types of a recommendation object
@@ -112,6 +113,8 @@ export default function BoardPage() {
 
       if (recsError) {
         console.error("Error fetching the recommendations:", recsError.message);
+        toast.error("Error loading recommendations!");
+        return;
       }
 
       // Get signed URLs for each thumbnail
@@ -124,7 +127,7 @@ export default function BoardPage() {
               .createSignedUrl(rec.thumbnail, 60 * 60); // valid for 1 hour
 
             if (signedUrlError) {
-              console.error(`Error getting signed URL for board ${rec.id}:`, signedUrlError.message);
+              console.error(`Error getting signed URL for recommendation ${rec.id}:`, signedUrlError.message);
               return rec;
             }
 
@@ -160,25 +163,40 @@ export default function BoardPage() {
 
     // Upload file only if a file is selected
     if (selectedFile) {
-      const fileExt = selectedFile.name.split('.').pop();
-      const path = `recommendations/${uuidv4()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
-        .from('thumbnails')
-        .upload(path, selectedFile, {
-          cacheControl: '3600',
-          upsert: false, // prevent replacing
+      // try compressing the file
+      try{
+        // Resize and convert
+        const compressedFile = await imageCompression(selectedFile, {
+          maxWidthOrHeight: 3000, // Resize while keeping aspect ratio
+          maxSizeMB: 0.2,        // Target compressed size ~200KB
+          fileType: 'image/webp', // Convert to WebP
+          useWebWorker: true,
         });
 
-      if (uploadError) {
-        console.error("Image upload failed:", uploadError.message);
-        toast.error("Thumbnail upload failed");
-        setIsLoading(false);
-        return;
-      }
+        // setSelectedFile(compressedFile)
+        // const fileExt = selectedFile.name.split('.').pop();
+        const path = `recommendations/${uuidv4()}.webp`;
+        const { error: uploadError } = await supabase.storage
+          .from('thumbnails')
+          .upload(path, compressedFile, {
+            cacheControl: '3600',
+            upsert: false, // prevent replacing
+          });
 
-      thumbnailPath = path;
+        if (uploadError) {
+          console.error("Image upload failed:", uploadError.message);
+          toast.error("Thumbnail upload failed");
+          setIsLoading(false);
+          return;
+        }
+
+        thumbnailPath = path;
+
+      } catch (err){
+        console.error("Image compression failed:", err);
+        toast.error("Image processing failed.");
+      }  
     }
-    
     // inserting rec details into recommendations table
     const {data, error} = await supabase
     .from("recommendations")
@@ -204,23 +222,31 @@ export default function BoardPage() {
 
     // get signed url of uploaded thumbnail
     // after uploading thumbnail
-    const { data: signedUrlData, error: signedUrlError } = await supabase
-    .storage
-    .from("thumbnails") // replace with your actual bucket name
-    .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
+    if (thumbnailPath !== ""){
+      const { data: signedUrlData, error: signedUrlError } = await supabase
+      .storage
+      .from("thumbnails") // replace with your actual bucket name
+      .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
 
-    if (signedUrlError) {
-      console.error(`Error getting signed URL for board ${data.id}:`, signedUrlError.message);
+      if (signedUrlError) {
+        console.error(`Error getting signed URL for recommendation ${data.id}:`, signedUrlError.message);
+      }
+      const thumbnailUrl = signedUrlData?.signedUrl || "";
+
+      // add rec to UI
+      setRecommendations(prev => {
+        const newRecs = [...prev, {...data, thumbnail: thumbnailUrl}];
+        updateNumItems(newRecs.length);
+        return newRecs;
+      });
+    } else {
+      // add rec to UI
+      setRecommendations(prev => {
+        const newRecs = [...prev, data];
+        updateNumItems(newRecs.length);
+        return newRecs;
+      })   
     }
-    const thumbnailUrl = signedUrlData?.signedUrl || "";
-
-    // add rec to UI
-    setRecommendations(prev => {
-      const newRecs = [...prev, {...data, thumbnail: thumbnailUrl}];
-      updateNumItems(newRecs.length);
-      return newRecs;
-    });
-
     console.log("Recommendation added successfully");
     toast.success("Recommendation added successfully!")
 
@@ -237,13 +263,13 @@ export default function BoardPage() {
   }
 
    // edit recommendation details
-  const editRec = async (updatedRec: RecType, selectedEditFile: File | null) => {
+  const editRec = async (updatedRec: RecType) => {
     setIsLoading(true);
     // if (!editingRec.name.trim()) return
-    let newThumbnailPath = updatedRec.thumbnail || "";
+    let newThumbnailPath = "";
     let oldThumbnailPath = "";
 
-     // fetch the actual thumbnail path from DB
+    // fetch the actual thumbnail path from DB
     const { data: recFromDB, error: fetchError } = await supabase
       .from("recommendations")
       .select("thumbnail")
@@ -258,27 +284,44 @@ export default function BoardPage() {
     }
 
     oldThumbnailPath = recFromDB.thumbnail;
+    newThumbnailPath = oldThumbnailPath;
 
     // upload new thumbnail if there's a new file
     if (selectedEditFile) {
-      const fileExt = selectedEditFile.name.split(".").pop();
-      const filePath = `recommendations/${uuidv4()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("thumbnails")
-        .upload(filePath, selectedEditFile, {
-          cacheControl: "3600",
-          upsert: false,
+      // try compressing the file
+      try{
+        // Resize and convert
+        const compressedFile = await imageCompression(selectedEditFile, {
+          maxWidthOrHeight: 3000, // Resize while keeping aspect ratio
+          maxSizeMB: 0.2,        // Target compressed size ~200KB
+          fileType: 'image/webp', // Convert to WebP
+          useWebWorker: true,
         });
 
-      if (uploadError) {
-        console.error("Upload failed:", uploadError.message);
-        toast.error("Thumbnail upload failed");
-        setIsLoading(false);
-        return;
-      }
+        // setSelectedEditFile(compressedFile)
+        // const fileExt = selectedEditFile.name.split(".").pop();
+        const filePath = `recommendations/${uuidv4()}.webp`;
 
-      newThumbnailPath = filePath;
+        const { error: uploadError } = await supabase.storage
+          .from("thumbnails")
+          .upload(filePath, compressedFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Upload failed:", uploadError.message);
+          toast.error("Thumbnail upload failed");
+          setIsLoading(false);
+          return;
+        }
+
+        newThumbnailPath = filePath;
+
+      } catch (err){
+        console.error("Image compression failed:", err);
+        toast.error("Image processing failed.");
+      }
 
       // delete the old thumbnail (using real path)
       if (oldThumbnailPath && oldThumbnailPath !== newThumbnailPath) {
@@ -293,7 +336,7 @@ export default function BoardPage() {
     }
 
     // update rec in DB
-    const { error: updateError } = await supabase
+    const {data, error: updateError } = await supabase
       .from("recommendations")
       .update({
         name: updatedRec.name,
@@ -312,23 +355,35 @@ export default function BoardPage() {
     }
 
     // get signed URL for updated thumbnail (for UI)
-    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+    if (newThumbnailPath !== ""){
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
       .from("thumbnails")
       .createSignedUrl(newThumbnailPath, 60 * 60);
 
-    const thumbnailUrl = signedUrlData?.signedUrl || "";
+      const thumbnailUrl = signedUrlData?.signedUrl || "";
 
-    // update local state
-    setRecommendations(prev =>
-      prev.map(r =>
-        r.id === updatedRec.id
-          ? { ...updatedRec, thumbnail: thumbnailUrl }
-          : r
-      )
-    );
+      // update local state
+      setRecommendations(prev =>
+        prev.map(r =>
+          r.id === updatedRec.id
+            ? { ...updatedRec, thumbnail: thumbnailUrl }
+            : r
+        )
+      );
+    } else {
+       // update local state
+      setRecommendations(prev =>
+        prev.map(r =>
+          r.id === updatedRec.id
+            ? { ...updatedRec, data }
+            : r
+        )
+      );
+    }
 
     setIsLoading(false);
     setEditingRec(null);
+    setSelectedEditFile(null);
     toast.success("Recommendation updated!");
   }
 
@@ -676,7 +731,9 @@ export default function BoardPage() {
                         <DialogClose asChild>
                           <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button onClick={() => editRec(editingRec, selectedEditFile)} disabled={!editingRec.name.trim() || isLoading}>Save Changes</Button>
+                        <Button onClick={() => editRec(editingRec)} disabled={!editingRec.name.trim() || isLoading}>
+                          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
+                        </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>

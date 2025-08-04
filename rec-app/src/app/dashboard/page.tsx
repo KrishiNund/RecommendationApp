@@ -5,7 +5,7 @@ import ProtectedRoute from "../components/ProtectedRoute"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Search, LayoutGrid, List, CircleSlash2, Upload, AlertCircle} from "lucide-react"
+import { Plus, Search, LayoutGrid, List, CircleSlash2, Upload, AlertCircle, Loader2} from "lucide-react"
 import { useState, useEffect } from "react"
 import Board from "../components/Board"
 import {
@@ -35,6 +35,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useInsertUserOnAuth } from "../hooks/useInsertUserOnAuth"
 import { toast } from "sonner"
+import imageCompression from 'browser-image-compression';
 
 
 export default function Dashboard() {
@@ -142,7 +143,7 @@ export default function Dashboard() {
   }
 
   // add a recommendation board
- const addBoard = async (e?: React.MouseEvent) => {
+  const addBoard = async (e?: React.MouseEvent) => {
     setIsLoading(true);
     if (e) e.preventDefault();
     if (!boardName.trim()) return;
@@ -157,23 +158,39 @@ export default function Dashboard() {
 
     // Upload file only if a file is selected
     if (selectedFile) {
-      const fileExt = selectedFile.name.split('.').pop();
-      const path = `boards/${uuidv4()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
-        .from('thumbnails')
-        .upload(path, selectedFile, {
-          cacheControl: '3600',
-          upsert: false, // prevent replacing
+      // try compressing the file
+      try{
+        // Resize and convert
+        const compressedFile = await imageCompression(selectedFile, {
+          maxWidthOrHeight: 3000, // Resize while keeping aspect ratio
+          maxSizeMB: 0.2,        // Target compressed size ~200KB
+          fileType: 'image/webp', // Convert to WebP
+          useWebWorker: true,
         });
 
-      if (uploadError) {
-        console.error("Image upload failed:", uploadError.message);
-        toast.error("Thumbnail upload failed");
-        setIsLoading(false);
-        return;
-      }
+        // setSelectedFile(compressedFile)
+        // const fileExt = selectedFile.name.split('.').pop();
+        const path = `boards/${uuidv4()}.webp`;
+        const { error: uploadError } = await supabase.storage
+          .from('thumbnails')
+          .upload(path, compressedFile, {
+            cacheControl: '3600',
+            upsert: false, // prevent replacing
+          });
 
-      thumbnailPath = path;
+        if (uploadError) {
+          console.error("Image upload failed:", uploadError.message);
+          toast.error("Thumbnail upload failed");
+          setIsLoading(false);
+          return;
+        }
+
+        thumbnailPath = path;
+
+      } catch (err){
+        console.error("Image compression failed:", err);
+        toast.error("Image processing failed.");
+      }  
     }
 
     // Insert into boards table
@@ -199,20 +216,26 @@ export default function Dashboard() {
     }
 
     // get signed url of uploaded thumbnail after uplaoding thumbnail
-    const { data: signedUrlData, error: signedUrlError } = await supabase
-    .storage
-    .from("thumbnails")
-    .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
+    if (thumbnailPath !== ""){
+      const { data: signedUrlData, error: signedUrlError } = await supabase
+      .storage
+      .from("thumbnails")
+      .createSignedUrl(thumbnailPath, 60 * 60); // valid for 1 hour
 
-    if (signedUrlError) {
-      console.error(`Error getting signed URL for board ${data.id}:`, signedUrlError.message);
+      if (signedUrlError) {
+        console.error(`Error getting signed URL for board ${data.id}:`, signedUrlError.message);
+      }
+      const thumbnailUrl = signedUrlData?.signedUrl || "";
+
+      // Add board to UI
+      setBoards([...boards, { ...data, thumbnail: thumbnailUrl }]);
+    } else {
+      // Add board to UI
+      setBoards([...boards, data]);
     }
-    const thumbnailUrl = signedUrlData?.signedUrl || "";
-
-
-    // Add board to UI
-    setBoards([...boards, { ...data, thumbnail: thumbnailUrl }]);
-
+    
+    console.log("Board added successfully");
+    toast.success("Board added successfully!")
     // Reset
     setBoardName("");
     setBoardDescription("");
@@ -227,22 +250,38 @@ export default function Dashboard() {
   const deleteBoard = async (id: string) => {
     setIsLoading(true);
 
-    // get the board's thumbnail path
-    const { data: boardData, error: fetchError } = await supabase
+    // Step 1: Get board's thumbnail path
+    const { data: boardData, error: fetchBoardError } = await supabase
       .from("boards")
       .select("thumbnail")
       .eq("id", id)
       .single();
 
-    if (fetchError) {
-      console.error("Failed to fetch board before delete:", fetchError.message);
+    if (fetchBoardError) {
+      console.error("Failed to fetch board before delete:", fetchBoardError.message);
       setIsLoading(false);
       return;
     }
 
-    const thumbnailPath = boardData?.thumbnail;
+    const boardThumbnailPath = boardData?.thumbnail;
 
-    // delete the board from the database
+    // Step 2: Get recommendation thumbnail paths before board deletion
+    const { data: recData, error: fetchRecsError } = await supabase
+      .from("recommendations")
+      .select("thumbnail")
+      .eq("board_id", id);
+
+    if (fetchRecsError) {
+      console.error("Failed to fetch recommendations before delete:", fetchRecsError.message);
+      setIsLoading(false);
+      return;
+    }
+
+    const recommendationThumbnailPaths = (recData || [])
+      .map(rec => rec.thumbnail)
+      .filter(Boolean); // remove null/undefined
+
+    // Step 3: Delete board (cascades recommendations)
     const { error: deleteBoardError } = await supabase
       .from("boards")
       .delete()
@@ -254,30 +293,41 @@ export default function Dashboard() {
       return;
     }
 
-    // delete the thumbnail from storage (if exists)
-    if (thumbnailPath) {
-      const { error: deleteThumbError } = await supabase.storage
+    // Step 4: Delete board thumbnail (if exists)
+    if (boardThumbnailPath) {
+      const { error: deleteBoardThumbError } = await supabase.storage
         .from("thumbnails")
-        .remove([thumbnailPath]);
+        .remove([boardThumbnailPath]);
 
-      if (deleteThumbError) {
-        console.warn("Board deleted but thumbnail not removed:", deleteThumbError.message);
+      if (deleteBoardThumbError) {
+        console.warn("Board deleted but thumbnail not removed:", deleteBoardThumbError.message);
       }
     }
 
-    // update local UI state
+    // Step 5: Delete recommendation thumbnails (if any)
+    if (recommendationThumbnailPaths.length > 0) {
+      const { error: deleteRecsThumbsError } = await supabase.storage
+        .from("thumbnails")
+        .remove(recommendationThumbnailPaths);
+
+      if (deleteRecsThumbsError) {
+        console.warn("Some recommendation thumbnails not deleted:", deleteRecsThumbsError.message);
+      }
+    }
+
+    // Step 6: Update UI
     setBoards(prevBoards => prevBoards.filter(board => board.id !== id));
     setIsLoading(false);
     toast.success("Board deleted!");
   };
 
   // edit board details
-  const editBoard = async (updatedBoard: BoardType, selectedEditFile: File | null) => {
+  const editBoard = async (updatedBoard: BoardType) => {
     setIsLoading(true);
 
-    let newThumbnailPath = updatedBoard.thumbnail || "";
     let oldThumbnailPath = "";
-
+    let newThumbnailPath = "";
+    
     // fetch the actual thumbnail path from DB 
     const { data: boardFromDB, error: fetchError } = await supabase
       .from("boards")
@@ -293,27 +343,44 @@ export default function Dashboard() {
     }
 
     oldThumbnailPath = boardFromDB.thumbnail;
+    newThumbnailPath = oldThumbnailPath;
 
     // upload new thumbnail if there's a new file
     if (selectedEditFile) {
-      const fileExt = selectedEditFile.name.split(".").pop();
-      const filePath = `boards/${uuidv4()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("thumbnails")
-        .upload(filePath, selectedEditFile, {
-          cacheControl: "3600",
-          upsert: false,
+      // try compressing the file
+      try{
+        // Resize and convert
+        const compressedFile = await imageCompression(selectedEditFile, {
+          maxWidthOrHeight: 3000, // Resize while keeping aspect ratio
+          maxSizeMB: 0.2,        // Target compressed size ~200KB
+          fileType: 'image/webp', // Convert to WebP
+          useWebWorker: true,
         });
 
-      if (uploadError) {
-        console.error("Upload failed:", uploadError.message);
-        toast.error("Thumbnail upload failed");
-        setIsLoading(false);
-        return;
-      }
+        // setSelectedEditFile(compressedFile)
+        // const fileExt = selectedEditFile.name.split(".").pop();
+        const filePath = `boards/${uuidv4()}.webp`;
 
-      newThumbnailPath = filePath;
+        const { error: uploadError } = await supabase.storage
+          .from("thumbnails")
+          .upload(filePath, compressedFile, {
+            cacheControl: "3600",
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Upload failed:", uploadError.message);
+          toast.error("Thumbnail upload failed");
+          setIsLoading(false);
+          return;
+        }
+
+        newThumbnailPath = filePath;
+
+      } catch (err){
+        console.error("Image compression failed:", err);
+        toast.error("Image processing failed.");
+      }
 
       // delete the old thumbnail (using real path)
       if (oldThumbnailPath && oldThumbnailPath !== newThumbnailPath) {
@@ -328,7 +395,7 @@ export default function Dashboard() {
     }
 
     // update board in DB
-    const { error: updateError } = await supabase
+    const { data, error: updateError } = await supabase
       .from("boards")
       .update({
         name: updatedBoard.name,
@@ -346,21 +413,32 @@ export default function Dashboard() {
     }
 
     // get signed URL for updated thumbnail (for UI)
-    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+    if (newThumbnailPath !== ""){
+      const { data: signedUrlData, error: signedUrlError } = await supabase.storage
       .from("thumbnails")
       .createSignedUrl(newThumbnailPath, 60 * 60);
 
-    const thumbnailUrl = signedUrlData?.signedUrl || "";
+      const thumbnailUrl = signedUrlData?.signedUrl || "";
 
-    // update local state
-    setBoards(prev =>
-      prev.map(b =>
-        b.id === updatedBoard.id
-          ? { ...updatedBoard, thumbnail: thumbnailUrl }
-          : b
-      )
-    );
-
+      // update local state
+      setBoards(prev =>
+        prev.map(b =>
+          b.id === updatedBoard.id
+            ? { ...updatedBoard, thumbnail: thumbnailUrl }
+            : b
+        )
+      );
+    } else {
+      // update local state
+      setBoards(prev =>
+        prev.map(b =>
+          b.id === updatedBoard.id
+            ? { ...updatedBoard, data }
+            : b
+        )
+      );
+    }
+    
     setIsLoading(false);
     setEditingBoard(null);
     toast.success("Board updated!");
@@ -375,7 +453,7 @@ export default function Dashboard() {
 
   // handle uploading of an image for the thumnail of the board when creating board
   // Updated thumbnail input handler (just previews and stores file)
-  const handleThumbnailChange = (
+  const handleThumbnailChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0];
@@ -541,7 +619,7 @@ export default function Dashboard() {
                       onClick={addBoard}
                       disabled={!boardName.trim() || !boardCategory || isLoading}
                     >
-                      Create Board
+                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Board"}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -636,12 +714,12 @@ export default function Dashboard() {
                             id="thumbnailInput"
                             type="file"
                             accept="image/*"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (!file) return;
-
-                              setSelectedEditFile(file); // save file for later upload
-
+                              
+                              setSelectedEditFile(file); // Store the file in state
+                              
                               // For preview
                               const reader = new FileReader();
                               reader.onloadend = () => {
@@ -652,6 +730,7 @@ export default function Dashboard() {
                                 }
                               };
                               reader.readAsDataURL(file);
+                              
                             }}
                             className="hidden"
                           />
@@ -664,10 +743,10 @@ export default function Dashboard() {
                         <Button variant="outline">Cancel</Button>
                       </DialogClose>
                       <Button 
-                        onClick={async () => await editBoard(editingBoard, selectedEditFile)} 
+                        onClick={async () => await editBoard(editingBoard)} 
                         disabled={!editingBoard.name.trim() || !editingBoard.category || isLoading}
                       >
-                        Save Changes
+                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"}
                       </Button>
                     </DialogFooter>
                   </DialogContent>

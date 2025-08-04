@@ -30,17 +30,96 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { supabase } from "@/lib/supabase"
+import { toast } from "sonner"
 
-// copies link to clipboard if possible else shows a dialog to allow manual copying
-function CopyLinkComponent({ public_id }: { public_id: string }) {
-  const { handleCopy, DialogFallback } = useCopyLinkHandler(public_id)
+// // copies link to clipboard if possible else shows a dialog to allow manual copying
+// function CopyLinkComponent({ public_id }: { public_id: string }) {
+//   const { handleCopy, DialogFallback } = useCopyLinkHandler(public_id)
+
+//   return (
+//     <>
+//       <Button
+//         variant="ghost"
+//         className="w-full h-8 flex items-center space-x-1 text-gray-800 justify-start cursor-pointer"
+//         onClick={handleCopy}
+//       >
+//         <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
+//         <span>Copy Link</span>
+//       </Button>
+
+//       <DialogFallback />
+//     </>
+//   )
+// }
+function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId: string }) {
+  const { handleCopy, DialogFallback } = useCopyLinkHandler();
+
+  const handleShareBoard = async () => {
+    const link = `${window.location.origin}/public/${public_id}`;
+
+    // 1. Fetch recommendations for the board
+    const { data: recs, error: fetchError } = await supabase
+      .from("recommendations")
+      .select("id, thumbnail")
+      .eq("board_id", boardId);
+
+    if (fetchError) {
+      console.error("Error fetching recommendations:", fetchError.message);
+      toast.error("Failed to prepare link.");
+      return;
+    }
+
+    // 2. Create signed URLs
+    const updates = await Promise.all(
+      recs.map(async (rec) => {
+        if (!rec.thumbnail) return null;
+
+        const { data, error } = await supabase
+          .storage
+          .from("thumbnails")
+          .createSignedUrl(rec.thumbnail, 60 * 60 * 24 * 365); // valid 1 year
+
+        if (error) {
+          console.warn("Signed URL error for rec:", rec.id, error.message);
+          return null;
+        }
+
+        return { id: rec.id, public_thumbnail: data?.signedUrl };
+      })
+    );
+
+    const cleaned = updates.filter(Boolean);
+
+    // 3. Batch update
+    if (cleaned.length > 0) {
+      for (const rec of cleaned) {
+        const { error: updateError } = await supabase
+          .from("recommendations")
+          .update({ public_thumbnail: rec?.public_thumbnail })
+          .eq("id", rec?.id);
+
+        if (updateError) {
+          console.error(`Error updating recommendation ${rec?.id}:`, updateError.message);
+          toast.error("Failed to finalize share.");
+          return;
+        }
+      }
+    }
+
+    // 4. Copy the final link
+    handleCopy(link);
+  };
 
   return (
     <>
       <Button
         variant="ghost"
         className="w-full h-8 flex items-center space-x-1 text-gray-800 justify-start cursor-pointer"
-        onClick={handleCopy}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleShareBoard();
+        }}
       >
         <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
         <span>Copy Link</span>
@@ -48,9 +127,8 @@ function CopyLinkComponent({ public_id }: { public_id: string }) {
 
       <DialogFallback />
     </>
-  )
+  );
 }
-
 const categoryColors = {
   anime: "bg-pink-100 text-pink-800",
   manga: "bg-purple-100 text-purple-800",
@@ -207,8 +285,8 @@ export default function Board({
 
                     
                     {/* adds copy link to clipboard component */}
-                    <CopyLinkComponent public_id={public_id}/>
-                    
+                    {/* <CopyLinkComponent public_id={public_id}/> */}
+                    <CopyLinkComponent public_id={public_id} boardId={id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
