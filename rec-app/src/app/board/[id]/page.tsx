@@ -4,7 +4,7 @@ import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Sparkles, Upload,Loader2, FolderOpen } from "lucide-react";
+import { Plus, Upload,Loader2, FolderOpen, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Recommendation from "@/app/components/Recommendation";
@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 import imageCompression from 'browser-image-compression';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function BoardPage() {
     // types of a recommendation object
@@ -55,6 +56,7 @@ export default function BoardPage() {
   const [boardCreatedAt, setBoardCreatedAt] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedEditFile, setSelectedEditFile] = useState<File | null>(null);
+  const [userPlan, setUserPlan] = useState("")
 
   // getting current logged in user first
   useEffect(() => {
@@ -71,6 +73,20 @@ export default function BoardPage() {
       // Set user for ownership check
       const currentUser = sessionData.session.user;
       setUser(currentUser);
+
+      // Fetch user plan
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("plan")
+        .eq("id", currentUser.id)
+        .limit(1);
+
+      if (userError) {
+        console.error("Error fetching user plan:", userError.message);
+        return;
+      }
+
+      setUserPlan(userData?.[0]?.plan || "free");
     }
 
     getCurrentUser();
@@ -143,6 +159,8 @@ export default function BoardPage() {
     fetchBoard();
   }, [user, board_id]);
   
+  // state to check if recommendations can be created or not
+  const canCreateRec = userPlan === "pro" || (userPlan === "free" && recommendations.length < 10);
 
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
@@ -474,11 +492,11 @@ export default function BoardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 py-8 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto space-y-12">
+      <div className="min-h-screen bg-white px-4 py-8 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-2">
           {/* Hero Header */}
           <div className="relative py-8 sm:py-16">
-            <div className="relative z-10 space-y-4">
+            <div className="relative z-10 space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
@@ -505,7 +523,10 @@ export default function BoardPage() {
                   }
                 }}>
                   <DialogTrigger asChild>
-                    <Button className="h-10 px-6 rounded-lg bg-[#bc6c25] hover:bg-[#a05a1f] text-white shadow-sm">
+                    <Button 
+                      className="h-10 px-6 rounded-lg bg-[#bc6c25] hover:bg-[#a05a1f] text-white shadow-sm"
+                      disabled={!canCreateRec || isLoading}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Recommendation
                     </Button>
@@ -738,10 +759,22 @@ export default function BoardPage() {
                     </DialogContent>
                   </Dialog>
                 )}
-              </div>
-            </div>
-          </div>
 
+                
+              </div>
+              {/* place alert here if cannot create boards anymore */}
+              {(!canCreateRec && !isLoading) && (
+                <Alert>
+                  <AlertCircle />
+                    <AlertTitle>Recommendation limit reached</AlertTitle>
+                    <AlertDescription>
+                    You've reached the limit of 20 recommendations per board on the free plan. Upgrade to Pro to add more recommendations.
+                    </AlertDescription>
+                </Alert>
+              )}
+            </div> 
+          </div>
+          
           {/* Recommendations Grid */}
           <div>
             {isLoading ? (

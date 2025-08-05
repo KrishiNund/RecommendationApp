@@ -8,7 +8,7 @@ import {
   CardDescription,
 } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
-import { MoreHorizontal, ChevronRight, LinkIcon, FileHeart, Edit, Trash2 } from "lucide-react"
+import { MoreHorizontal, ChevronRight, LinkIcon, FileHeart, Edit, Trash2, Loader2 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { supabase } from "@/lib/supabase"
 import { toast } from "sonner"
+import { useState } from "react"
 
 // // copies link to clipboard if possible else shows a dialog to allow manual copying
 // function CopyLinkComponent({ public_id }: { public_id: string }) {
@@ -53,9 +54,11 @@ import { toast } from "sonner"
 //   )
 // }
 function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId: string }) {
+  const [isLoading, setIsLoading] = useState(false)
   const { handleCopy, DialogFallback } = useCopyLinkHandler();
 
   const handleShareBoard = async () => {
+    setIsLoading(true);
     const link = `${window.location.origin}/public/${public_id}`;
 
     // 1. Fetch recommendations for the board
@@ -109,6 +112,7 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
 
     // 4. Copy the final link
     handleCopy(link);
+    setIsLoading(false);
   };
 
   return (
@@ -120,15 +124,25 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
           e.stopPropagation();
           handleShareBoard();
         }}
+        disabled={isLoading}
       >
-        <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
-        <span>Copy Link</span>
+        {/* <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
+        <span>Copy Link</span> */}
+        {isLoading ? 
+          <Loader2 className="w-4 h-4 animate-spin" /> 
+        : 
+          <>
+            <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
+            <span>Copy Link</span>
+          </>
+        }
       </Button>
 
       <DialogFallback />
     </>
   );
 }
+
 const categoryColors = {
   anime: "bg-pink-100 text-pink-800",
   manga: "bg-purple-100 text-purple-800",

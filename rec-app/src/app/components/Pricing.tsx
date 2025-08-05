@@ -118,7 +118,7 @@ export default function Pricing() {
 
               <div className="space-y-5 mb-8">
                 <Feature text="Create up to 3 boards" />
-                <Feature text="Unlimited recommendations" />
+                <Feature text="20 recommendations per board" />
                 <Feature text="Public sharing via link" />
               </div>
             </div>
@@ -188,7 +188,8 @@ export default function Pricing() {
               </div>
 
               <div className="space-y-5 mb-8 mt-6">
-                <Feature text="Unlimited boards" emphasized />
+                <Feature text="No limit on boards" emphasized />
+                <Feature text="No limit on recommendations per board" emphasized />
                 <Feature text="Early access to new features" emphasized />
                 <Feature text="Everything in Free plan" />
               </div>
