@@ -101,6 +101,7 @@ export default function ProfilePage() {
       console.log("Account deleted!");
       await supabase.auth.signOut(); // immediately updates auth state
       router.push("/"); // go to landing
+      window.location.href = '/'
     } catch (err) {
       console.error("Unexpected error:", err);
     }

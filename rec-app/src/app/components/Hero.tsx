@@ -101,7 +101,7 @@ export default function Hero() {
               >
                 <div>
                   <Link href="/dashboard">
-                    <button className="bg-[#bc6c25] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl font-medium hover:bg-[#a3581e] shadow-lg">
+                    <button className="bg-[#bc6c25] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl font-medium hover:bg-[#a3581e] shadow-lg cursor-pointer">
                       Go to Your Boards →
                     </button>
                   </Link>
@@ -110,7 +110,7 @@ export default function Hero() {
             ) : (
               // Default "Start for free" CTA
               <Link href="/signup">
-                <button className="bg-[#bc6c25] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl font-medium hover:bg-[#a3581e] shadow-lg transition">
+                <button className="bg-[#bc6c25] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl font-medium hover:bg-[#a3581e] shadow-lg transition cursor-pointer">
                   Start for free
                 </button>
               </Link>

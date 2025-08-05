@@ -13,8 +13,8 @@ export default function Home() {
       <Features />
       <HowItWorks />
       <Pricing />
-      <CTA />
       <FAQ />
+      <CTA />
     </>
   );
 }

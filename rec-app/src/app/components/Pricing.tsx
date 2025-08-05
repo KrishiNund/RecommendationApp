@@ -141,8 +141,7 @@ export default function Pricing() {
                 ):!user ? (
                   <Link href="/signup" passHref>
                     <Button
-                      variant="outline"
-                      className="w-full h-12 transition-colors hover:border-[#bc6c25] hover:text-[#bc6c25] hover:bg-white cursor-pointer"
+                      className="w-full h-12 bg-[#bc6c25] text-white hover:bg-[#a15514] transition-colors rounded-md shadow-md font-semibold cursor-pointer"
                     >
                       Get Started
                     </Button>
