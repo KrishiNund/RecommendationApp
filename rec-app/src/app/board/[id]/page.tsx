@@ -160,7 +160,7 @@ export default function BoardPage() {
   }, [user, board_id]);
   
   // state to check if recommendations can be created or not
-  const canCreateRec = userPlan === "pro" || (userPlan === "free" && recommendations.length < 10);
+  const canCreateRec = userPlan === "pro" || (userPlan === "free" && recommendations.length < 20);
 
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
