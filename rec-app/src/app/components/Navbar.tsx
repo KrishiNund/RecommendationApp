@@ -70,7 +70,7 @@ export default function Navbar() {
                   Features
                 </Button>
               </Link>
-              <Link href="#HIW">
+              <Link href="#how-it-works">
                 <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
                   How It Works
                 </Button>
