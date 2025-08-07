@@ -275,6 +275,7 @@ export default function BoardPage() {
     setRating(0);
     setThumbnail("");
     setIsLoading(false);
+    setSelectedFile(null);
     
     // close dialog after successful creation
     setIsDialogOpen(false); 

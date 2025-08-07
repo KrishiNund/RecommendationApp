@@ -52,10 +52,10 @@ export default function Recommendation({
     <motion.div
       whileHover={{ y: -4, boxShadow: "0 6px 24px rgba(0,0,0,0.10)" }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
-      className="relative h-full flex flex-col bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
+      className="relative flex flex-col bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
     >
-      {/* Main content (fixed height) */}
-      <div className="flex-1 flex flex-col h-full">
+      {/* Main content (variable height) */}
+      <div className="flex flex-col">
         {/* Thumbnail area */}
         <div className="relative aspect-video rounded-t-2xl overflow-hidden">
           {thumbnail ? (
@@ -121,7 +121,7 @@ export default function Recommendation({
               )}   
             </>
           ) : (
-            <div className="relative h-full bg-gray-50">
+            <div className="relative h-full bg-gradient-to-br from-amber-50 to-gray-100 flex items-center justify-center">
               {isPublic !== true && (
                 <div className="absolute top-3 right-3 z-10">
                   <DropdownMenu>
@@ -173,16 +173,19 @@ export default function Recommendation({
                   </DropdownMenu>
                 </div>
               )}
-              <div className="flex flex-col items-center justify-center h-full text-gray-300">
-                <MessageSquare className="w-8 h-8 mb-2" />
-                <p className="text-sm font-medium text-gray-400">No image</p>
-              </div>
+              
+                <div className="flex items-center justify-center mb-2">
+                  <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#ffe5b4] text-[#bc6c25] text-3xl font-bold shadow">
+                    {name?.charAt(0).toUpperCase() || "?"}
+                  </span>
+                </div>
+              
             </div>
           )}
         </div>
 
         {/* Content area */}
-        <div className="p-5 space-y-4 flex-1 flex flex-col">
+        <div className="p-5 space-y-4 flex flex-col">
           <div className="flex justify-between items-start gap-2">
             <h2 className="text-lg font-semibold text-gray-900 group-hover:text-[#a05a1f] transition-colors">
               {name}
