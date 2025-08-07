@@ -23,7 +23,7 @@ export default function Footer() {
 
         <div className="flex gap-4">
           <Link href="/privacy-policy" className="hover:text-black transition">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-black transition">Terms of Service</Link>
+          <Link href="/terms-of-service" className="hover:text-black transition">Terms of Service</Link>
           <a
             href="mailto:krishinund@gmail.com"
             className="hover:text-black transition"
