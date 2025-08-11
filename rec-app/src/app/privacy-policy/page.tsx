@@ -6,8 +6,9 @@ export default function PrivacyPolicyPage() {
       <p className="text-sm text-gray-500 mb-10">Effective Date: August 7, 2025</p>
 
       <section className="space-y-6">
-        <p>
-          Recoards ("we", "our", or "us") operates the website{" "}
+       <p>
+          Recoards ("we", "our", or "us") is owned and operated by Knyro, a Mauritius-registered business, 
+          and operates the website{" "}
           <a href="https://www.recoards.com" className="text-blue-600 underline">
             https://www.recoards.com
           </a>{" "}
@@ -90,7 +91,7 @@ export default function PrivacyPolicyPage() {
 
         <h2 className="text-2xl font-semibold text-black mt-8">10. Contact</h2>
         <p>
-          Questions or concerns? Email us at{" "}
+          Questions or concerns? Please contact Knyro (operator of Recoards) at{" "}
           <a href="mailto:contact@recoards.com" className="text-blue-600 underline">
             contact@recoards.com
           </a>

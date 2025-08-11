@@ -11,7 +11,7 @@ const body_font = Inter_Tight({
 
 export const metadata: Metadata = {
   title: "Recoards",
-  description: "Make pretty recommendations boards for the things you love!",
+  description: "Make pretty recommendations boards for the things you love! Made with love by Knyro.",
   icons:{
     icon: "/icon/rounded_favicon.ico"
   }

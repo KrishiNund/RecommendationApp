@@ -18,14 +18,29 @@ export default function Footer() {
 
   return (
     <footer className={`${bgVar} py-6 text-center text-sm text-gray-500`}>
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-        <span>© {currentYear} Recoards. All rights reserved.</span>
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
+        
+        <div className="flex flex-col md:flex-row items-center gap-1 text-gray-500">
+          <span>© {currentYear} Recoards. All rights reserved.</span>
+          <span className="hidden md:inline">•</span>
+          <span>
+            A product by{' Knyro '}
+            {/* <Link 
+              href="https://knyro.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-medium hover:text-black transition"
+            >
+              Knyro
+            </Link> */}
+          </span>
+        </div>
 
         <div className="flex gap-4">
           <Link href="/privacy-policy" className="hover:text-black transition">Privacy Policy</Link>
           <Link href="/terms-of-service" className="hover:text-black transition">Terms of Service</Link>
           <a
-            href="mailto:krishinund@gmail.com"
+            href="mailto:contact@recoards.com"
             className="hover:text-black transition"
           >
             Contact
