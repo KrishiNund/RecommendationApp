@@ -5,11 +5,11 @@ import { supabase } from '@/lib/supabase'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { FcGoogle } from 'react-icons/fc'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Info } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 // importing google font for logo/brand name
 import { Bebas_Neue } from 'next/font/google'
 
@@ -19,33 +19,6 @@ const logo_font = Bebas_Neue({
 })
 
 export default function SignUpPage() {
-  // useEffect(() => {
-  //   const checkAndInsertUser = async () => {
-  //     const { data: { user } } = await supabase.auth.getUser();
-
-  //     if (user) {
-  //       // Check if user already exists in 'users' table
-  //       const { data: existingUser, error: fetchError } = await supabase
-  //         .from('users')
-  //         .select('id')
-  //         .eq('id', user.id)
-  //         .single();
-
-  //       if (!existingUser) {
-  //         const { error: insertError } = await supabase.from('users').insert({
-  //           id: user.id,
-  //           plan: 'free',
-  //         });
-
-  //         if (insertError) {
-  //           console.error('Failed to insert user:', insertError);
-  //         }
-  //       }
-  //     }
-  //   };
-
-  //   checkAndInsertUser();
-  // }, []);
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -172,7 +145,34 @@ export default function SignUpPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              <span className="inline-flex items-center">
+                Password
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center ml-1 w-4 h-4 rounded-full transition-colors cursor-help"
+                    >
+                      <Info size={13} className="text-gray-500" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent 
+                    side="top" 
+                    className="max-w-xs bg-gray-900 text-white border-gray-700 shadow-xl"
+                  >
+                    <div className="space-y-2">
+                      <p className="font-medium">Password Requirements:</p>
+                      <ul className="text-xs space-y-1 text-gray-200">
+                        <li>• At least 8 characters long</li>
+                        <li>• One uppercase letter (A-Z)</li>
+                        <li>• One lowercase letter (a-z)</li>
+                        <li>• One digit (0-9)</li>
+                        <li>• One special symbol (!@#$%^&*)</li>
+                      </ul>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </span>
             </label>
             <div className="relative">
               <Input
