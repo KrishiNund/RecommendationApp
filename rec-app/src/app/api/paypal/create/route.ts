@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
           {
             amount: {
               currency_code: "USD",
-              value: "1.00",
+              value: "9.99",
             },
             description: "Recoards Pro Plan - one time payment",
             custom_id: userId, // <-- ties the order to your user
