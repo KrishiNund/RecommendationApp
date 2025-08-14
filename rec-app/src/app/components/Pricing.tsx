@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Pricing() {
   const [userPlan, setUserPlan] = useState("")
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     // fetch current user and plan on mount
     const getCurrentUserAndPlan = async () => {
@@ -220,7 +222,36 @@ export default function Pricing() {
                     </Link>
                   ) : userPlan === "free" ? (
                     // the paypal button to be added
-                    <Button className="w-full h-12 cursor-pointer bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] text-white shadow-md hover:shadow-lg transition-all">
+                    <Button
+                      className="w-full h-12 cursor-pointer bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] text-white shadow-md hover:shadow-lg transition-all"
+                      onClick={async () => {
+                        try {
+                          // You have `user` and `userPlan` already
+                          const userId = user?.id;
+                          if (!userId) {
+                            return router.push("/signup");
+                          }
+
+                          const res = await fetch("/api/paypal/create", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId }),
+                          });
+
+                          const data = await res.json();
+                          if (!res.ok || !data.approveUrl) {
+                            console.error(data);
+                            return alert("Could not start checkout. Please try again.");
+                          }
+
+                          // Full-page redirect to PayPal
+                          window.location.href = data.approveUrl;
+                        } catch (e) {
+                          console.error(e);
+                          alert("Something went wrong. Please try again.");
+                        }
+                      }}
+                    >
                       Upgrade now <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   ) : (
