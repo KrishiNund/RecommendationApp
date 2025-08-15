@@ -1,12 +1,12 @@
-// app/privacy/page.tsx or pages/privacy.tsx (based on your Next.js setup)
+// app/privacy/page.tsx
 export default function PrivacyPolicyPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-16 text-neutral-800">
       <h1 className="text-4xl font-semibold mb-6 text-black">Privacy Policy</h1>
-      <p className="text-sm text-gray-500 mb-10">Effective Date: August 7, 2025</p>
+      <p className="text-sm text-gray-500 mb-10">Effective Date: August 15, 2025</p>
 
       <section className="space-y-6">
-       <p>
+        <p>
           Recoards ("we", "our", or "us") is owned and operated by Knyro, a Mauritius-registered business, 
           and operates the website{" "}
           <a href="https://www.recoards.com" className="text-blue-600 underline">
@@ -19,8 +19,9 @@ export default function PrivacyPolicyPage() {
         <h2 className="text-2xl font-semibold text-black mt-8">1. Information We Collect</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Account Data:</strong> Name, email address, and password (via Supabase Auth).</li>
-          <li><strong>Usage Data:</strong> Pages visited, time spent, interactions, IP address (via tools like PostHog).</li>
+          <li><strong>Usage Data:</strong> Pages visited, time spent, and interactions with our website.</li>
           <li><strong>Payment Info:</strong> Payments are securely processed by PayPal; we do not store card data.</li>
+          <li><strong>Analytics Data:</strong> Non-identifiable information about your interactions with our website (e.g., page views, scrolls, clicks on external links) collected via Google Analytics. We do not collect personally identifiable information through this tool.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold text-black mt-8">2. How We Use Your Information</h2>
@@ -31,6 +32,7 @@ export default function PrivacyPolicyPage() {
           <li>To communicate with you (e.g., updates, support)</li>
           <li>To process payments and enforce Pro access</li>
           <li>To comply with legal obligations</li>
+          <li>To analyze general website usage for improving our Service (via Google Analytics)</li>
         </ul>
 
         <h2 className="text-2xl font-semibold text-black mt-8">3. Third-Party Services</h2>
@@ -40,10 +42,10 @@ export default function PrivacyPolicyPage() {
         <ul className="list-disc pl-6 space-y-2">
           <li>Supabase (Auth & backend)</li>
           <li>PayPal (Payments)</li>
-          <li>PostHog (Analytics)</li>
+          <li>Google Analytics (Website analytics)</li>
         </ul>
         <p>
-          These services may collect data as per their own privacy policies. We do not control or take responsibility for their practices.
+          These services may collect data as per their own privacy policies. We do not control or take responsibility for their practices; see the providers' privacy policies for more information.
         </p>
 
         <h2 className="text-2xl font-semibold text-black mt-8">4. Data Storage & Security</h2>
@@ -53,7 +55,7 @@ export default function PrivacyPolicyPage() {
 
         <h2 className="text-2xl font-semibold text-black mt-8">5. Cookies</h2>
         <p>
-          We use cookies and similar technologies to improve your browsing experience and track usage. You may disable cookies in your browser if you prefer.
+          We use cookies and similar technologies to improve your browsing experience and track usage. This includes cookies used by Google Analytics. You may disable cookies in your browser if you prefer.
         </p>
 
         <h2 className="text-2xl font-semibold text-black mt-8">6. Children’s Privacy</h2>
