@@ -1,10 +1,11 @@
 "use client";
-import { Sparkles, FolderOpen } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Recommendation from "@/app/components/Recommendation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import Head from "next/head";
 
 export default function PublicBoardPage() {
     // types of a recommendation object
@@ -70,25 +71,6 @@ export default function PublicBoardPage() {
             toast.error("Error loading recommendations!");
             return;
         }
-        // // Get signed URLs for each thumbnail
-        // const recsWithThumbnails = await Promise.all(
-        //   (recs ?? []).map(async (rec) => {
-        //     if (rec.thumbnail) {
-        //       const { data: signedUrlData, error: signedUrlError } = await supabase
-        //         .storage
-        //         .from("thumbnails") // replace with your actual bucket name
-        //         .createSignedUrl(rec.thumbnail, 60 * 60); // valid for 1 hour
-
-        //       if (signedUrlError) {
-        //         console.error(`Error getting signed URL for recommendation ${rec.id}:`, signedUrlError.message);
-        //         return rec;
-        //       }
-
-        //       return { ...rec, thumbnail: signedUrlData.signedUrl };
-        //     }
-        //     return rec;
-        //   })
-        // );
         setRecommendations(recs || []);
         setIsLoading(false);
     }
@@ -97,6 +79,16 @@ export default function PublicBoardPage() {
   }, []);
   
   return (
+    <>
+      <Head>
+        <title>{boardName} – Recoards</title>
+        <meta property="og:title" content={`${boardName} – Recoards`} />
+        <meta property="og:description" content={`Check out this board with ${recommendations.length} recommendations!`} />
+        <meta property="og:image" content={recommendations[0]?.public_thumbnail || '/favicon.png'} />
+        <meta property="og:url" content={`https://www.recoards.com/public/${public_id}`} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
       <div className="min-h-screen bg-white px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-2">
           {/* Hero Header */}
@@ -156,5 +148,6 @@ export default function PublicBoardPage() {
           </div>
         </div>
       </div>
+    </>
   );
 }
