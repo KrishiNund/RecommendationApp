@@ -15,6 +15,24 @@ export const metadata: Metadata = {
   description: "Make pretty recommendations boards for the things you love! Made with love by Knyro.",
   icons:{
     icon: "/icon/rounded_favicon.ico"
+  },
+  openGraph: {
+    title: "Recoards",
+    description: "Make pretty recommendation boards for the things you love! Made with love by Knyro.",
+    // url: "https://www.recoards.com",
+    siteName: "Recoards",
+    images: [
+      {
+        url: "/icon/social-preview.png", // <-- new image just for social thumbnails
+        // width: 1200,   // recommended social preview size
+        // height: 630,
+        alt: "Recoards - make pretty recommendation boards"
+      }
+    ],
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image"
   }
 };
 
