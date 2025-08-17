@@ -652,6 +652,7 @@ export default function BoardPage() {
                           <Input
                             id="editName"
                             value={editingRec.name}
+                            maxLength={50}
                             onChange={(e) =>
                               setEditingRec({ ...editingRec, name: e.target.value })
                             }
@@ -662,6 +663,7 @@ export default function BoardPage() {
                           <Input
                             id="editDescription"
                             value={editingRec.description}
+                            maxLength={120}
                             onChange={(e) =>
                               setEditingRec({ ...editingRec, description: e.target.value })
                             }
