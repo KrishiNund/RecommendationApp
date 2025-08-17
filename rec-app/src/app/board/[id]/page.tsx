@@ -555,7 +555,6 @@ export default function BoardPage() {
                         <Label htmlFor="description" className="text-gray-700">Description</Label>
                         <Input
                           id="description"
-                          placeholder="Brief description (optional)"
                           maxLength={120}
                           value={recDesc}
                           onChange={e => setRecDesc(e.target.value)}
