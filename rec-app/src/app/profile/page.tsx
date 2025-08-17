@@ -106,10 +106,16 @@ export default function ProfilePage() {
           color: "#4a2e00",
           border: "1px solid #fae1c3",
         },
-      })
-      await supabase.auth.signOut(); // immediately updates auth state
-      router.push("/"); // go to landing
-      window.location.href = '/'
+      });
+      // wait 1–1.5s before redirecting
+      setTimeout(async () => {
+        await supabase.auth.signOut();
+        router.push("/"); // go to landing
+      }, 1200);
+      
+      // await supabase.auth.signOut(); // immediately updates auth state
+      // router.push("/"); // go to landing
+      // window.location.href = '/'
     } catch (err) {
       console.error("Unexpected error:", err);
       toast.error("Unexpected error occurred: Account could not be deleted.")
