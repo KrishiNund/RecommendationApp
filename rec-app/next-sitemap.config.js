@@ -4,18 +4,38 @@ module.exports = {
   generateRobotsTxt: true,              // generates robots.txt automatically
   trailingSlash: false,
   exclude: [
-    '/dashboard/*',  
+    '/dashboard',
+    '/profile',
+    '/api',
     '/api/*',
+    '/board',
     '/board/*',
-    '/profile/*',
+    '/public',
     '/public/*',
-    '/upgrade/*'
+    '/upgrade',
+    '/upgrade/*',
+    '/login',
+    '/signup',
 
   ],
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
-      { userAgent: '*', disallow: ['/dashboard', '/api', '/board', '/profile', '/public', '/upgrade'] },
+      { userAgent: '*', disallow: [
+            '/dashboard',
+            '/profile',
+            '/api',
+            '/api/*',
+            '/board',
+            '/board/*',
+            '/public',
+            '/public/*',
+            '/upgrade',
+            '/upgrade/*',
+            '/login',
+            '/signup'
+            ] 
+        },
     ],
   },
   transform: async (config, path) => {
