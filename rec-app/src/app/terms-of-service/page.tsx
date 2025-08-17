@@ -4,7 +4,7 @@ export default function TermsOfServicePage() {
     <main className="max-w-3xl mx-auto px-6 py-16 text-base text-gray-800">
       <h1 className="text-4xl font-bold mb-6 text-center">Terms of Service</h1>
       <p className="text-sm text-gray-500 mb-12 text-center">
-        Last Updated: August 7, 2025
+        Last Updated: August 17, 2025
       </p>
 
       <section className="space-y-8">
