@@ -10,7 +10,7 @@ const faqs = [
   },
   {
     q: "What can I use this app to recommend?",
-    a: "You can create boards for anything you love — from anime, manga, games, music, books, movies, podcasts, to travel spots or niche collections."
+    a: "You can create boards for anything you love — from movies, TV shows, games, books, music to tech gadgets, travel spots or niche collections."
   },
   {
     q: "Is the app free to use?",

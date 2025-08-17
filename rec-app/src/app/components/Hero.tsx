@@ -60,7 +60,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Create and share beautiful boards for anything you love—anime, games, music, movies, and more.
+          Create and share beautiful boards for anything you love—books, games, movies, TV shows, and more.
         </motion.p>
 
         {/* CTA Button */}
@@ -74,16 +74,6 @@ export default function Hero() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
           >
-            {/* <Link href="/signup" className="block">
-              {(!user && !isLoading) && (
-                <Button
-                  size="lg"
-                  className="bg-[#bc6c25] hover:bg-[#a05a1f] text-white px-8 py-5 text-base shadow-lg hover:shadow-xl rounded-xl font-semibold cursor-pointer"
-                >
-                  Start for free
-                </Button>
-              )}
-            </Link> */}
             {isLoading ? (
               // Skeleton while loading
               <div className="mt-8 space-y-4 animate-pulse text-center">

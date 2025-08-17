@@ -531,7 +531,7 @@ export default function Dashboard() {
                       <Label htmlFor="boardName">Board Name *</Label>
                       <Input
                         id="boardName"
-                        placeholder="e.g. Best Anime of 2023"
+                        placeholder="Enter a board name (e.g., Best Cozy Games)"
                         maxLength={30}
                         value={boardName}
                         onChange={e => setBoardName(e.target.value)}
@@ -541,7 +541,7 @@ export default function Dashboard() {
                       <Label htmlFor="description">Description</Label>
                       <Input
                         id="description"
-                        placeholder="What's this board about?"
+                        placeholder="Describe your board (e.g.,best games to play when it's raining outside)"
                         maxLength={80}
                         value={boardDescription}
                         onChange={e => setBoardDescription(e.target.value)}
@@ -559,20 +559,29 @@ export default function Dashboard() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectItem value="anime">Anime</SelectItem>
-                            <SelectItem value="manga">Manga/Manhwa</SelectItem>
-                            <SelectItem value="games">Games</SelectItem>
-                            <SelectItem value="music">Music</SelectItem>
-                            <SelectItem value="movies">Movies</SelectItem>
-                            <SelectItem value="books">Books</SelectItem>
-                            <SelectItem value="podcasts">Podcasts</SelectItem>
-                            <SelectItem value="tech">Tech</SelectItem>
-                            <SelectItem value="food">Food</SelectItem>
-                            <SelectItem value="travel">Travel</SelectItem>
-                            <SelectItem value="fitness">Fitness</SelectItem>
-                            <SelectItem value="fashion">Fashion</SelectItem>
+                            <SelectItem value="apps">Apps</SelectItem>
                             <SelectItem value="art">Art</SelectItem>
-                            <SelectItem value="science">Science</SelectItem>
+                            <SelectItem value="books">Books</SelectItem>
+                            <SelectItem value="collectibles">Collectibles</SelectItem>
+                            <SelectItem value="comics">Comics</SelectItem>
+                            <SelectItem value="diy">DIY</SelectItem>
+                            <SelectItem value="education">Education</SelectItem>
+                            <SelectItem value="fashion">Fashion</SelectItem>
+                            <SelectItem value="fitness">Fitness</SelectItem>
+                            <SelectItem value="food">Food</SelectItem>
+                            <SelectItem value="games">Games</SelectItem>
+                            <SelectItem value="gear">Gear</SelectItem>
+                            <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                            <SelectItem value="manga">Manga</SelectItem>
+                            <SelectItem value="movies">Movies</SelectItem>
+                            <SelectItem value="music">Music</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="photography">Photography</SelectItem>
+                            <SelectItem value="podcasts">Podcasts</SelectItem>
+                            <SelectItem value="science">Science</SelectItem>
+                            <SelectItem value="tech">Tech</SelectItem>
+                            <SelectItem value="travel">Travel</SelectItem>
+                            <SelectItem value="TV shows">TV shows</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -641,6 +650,7 @@ export default function Dashboard() {
                         <Input
                           id="editName"
                           value={editingBoard.name}
+                          placeholder="Enter a board name (e.g., Best Cozy Games)"
                           maxLength={25}
                           onChange={(e) =>
                             setEditingBoard({ ...editingBoard, name: e.target.value })
@@ -652,6 +662,7 @@ export default function Dashboard() {
                         <Input
                           id="editDescription"
                           value={editingBoard.description}
+                          placeholder="Describe your board (e.g.,best games to play when it's raining outside)"
                           maxLength={80}
                           onChange={(e) =>
                             setEditingBoard({ ...editingBoard, description: e.target.value })
@@ -670,21 +681,32 @@ export default function Dashboard() {
                             <SelectValue placeholder="Select a category" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="anime">Anime</SelectItem>
-                            <SelectItem value="manga">Manga/Manhwa</SelectItem>
-                            <SelectItem value="games">Games</SelectItem>
-                            <SelectItem value="music">Music</SelectItem>
-                            <SelectItem value="movies">Movies</SelectItem>
-                            <SelectItem value="books">Books</SelectItem>
-                            <SelectItem value="podcasts">Podcasts</SelectItem>
-                            <SelectItem value="tech">Tech</SelectItem>
-                            <SelectItem value="food">Food</SelectItem>
-                            <SelectItem value="travel">Travel</SelectItem>
-                            <SelectItem value="fitness">Fitness</SelectItem>
-                            <SelectItem value="fashion">Fashion</SelectItem>
-                            <SelectItem value="art">Art</SelectItem>
-                            <SelectItem value="science">Science</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectGroup>
+                              <SelectItem value="anime">Anime</SelectItem>
+                              <SelectItem value="apps">Apps</SelectItem>
+                              <SelectItem value="art">Art</SelectItem>
+                              <SelectItem value="books">Books</SelectItem>
+                              <SelectItem value="collectibles">Collectibles</SelectItem>
+                              <SelectItem value="comics">Comics</SelectItem>
+                              <SelectItem value="diy">DIY</SelectItem>
+                              <SelectItem value="education">Education</SelectItem>
+                              <SelectItem value="fashion">Fashion</SelectItem>
+                              <SelectItem value="fitness">Fitness</SelectItem>
+                              <SelectItem value="food">Food</SelectItem>
+                              <SelectItem value="games">Games</SelectItem>
+                              <SelectItem value="gear">Gear</SelectItem>
+                              <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                              <SelectItem value="manga">Manga</SelectItem>
+                              <SelectItem value="movies">Movies</SelectItem>
+                              <SelectItem value="music">Music</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="photography">Photography</SelectItem>
+                              <SelectItem value="podcasts">Podcasts</SelectItem>
+                              <SelectItem value="science">Science</SelectItem>
+                              <SelectItem value="tech">Tech</SelectItem>
+                              <SelectItem value="travel">Travel</SelectItem>
+                              <SelectItem value="TV shows">TV shows</SelectItem>
+                            </SelectGroup>
                           </SelectContent>
                         </Select>
                       </div>

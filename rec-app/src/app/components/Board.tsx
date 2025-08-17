@@ -145,21 +145,30 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
 
 const categoryColors = {
   anime: "bg-pink-100 text-pink-800",
-  manga: "bg-purple-100 text-purple-800",
-  games: "bg-blue-100 text-blue-800",
-  music: "bg-green-100 text-green-800",
-  movies: "bg-yellow-100 text-yellow-800",
-  books: "bg-orange-100 text-orange-800",
-  podcasts: "bg-cyan-100 text-cyan-800",
-  tech: "bg-slate-100 text-slate-800",
-  food: "bg-red-100 text-red-800",
-  travel: "bg-teal-100 text-teal-800",
-  fitness: "bg-lime-100 text-lime-800",
-  fashion: "bg-fuchsia-100 text-fuchsia-800",
+  apps: "bg-cyan-100 text-cyan-800",
   art: "bg-indigo-100 text-indigo-800",
-  science: "bg-emerald-100 text-emerald-800",
-  other: "bg-gray-100 text-gray-800"
-}
+  books: "bg-orange-100 text-orange-800",
+  collectibles: "bg-amber-100 text-amber-800",
+  comics: "bg-rose-100 text-rose-800",
+  diy: "bg-emerald-100 text-emerald-800",
+  education: "bg-violet-100 text-violet-800",
+  fashion: "bg-fuchsia-100 text-fuchsia-800",
+  fitness: "bg-lime-100 text-lime-800",
+  food: "bg-red-100 text-red-800",
+  games: "bg-blue-100 text-blue-800",
+  gear: "bg-stone-100 text-stone-800",
+  lifestyle: "bg-yellow-100 text-yellow-800",
+  manga: "bg-purple-100 text-purple-800",
+  movies: "bg-orange-200 text-orange-900",
+  music: "bg-green-100 text-green-800",
+  other: "bg-gray-100 text-gray-800",
+  photography: "bg-sky-100 text-sky-800",
+  podcasts: "bg-teal-100 text-teal-800",
+  science: "bg-emerald-200 text-emerald-900",
+  tech: "bg-slate-100 text-slate-800",
+  travel: "bg-cyan-200 text-cyan-900",
+  "TV shows": "bg-violet-200 text-violet-900"
+};
 
 // all parameters that can be passed to the board component
 type BoardProps = {

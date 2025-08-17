@@ -21,8 +21,8 @@ export default function TermsOfServicePage() {
           <h2 className="text-xl font-semibold">2. Description of Service</h2>
           <p>
             Recoards is a web application that allows users to create, organize, and
-            share recommendation boards for media such as anime, books, games,
-            music, and more.
+            share recommendation boards for media such as movies, TV shows, books,
+            games, and more.
           </p>
         </div>
 

@@ -547,6 +547,7 @@ export default function BoardPage() {
                           id="recName"
                           maxLength={50}
                           value={recName}
+                          placeholder="Enter a title (e.g., Spirited Away)"
                           onChange={e => setRecName(e.target.value)}
                           className="rounded-lg"
                         />
@@ -557,6 +558,7 @@ export default function BoardPage() {
                           id="description"
                           maxLength={120}
                           value={recDesc}
+                          placeholder="Add a short note (e.g., A heartwarming fantasy adventure)"
                           onChange={e => setRecDesc(e.target.value)}
                           className="rounded-lg"
                         />
@@ -567,6 +569,7 @@ export default function BoardPage() {
                           id="comment"
                           maxLength={50}
                           value={comment}
+                          placeholder="Add a personal note (e.g., Watched this last summer, still a favorite)"
                           onChange={e => setComment(e.target.value)}
                           className="rounded-lg"
                         />
@@ -650,6 +653,7 @@ export default function BoardPage() {
                           <Input
                             id="editName"
                             value={editingRec.name}
+                            placeholder="Enter a title (e.g., Spirited Away)"
                             maxLength={50}
                             onChange={(e) =>
                               setEditingRec({ ...editingRec, name: e.target.value })
@@ -661,6 +665,7 @@ export default function BoardPage() {
                           <Input
                             id="editDescription"
                             value={editingRec.description}
+                            placeholder="Add a short note (e.g., A heartwarming fantasy adventure)"
                             maxLength={120}
                             onChange={(e) =>
                               setEditingRec({ ...editingRec, description: e.target.value })
@@ -673,6 +678,7 @@ export default function BoardPage() {
                             id="comment"
                             maxLength={50}
                             value={editingRec.comment}
+                            placeholder="Add a personal note (e.g., Watched this last summer, still a favorite)"
                             onChange={(e) => 
                               setEditingRec({...editingRec, comment: e.target.value})
                             }

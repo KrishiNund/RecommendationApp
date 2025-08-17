@@ -6,7 +6,7 @@ const steps = [
   {
     title: "Create Your Board",
     description:
-      "Start by creating a beautiful recommendation board for your favorite anime, games, music, or anything you love.",
+      "Start by creating a beautiful recommendation board for your favorite movies, games, books, or anything you love.",
     image: "/screenshots/create-board.png",
   },
   {
