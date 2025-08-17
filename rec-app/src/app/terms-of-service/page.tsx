@@ -79,13 +79,26 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold">8. Intellectual Property</h2>
+          <h2 className="text-xl font-semibold">8. Intellectual Property & Copyright</h2>
           <p>
-            All original code, design, and branding on Recoards is the property of
-            its creator. You may not copy, reproduce, or distribute any part of the
-            Service without express permission. User-generated content remains the
-            property of the user, but by uploading it, you grant us a license to
-            display and host it within the Service.
+            All original code, design, and branding on Recoards are the property of its creator. 
+            You may not copy, reproduce, or distribute any part of the Service without express permission. 
+          </p>
+          <br />
+          <p>
+            Recoards provides a platform for users to create boards and recommendations. 
+            User-generated content remains the property of the user; however, by uploading content, 
+            you grant us a license to display and host it within the Service. While we facilitate this content, 
+            we do not manually control, verify, or endorse every individual submission and are not responsible 
+            for user-generated content.
+          </p>
+          <br />
+          <p>
+            If a copyright owner believes that any content uploaded to Recoards infringes their rights, 
+            they may contact us at <a href="mailto:contact@recoards.com" className="text-blue-600">contact@recoards.com</a> {''}
+            to request removal. Upon receiving a valid notice, we will remove or disable access to the 
+            infringing content in order to comply with copyright law. We reserve the right to terminate 
+            accounts of users who repeatedly upload infringing content.
           </p>
         </div>
 
