@@ -37,7 +37,13 @@ export default function LoginPage() {
       setError(error.message)
       toast.error("Something went wrong during login. Please try again.")
     } else {
-      toast.success("Log in successful!")
+      toast.success("Log in successful!",{
+        style: {
+          background: "#fef6e4",
+          color: "#4a2e00",
+          border: "1px solid #fae1c3",
+        },
+      })
       setTimeout(() => {
         router.push('/dashboard')
       }, 1000)

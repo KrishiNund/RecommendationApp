@@ -235,7 +235,13 @@ export default function Dashboard() {
     }
     
     console.log("Board added successfully");
-    toast.success("Board added successfully!")
+    toast.success("Board added successfully!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
     // Reset
     setBoardName("");
     setBoardDescription("");
@@ -318,7 +324,13 @@ export default function Dashboard() {
     // Step 6: Update UI
     setBoards(prevBoards => prevBoards.filter(board => board.id !== id));
     setIsLoading(false);
-    toast.success("Board deleted!");
+    toast.success("Board deleted!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
   };
 
   // edit board details
@@ -441,7 +453,13 @@ export default function Dashboard() {
     
     setIsLoading(false);
     setEditingBoard(null);
-    toast.success("Board updated!");
+    toast.success("Board updated!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
   };
 
   // searching for board by name, description or category

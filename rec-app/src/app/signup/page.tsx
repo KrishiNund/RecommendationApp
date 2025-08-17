@@ -56,7 +56,13 @@ export default function SignUpPage() {
       }
     }
 
-    toast.success("Sign up successful!")
+    toast.success("Sign up successful!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    })
     setTimeout(() => {
         router.push('/login')
       }, 1000)

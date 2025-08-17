@@ -266,7 +266,13 @@ export default function BoardPage() {
       })   
     }
     console.log("Recommendation added successfully");
-    toast.success("Recommendation added successfully!")
+    toast.success("Recommendation added successfully!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
 
     // reset form when dialog is closed
     setRecName("");
@@ -403,7 +409,13 @@ export default function BoardPage() {
     setIsLoading(false);
     setEditingRec(null);
     setSelectedEditFile(null);
-    toast.success("Recommendation updated!");
+    toast.success("Recommendation updated!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
   }
 
   // delete a recommendation
@@ -455,7 +467,13 @@ export default function BoardPage() {
       return newRecs;
     });
     setIsLoading(false);
-    toast.success("Recommendation deleted!");
+    toast.success("Recommendation deleted!",{
+      style: {
+        background: "#fef6e4",
+        color: "#4a2e00",
+        border: "1px solid #fae1c3",
+      },
+    });
   };
 
   // handle uploading of an image for the thumnail of the board

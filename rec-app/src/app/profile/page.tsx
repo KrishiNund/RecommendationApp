@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation"
 import Link from "next/link";
+import { toast } from "sonner";
 
 
 export default function ProfilePage() {
@@ -99,11 +100,19 @@ export default function ProfilePage() {
 
       // Optional: redirect user after deletion
       console.log("Account deleted!");
+      toast.success("Account deletion successful!",{
+        style: {
+          background: "#fef6e4",
+          color: "#4a2e00",
+          border: "1px solid #fae1c3",
+        },
+      })
       await supabase.auth.signOut(); // immediately updates auth state
       router.push("/"); // go to landing
       window.location.href = '/'
     } catch (err) {
       console.error("Unexpected error:", err);
+      toast.error("Unexpected error occurred: Account could not be deleted.")
     }
   };
 
