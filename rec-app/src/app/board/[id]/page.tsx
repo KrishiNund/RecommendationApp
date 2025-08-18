@@ -585,7 +585,7 @@ export default function BoardPage() {
                         <Label htmlFor="comment" className="text-gray-700">Personal Note</Label>
                         <Input
                           id="comment"
-                          maxLength={50}
+                          maxLength={90}
                           value={comment}
                           placeholder="Add a personal note (e.g., Watched this last summer, still a favorite)"
                           onChange={e => setComment(e.target.value)}
@@ -694,7 +694,7 @@ export default function BoardPage() {
                           <Label htmlFor="comment" className="text-gray-700">Personal Note</Label>
                           <Input
                             id="comment"
-                            maxLength={50}
+                            maxLength={90}
                             value={editingRec.comment}
                             placeholder="Add a personal note (e.g., Watched this last summer, still a favorite)"
                             onChange={(e) => 

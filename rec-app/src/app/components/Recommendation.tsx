@@ -186,21 +186,21 @@ export default function Recommendation({
 
         {/* Content area */}
         <div className="p-5 space-y-4 flex flex-col">
-          <div className="flex justify-between items-start gap-2">
-            <h2 className="text-lg font-semibold text-gray-900 group-hover:text-[#a05a1f] transition-colors">
-              {name}
+          <div className="flex justify-between items-start gap-3">
+            <h2 className="text-lg font-semibold text-gray-900 group-hover:text-[#a05a1f] transition-colors flex-1 min-w-0">
+              <span className="break-words">{name}</span>
             </h2>
             <motion.div
               whileHover={{ boxShadow: "0 2px 8px #ffe5b4b0" }}
-              className="flex items-center gap-1 px-3 py-1 bg-white/70 backdrop-blur border border-amber-100 rounded-full shadow-sm cursor-default min-w-[56px] justify-center"
+              className="flex items-center gap-1 px-3 py-1 bg-white/70 backdrop-blur border border-amber-100 rounded-full shadow-sm cursor-default flex-shrink-0"
               title={`Rating: ${rating}/10`}
             >
               <span className="text-base font-bold text-[#bc6c25]">{rating}</span>
-              <Star className="w-4 h-4 ml-1 text-[#f5b342] fill-[#f5b342] drop-shadow-sm" />
+              <Star className="w-4 h-4 ml-1 text-[#f5b342] fill-[#f5b342] drop-shadow-sm flex-shrink-0" />
             </motion.div>
           </div>
           {description && (
-            <p className="text-sm text-gray-600 line-clamp-2">
+            <p className="text-sm text-gray-600 line-clamp-2 break-words whitespace-pre-wrap">
               {description}
             </p>
           )}
@@ -244,7 +244,7 @@ export default function Recommendation({
                     <X className="w-3 h-3" />
                   </button>
                   <div className="bg-white/90 border border-[#fff7e6] rounded-xl px-4 py-3 shadow-sm text-sm text-gray-700">
-                    {comment}
+                    <span className="break-words whitespace-pre-wrap">{comment}</span>
                   </div>
                 </div>
               </div>
