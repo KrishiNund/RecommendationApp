@@ -669,7 +669,7 @@ export default function Dashboard() {
                           id="editName"
                           value={editingBoard.name}
                           placeholder="Enter a board name (e.g., Best Cozy Games)"
-                          maxLength={25}
+                          maxLength={30}
                           onChange={(e) =>
                             setEditingBoard({ ...editingBoard, name: e.target.value })
                           }
