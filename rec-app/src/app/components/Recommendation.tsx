@@ -200,7 +200,7 @@ export default function Recommendation({
             </motion.div>
           </div>
           {description && (
-            <p className="text-sm text-gray-600 line-clamp-2 break-words whitespace-pre-wrap">
+            <p className="text-sm text-gray-600 line-clamp-3 break-words whitespace-pre-wrap">
               {description}
             </p>
           )}
