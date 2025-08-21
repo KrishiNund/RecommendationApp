@@ -21,6 +21,7 @@ export default function PublicBoardPage() {
   };
 
   const [boardName, setBoardName] = useState("Loading...");
+  const [boardDescription, setBoardDescription] = useState("");
   const { public_id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<RecType[]>([]);
@@ -46,7 +47,7 @@ export default function PublicBoardPage() {
 
         const { data, error: boardNameError } = await supabase
         .from("boards")
-        .select("name, created_at")
+        .select("name, description, created_at")
         .eq("id", board_id)
         .single();
 
@@ -55,6 +56,7 @@ export default function PublicBoardPage() {
             setBoardName("Untitled Board");
         } else {
             setBoardName(data.name);
+            setBoardDescription(data.description || "");
             setBoardCreatedAt(data.created_at)
         }
 
@@ -84,18 +86,23 @@ export default function PublicBoardPage() {
         <div className="relative py-8 sm:py-16">
           <div className="relative z-10 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
-                    {boardName}
-                  </h1>
+                              <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+                      {boardName}
+                    </h1>
+                  </div>
+                  {boardDescription && (
+                    <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                      {boardDescription}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <span>Created on {boardCreatedAt.split('T')[0]}</span>
+                    <span>•</span>
+                    <span>{recommendations.length} {recommendations.length === 1 ? 'recommendation' : 'recommendations'}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <span>Created on {boardCreatedAt.split('T')[0]}</span>
-                  <span>•</span>
-                  <span>{recommendations.length} {recommendations.length === 1 ? 'recommendation' : 'recommendations'}</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

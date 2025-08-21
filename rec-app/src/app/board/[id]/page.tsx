@@ -41,6 +41,7 @@ export default function BoardPage() {
   };
   const router = useRouter();
   const [boardName, setBoardName] = useState("Loading...");
+  const [boardDescription, setBoardDescription] = useState("");
   const { id } = useParams();
   const board_id = id;
   const [recName, setRecName] = useState("");
@@ -101,7 +102,7 @@ export default function BoardPage() {
       // fetch board details
       const { data, error } = await supabase
         .from("boards")
-        .select("name, user_id, created_at")
+        .select("name, description, user_id, created_at")
         .eq("id", board_id)
         .single();
 
@@ -119,6 +120,7 @@ export default function BoardPage() {
 
       setBoardName(data.name);
       setBoardCreatedAt(data.created_at)
+      setBoardDescription(data.description)
 
       // Fetch recommendations only if authorized
       const { data: recs, error: recsError } = await supabase
@@ -523,6 +525,11 @@ export default function BoardPage() {
                       {boardName}
                     </h1>
                   </div>
+                  {boardDescription && (
+                    <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                      {boardDescription}
+                    </p>
+                  )}
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <span>Created on {boardCreatedAt.split('T')[0]}</span>
                     <span>•</span>
