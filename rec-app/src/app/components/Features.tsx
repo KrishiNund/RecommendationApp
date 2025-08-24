@@ -32,8 +32,8 @@ const features = [
       12L7.84 9.65c-.68-.68-1.53-1.03-2.44-1.03C3.53 8.62 2 10.13 2 12s1.53 3.38 3.4 3.38c.91 0 1.76-.35 2.4-.99m8.4-4.78L13.5 12l2.66 2.35c.68.68 
       1.54 1.03 2.44 1.03c1.87 0 3.4-1.51 3.4-3.38s-1.53-3.38-3.4-3.38c-.91 0-1.76.35-2.4.99" />
     </svg>, // Unlimited Recommendations
-    title: "Unlimited Recommendations",
-    desc: "Add as many recommendations as you want to each board."
+    title: "Unlimited Recommendations (Pro)",
+    desc: "Start with 20 and upgrade to Pro to add as many recommendations as you like to your boards."
   },
   {
     icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
