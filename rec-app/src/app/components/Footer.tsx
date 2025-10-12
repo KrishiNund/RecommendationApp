@@ -7,7 +7,7 @@ export default function Footer() {
   const currentPath = usePathname()
   const authPages = ['/signup', '/login']
 
-  let bgVar = 'bg-white'
+  let bgVar = 'bg-[hsl(28,10%,98%)]'
   const useDiffBg = authPages.includes(currentPath)
 
   if (useDiffBg) {

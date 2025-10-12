@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Inter_Tight } from "next/font/google";
+import {Fredoka } from "next/font/google";
 import "./globals.css";
 import Footer from "./components/Footer";
 import AppLayout from "./components/AppLayout";
 import { Toaster } from "@/components/ui/sonner";
 import Script from "next/script";
 
-const body_font = Inter_Tight({
+const body_font = Fredoka({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"], // You can add more weights as needed, e.g. ["400", "700"]
 });
 
 export const metadata: Metadata = {

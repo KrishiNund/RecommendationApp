@@ -92,18 +92,18 @@ export default function Pricing() {
       whileInView="show"
       viewport={{ once: true, margin: "-100px" }}
       variants={container}
-      className="bg-white py-24 px-4 sm:px-6 lg:px-8"
+      className="bg-[hsl(28,10%,98%)] py-24 px-4 sm:px-6 lg:px-8"
       id="pricing"
     >
       <div className="max-w-6xl mx-auto">
         <motion.div variants={item} className="text-center space-y-4 mb-16">
-          <span className="inline-flex items-center rounded-full bg-[#bc6c25]/10 text-[#bc6c25] px-4 py-1.5 text-sm font-medium ">
+          {/* <span className="inline-flex items-center rounded-full bg-[#bc6c25]/10 text-[#bc6c25] px-4 py-1.5 text-sm font-medium ">
             Pricing
-          </span>
-          <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
+          </span> */}
+          <h2 className="text-4xl font-bold text-[hsl(28,20%,15%)] tracking-tight">
             Simple, transparent pricing
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-[hsl(28,15%,40%)] max-w-2xl mx-auto">
             Pay once. Use forever. No subscriptions.
           </p>
         </motion.div>
@@ -112,11 +112,11 @@ export default function Pricing() {
           {/* Free Plan */}
           <motion.div
             variants={item}
-            className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 transition-all flex flex-col bg-white group"
+            className="border border-[hsl(28,5%,90%)] rounded-xl p-8 transition-all flex flex-col bg-[hsl(28,20%,98%)] group"
           >
             <div className="flex-1">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2">Free</h3>
-              <p className="text-gray-500 mb-6">Perfect for trying out the platform</p>
+              <h3 className="text-2xl font-semibold text-[hsl(28,25%,15%)] mb-2">Free</h3>
+              <p className="text-[hsl(28,12%,40%)] mb-6">Perfect for trying out the platform</p>
 
               <div className="space-y-5 mb-8">
                 <Feature text="Create up to 3 boards" />
@@ -127,8 +127,8 @@ export default function Pricing() {
 
             <div className="pt-6 border-t border-gray-100">
               <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">$0</span>
-                <span className="text-gray-500"> forever</span>
+                <span className="text-4xl font-bold text-[hsl(28,20%,15%)]">$0</span>
+                <span className="text-[hsl(28,15%,40%)]"> forever</span>
               </div>
               {/* if not logged in, show default get started option */}
                 {isLoading ? (
@@ -143,7 +143,7 @@ export default function Pricing() {
                 ):!user ? (
                   <Link href="/signup" passHref>
                     <Button
-                      className="w-full h-12 bg-[#bc6c25] text-white hover:bg-[#a15514] transition-colors rounded-md shadow-md font-semibold cursor-pointer"
+                      className="w-full h-12 bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,55%)] text-[hsl(28,20%,15%)] transition-colors rounded-md shadow-md font-medium cursor-pointer"
                     >
                       Get Started
                     </Button>
@@ -171,20 +171,20 @@ export default function Pricing() {
           {/* Pro Plan */}
           <motion.div
             variants={item}
-            className="relative rounded-xl p-8 flex flex-col bg-[#fff9f2] border border-[#ffe5cc] shadow-[0_10px_40px_-15px_rgba(188,108,37,0.15)]"
+            className="relative rounded-xl p-8 flex flex-col bg-[hsl(28,10%,92%)] border border-[hsl(28,5%,85%)] shadow-[0_10px_40px_-15px_rgba(188,108,37,0.15)]"
           >
-            <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#bc6c25] text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-sm">
+            <div className="absolute top-0 right-6 -translate-y-1/2 bg-[hsl(29,45%,90%)] text-[hsl(28,15%,20%)] text-xs font-medium px-3 py-1.5 rounded-full shadow-sm">
               Best value
             </div>
 
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-3">
                 <div className="p-2 rounded-lg bg-[#bc6c25]/10">
-                  <Zap className="text-[#bc6c25]" size={20} />
+                  <Zap className="text-[hsl(28,45%,50%)]" size={20} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-semibold text-gray-900">Pro</h3>
-                  <p className="text-gray-500">Everything unlocked, forever</p>
+                  <h3 className="text-2xl font-semibold text-[hsl(28,20%,15%)]">Pro</h3>
+                  <p className="text-[hsl(28,12%,40%)]">Everything unlocked, forever</p>
                 </div>
               </div>
 
@@ -196,10 +196,10 @@ export default function Pricing() {
               </div>
             </div>
 
-            <div className="pt-6 border-t border-[#ffe5cc]">
+            <div className="pt-6 border-t border-[hsl(28,2%,90%)]">
               <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">$9.99</span>
-                <span className="text-gray-500"> one-time payment</span>
+                <span className="text-4xl font-bold text-[hsl(28,20%,15%)]">$9.99</span>
+                <span className="text-[hsl(28,15%,40%)]"> one-time payment</span>
               </div>
               {/* if not logged in, show default option */}
                 {isLoading ? (
@@ -275,10 +275,10 @@ function Feature({ text, emphasized = false }: { text: string; emphasized?: bool
   return (
     <div className="flex items-start gap-3">
       <CheckCircle2 
-        className={`${emphasized ? 'text-[#bc6c25]' : 'text-gray-400'} mt-0.5 flex-shrink-0`} 
+        className={`${emphasized ? 'text-[hsl(28,20%,55%)]' : 'text-[hsl(28,10%,65%)]'} mt-0.5 flex-shrink-0`} 
         size={18} 
       />
-      <span className={`${emphasized ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+      <span className={`${emphasized ? 'text-[hsl(28,45%,25%)] font-medium' : 'text-[hsl(28,35%,30%)]'}`}>
         {text}
       </span>
     </div>

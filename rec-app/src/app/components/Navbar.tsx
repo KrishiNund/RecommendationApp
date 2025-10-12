@@ -10,16 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Menu, LogIn, LogOut, UserPlus, LayoutDashboard, ChevronDown, UserRoundCog } from "lucide-react"
+import { Menu, LogIn, LogOut, UserPlus, LayoutDashboard, ChevronDown, UserRoundCog, X} from "lucide-react"
 import { supabase } from '../../lib/supabase'
 import Link from 'next/link'
 import { usePathname } from "next/navigation"
 import { useAuth } from "../hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { Skeleton } from "../../components/ui/skeleton"
-import { Bebas_Neue } from 'next/font/google'
+import { Luckiest_Guy } from 'next/font/google'
+import { useState } from "react"
 
-const logo_font = Bebas_Neue({
+const logo_font = Luckiest_Guy({
   weight: '400',
   subsets: ['latin'],
 })
@@ -30,6 +31,7 @@ export default function Navbar() {
   const currentPath = usePathname()
   const noDashboardPages = ['/']
   const isOnLandingPage = noDashboardPages.includes(currentPath)
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -39,7 +41,7 @@ export default function Navbar() {
 
   if (isLoading) {
     return (
-      <nav className="w-full px-6 py-4 border-b border-gray-100 bg-white">
+      <nav className="w-full px-6 py-4 border-b border-gray-100 bg-[hsl(28,10%,90%)]">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Skeleton className="h-8 w-32 rounded-md" />
           <div className="flex items-center space-x-4">
@@ -52,43 +54,40 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full px-6 py-4 border-b border-gray-100 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="w-full px-6 py-4 border-gray-100 bg-[hsl(28,10%,90%)] backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="group flex items-center">
-          <h1 className={`${logo_font.className} text-3xl text-[#bc6c25] tracking-wide group-hover:opacity-90 transition-opacity`}>
-            Recoards
+        <Link href="/" className="group flex items-center space-x-0.5">
+          {/* <img src="/icon/favicon.png" alt="logo" className="w-10 h-10"/> */}
+          <h1 className={`${logo_font.className} text-4xl text-[hsl(28,67%,44%)] font-bold tracking-normal group-hover:opacity-90 transition-opacity text-center`}>
+            RECOARDS
           </h1>
         </Link>
-
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center space-x-8 font-medium text-sm">
           {isOnLandingPage && (
-            <div className="flex space-x-6">
-              <Link href="#features">
-                <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
-                  Features
-                </Button>
+            <div className="flex items-baseline justify-between space-x-8">
+              <Link href="#features" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
+              after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">
+                <p className="">Features</p>
               </Link>
-              <Link href="#how-it-works">
-                <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
-                  How It Works
-                </Button>
+              <Link href="#how-it-works" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
+              after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">
+                  <p>How It Works</p>
               </Link>
-              <Link href="#pricing">
-                <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
-                  Pricing
-                </Button>
+              <Link href="#pricing" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
+              after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">      
+                  <p>Pricing</p>
               </Link>
             </div>
           )}
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-8">
             {user ? (
               <>
                 <Button 
                   onClick={() => router.push('/dashboard')}
-                  className="bg-[#bc6c25] hover:bg-[#a05a1f] text-white flex items-center space-x-2 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  className="bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] flex items-center space-x-2 shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   <span>Dashboard</span>
@@ -134,21 +133,22 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/login">
-                  <Button variant="ghost" className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/50 cursor-pointer">
+                <Link href="/login" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
+                after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">
                     Log in
-                  </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button className="bg-[#bc6c25] hover:bg-[#a05a1f] text-white shadow-sm hover:shadow-md transition-all cursor-pointer">
-                    Get Started
+                  <Button className="bg-[hsl(28,65%,55%)] hover:bg-[hsl(28,65%,60%)] text-[hsl(28,20%,15%)] flex items-center -space-x-1 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                    <p>Get Started</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width={64} height={64} viewBox="0 0 24 24">
+                      <path fill="none" stroke="#3d3229" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.0} d="M9 6s6 4.419 6 6s-6 6-6 6"></path>
+                    </svg>
                   </Button>
                 </Link>
               </>
             )}
           </div>
         </div>
-
         {/* Mobile Navigation */}
         <div className="md:hidden flex items-center space-x-2">
           {user ? (
@@ -194,85 +194,86 @@ export default function Navbar() {
               </DropdownMenu>
             </>
           ) : (
-           <DropdownMenu>
+           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-gray-700 hover:text-[#bc6c25] hover:bg-[#faedcd]/30 rounded-full h-10 w-10 transition-all"
+              <button
+                className="relative h-auto w-auto transition-all flex items-center border-none border-0 outline-none"
+                onClick={() => setIsOpen(!isOpen)}
               >
-                <Menu className="h-5 w-5" />
-              </Button>
+                {isOpen ? 
+                  (
+                    <X className="h-10 w-10 text-[hsl(28,15%,55%)] transition-all duration-200"/>
+                  ):(
+                    <Menu className="h-10 w-10 text-[hsl(28,15%,55%)] transition-all duration-200" /> 
+                  )}
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
-              className="w-56 border border-gray-100 shadow-xl rounded-xl mr-4 p-2 bg-white/95 backdrop-blur-sm"
+              className="w-56 border border-gray-100 shadow-xl rounded-xl mr-4 p-2 bg-[hsl(28,36%,96%)] backdrop-blur-sm"
               align="end"
             >
               {/* Auth Section */}
               <div className="space-y-1 mb-2">
                 <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                   <Link href="/login" className="w-full flex items-center space-x-3">
-                    <div className="p-2 bg-[#f5ebe1] rounded-lg">
-                      <LogIn className="h-5 w-5 text-[#bc6c25]" />
+                    <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
+                      <LogIn className="h-5 w-5 text-[hsl(28,20%,20%)]" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Log in</p>
-                      <p className="text-xs text-gray-500">Access your account</p>
+                      <p className="font-medium text-[hsl(28,20%,15%)]">Log in</p>
                     </div>
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                   <Link href="/signup" className="w-full flex items-center space-x-3">
-                    <div className="p-2 bg-[#f5ebe1] rounded-lg">
-                      <UserPlus className="h-5 w-5 text-[#bc6c25]" />
+                    <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
+                      <UserPlus className="h-5 w-5 text-[hsl(28,20%,20%)]" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Sign up</p>
-                      <p className="text-xs text-gray-500">Create new account</p>
+                      <p className="font-medium text-[hsl(28,20%,15%)]">Sign up</p>
                     </div>
                   </Link>
                 </DropdownMenuItem>
               </div>
-
               {/* Navigation Links (only on landing page) */}
               {isOnLandingPage && (
                 <>
-                  <DropdownMenuSeparator className="bg-gray-100 mx-3 my-1" />
+                  <DropdownMenuSeparator className="bg-[hsl(28,20%,90%)] mx-3 my-1" />
                   <div className="space-y-1 mt-2">
                     <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                       <Link href="#features" className="w-full flex items-center space-x-3">
-                        <div className="p-2 bg-[#f5ebe1] rounded-lg">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bc6c25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(28,20%,20%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
                           </svg>
                         </div>
-                        <span className="font-medium text-gray-900">Features</span>
+                        <span className="font-medium text-[hsl(28,20%,15%)]">Features</span>
                       </Link>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                       <Link href="#HIW" className="w-full flex items-center space-x-3">
-                        <div className="p-2 bg-[#f5ebe1] rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bc6c25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(28,20%,20%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="12" cy="12" r="10"></circle>
                               <path d="M12 16v-4"></path>
                               <path d="M12 8h.01"></path>
                             </svg>
                         </div>
-                        <span className="font-medium text-gray-900">How It Works</span>
+                        <span className="font-medium text-[hsl(28,20%,15%)]">How It Works</span>
                       </Link>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
                       <Link href="#pricing" className="w-full flex items-center space-x-3">
-                        <div className="p-2 bg-[#f5ebe1] rounded-lg">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bc6c25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(28,20%,20%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="12" y1="1" x2="12" y2="23"></line>
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                           </svg>
                         </div>
-                        <span className="font-medium text-gray-900">Pricing</span>
+                        <span className="font-medium text-[hsl(28,20%,15%)]">Pricing</span>
                       </Link>
                     </DropdownMenuItem>
  
