@@ -7,15 +7,14 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { FcGoogle } from 'react-icons/fc'
 import { EyeOff, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 
 // importing google font for logo/brand name
-import { Bebas_Neue } from 'next/font/google'
+import { Fredoka } from 'next/font/google'
 
-const logo_font = Bebas_Neue({
-  weight: '400',
+const logo_font = Fredoka({
+  weight: ['300','400','500', '600', '700'],
   subsets: ['latin'],
 })
 
@@ -53,13 +52,6 @@ export default function LoginPage() {
   }
 
   const loginWithGoogle = async () => {
-    // const redirectTo =
-    //   process.env.NODE_ENV === 'development'
-    //     ? 'https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard'
-    //     : 'https://https://recommendation-app-git-vercel-deployment1-krishinunds-projects.vercel.app/dashboard';
-
-    // const redirectTo = 'https://www.recoards.com/dashboard';
-
     const redirectTo = `${window.location.origin}/dashboard`;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -77,7 +69,7 @@ export default function LoginPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-[#f5ebe1] px-4">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-[hsl(28,10%,92%)] px-4">
       {/* logo */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
@@ -87,12 +79,12 @@ export default function LoginPage() {
       >
         <Link href="/" className="hover:opacity-80 transition-opacity">
           <h1
-            className={`${logo_font.className} text-5xl tracking-wide text-[#bc6c25] drop-shadow-sm`}
+            className={`${logo_font.className} text-5xl font-semibold tracking-tight text-[hsl(28,50%,50%)] drop-shadow-sm`}
           >
-            Recoards
+            RECOARDS
           </h1>
         </Link>
-        <p className="text-sm text-gray-600 mt-2">
+        <p className="text-sm text-[hsl(28,12%,35%)] mt-2">
           Your personalized recommendation board
         </p>
       </motion.header>
@@ -101,11 +93,11 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg"
+        className="w-full max-w-md rounded-2xl bg-[hsl(28,20%,95%)] p-8 shadow-lg"
       >
         <div className="text-center mb-8">
           <motion.h1 
-            className="text-3xl font-bold text-gray-900 mb-2"
+            className="text-3xl font-bold text-[hsl(28,25%,15%)] mb-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -113,7 +105,7 @@ export default function LoginPage() {
             Welcome Back
           </motion.h1>
           <motion.p 
-            className="text-gray-600"
+            className="text-[hsl(28,22%,35%)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -129,7 +121,7 @@ export default function LoginPage() {
           transition={{ delay: 0.3 }}
         >
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-xs font-medium text-[hsl(28,24%,25%)] mb-1">
               Email Address
             </label>
             <Input
@@ -143,15 +135,9 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="text-xs font-medium text-[hsl(28,24%,25%)]">
                 Password
               </label>
-              {/* <Link
-                href="/forgotPassword"
-                className="text-xs text-[#bc6c25] hover:underline font-medium"
-              >
-                Forgot Password?
-              </Link> */}
             </div>
             <div className="relative">
               <Input
@@ -159,7 +145,7 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pr-10 focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373]"
+                className="pr-10 focus:ring-2 focus:ring-[#d4a373] focus:border-[#d4a373] text-[hsl(28,21%,25%)]"
               />
               <button
                 type="button"
@@ -214,7 +200,7 @@ export default function LoginPage() {
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium bg-[hsl(28,20%,95%)] hover:bg-gray-50 transition-colors cursor-pointer"
               onClick={loginWithGoogle}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="mr-2">
