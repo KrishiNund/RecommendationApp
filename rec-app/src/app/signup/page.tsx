@@ -11,9 +11,9 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 // importing google font for logo/brand name
-import { Bebas_Neue } from 'next/font/google'
+import { Luckiest_Guy } from 'next/font/google'
 
-const logo_font = Bebas_Neue({
+const logo_font = Luckiest_Guy({
   weight: '400',
   subsets: ['latin'],
 })
@@ -87,7 +87,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-[#f5ebe1] px-4">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-[hsl(28,10%,92%)] px-4">
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -96,12 +96,12 @@ export default function SignUpPage() {
       >
         <Link href="/" className="hover:opacity-80 transition-opacity">
           <h1
-            className={`${logo_font.className} text-5xl tracking-wide text-[#bc6c25] drop-shadow-sm`}
+            className={`${logo_font.className} text-5xl tracking-tight text-[hsl(28,50%,50%)] drop-shadow-sm`}
           >
             Recoards
           </h1>
         </Link>
-        <p className="text-sm text-gray-600 mt-2">
+        <p className="text-sm text-[hsl(28,12%,35%)] mt-2">
           Your personalized recommendation board
         </p>
       </motion.header>
@@ -110,11 +110,11 @@ export default function SignUpPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg"
+        className="w-full max-w-md rounded-2xl bg-[hsl(28,20%,95%)] p-8 shadow-lg"
       >
         <div className="text-center mb-8">
           <motion.h1 
-            className="text-3xl font-bold text-gray-900 mb-2"
+            className="text-3xl font-bold text-[hsl(28,25%,15%)] mb-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -122,7 +122,7 @@ export default function SignUpPage() {
             Create Your Account
           </motion.h1>
           <motion.p 
-            className="text-gray-600"
+            className="text-[hsl(28,22%,35%)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -138,7 +138,7 @@ export default function SignUpPage() {
           transition={{ delay: 0.3 }}
         >
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-[hsl(28,24%,25%)] mb-1">
               Email
             </label>
             <Input
@@ -150,7 +150,7 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-[hsl(28,24%,25%)] mb-1">
               <span className="inline-flex items-center">
                 Password
                 <Tooltip>
@@ -200,7 +200,7 @@ export default function SignUpPage() {
 
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
-              className="w-full bg-[#bc6c25] hover:bg-[#a05a1f] text-white py-5 text-base font-medium shadow-sm hover:shadow-md transition-all cursor-pointer"
+              className="w-full bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,55%)] text-[hsl(28,20%,15%)] py-5 text-base font-medium shadow-sm hover:shadow-md transition-all cursor-pointer"
               onClick={handleSignUp}
               disabled={loading}
             >
@@ -230,7 +230,7 @@ export default function SignUpPage() {
         whileTap={{ scale: 0.98 }}>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium bg-[hsl(28,20%,95%)] hover:bg-[hsl(28,20%,92%)] transition-colors cursor-pointer"
             onClick={handleGoogleSignUp}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="mr-2">

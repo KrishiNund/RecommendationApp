@@ -11,16 +11,16 @@ export default function Footer() {
   const useDiffBg = authPages.includes(currentPath)
 
   if (useDiffBg) {
-    bgVar = `bg-[#f5ebe1]`
+    bgVar = `bg-[hsl(28,10%,92%)]`
   }
 
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className={`${bgVar} py-6 text-center text-sm text-gray-500`}>
+    <footer className={`${bgVar} py-6 text-center text-sm text-[hsl(28,15%,45%)]`}>
       <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
         
-        <div className="flex flex-col md:flex-row items-center gap-1 text-gray-500">
+        <div className="flex flex-col md:flex-row items-center gap-1">
           <span>© {currentYear} Recoards. All rights reserved.</span>
           <span className="hidden md:inline">•</span>
           <span>

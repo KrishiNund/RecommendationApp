@@ -11,10 +11,10 @@ import { EyeOff, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 
 // importing google font for logo/brand name
-import { Fredoka } from 'next/font/google'
+import { Fredoka, Luckiest_Guy } from 'next/font/google'
 
-const logo_font = Fredoka({
-  weight: ['300','400','500', '600', '700'],
+const logo_font = Luckiest_Guy({
+  weight: ['400'],
   subsets: ['latin'],
 })
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
           </h1>
         </Link>
         <p className="text-sm text-[hsl(28,12%,35%)] mt-2">
-          Your personalized recommendation board
+          Your personalized recommendation boards
         </p>
       </motion.header>
       
@@ -159,7 +159,7 @@ export default function LoginPage() {
 
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
-              className="w-full bg-[#bc6c25] hover:bg-[#a05a1f] text-white py-5 text-base font-medium shadow-sm hover:shadow-md transition-all cursor-pointer"
+              className="w-full bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,55%)] text-[hsl(28,20%,15%)] py-5 text-base font-medium shadow-sm hover:shadow-md transition-all cursor-pointer"
               onClick={handleLogIn}
               disabled={loading}
             >
@@ -200,7 +200,7 @@ export default function LoginPage() {
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium bg-[hsl(28,20%,95%)] hover:bg-gray-50 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-5 text-base font-medium bg-[hsl(28,20%,95%)] hover:bg-[hsl(28,20%,92%)] transition-colors cursor-pointer"
               onClick={loginWithGoogle}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="mr-2">

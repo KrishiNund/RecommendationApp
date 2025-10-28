@@ -33,6 +33,23 @@ export default function Navbar() {
   const isOnLandingPage = noDashboardPages.includes(currentPath)
   const [isOpen, setIsOpen] = useState(false);
 
+  let navBgVar = 'bg-[hsl(28,10%,98%)]'
+  const authPages = ['/signup', '/login']
+  const useAuthBg = authPages.includes(currentPath)
+
+  const policyPages = ['/terms-of-service', 'privacy-policy']
+  const usePolicyBg = policyPages.includes(currentPath)
+
+  const landingPage = ['/']
+  const useLandingBg = landingPage.includes(currentPath)
+  
+
+  if (useAuthBg){
+    navBgVar = 'bg-[hsl(28,10%,92%)]'
+  } else if (useLandingBg){
+    navBgVar = 'bg-[hsl(28,10%,90%)]'
+  }
+  
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/')
@@ -41,7 +58,7 @@ export default function Navbar() {
 
   if (isLoading) {
     return (
-      <nav className="w-full px-6 py-4 border-b border-gray-100 bg-[hsl(28,10%,90%)]">
+      <nav className={`w-full px-6 py-4 border-b border-gray-100 ${navBgVar}`}>
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Skeleton className="h-8 w-32 rounded-md" />
           <div className="flex items-center space-x-4">
@@ -54,7 +71,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full px-6 py-4 border-gray-100 bg-[hsl(28,10%,90%)] backdrop-blur-sm sticky top-0 z-50">
+    <nav className={`w-full px-6 py-4 border-gray-100 ${navBgVar} backdrop-blur-sm sticky top-0 z-50`}>
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="group flex items-center space-x-0.5">

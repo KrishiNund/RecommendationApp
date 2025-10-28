@@ -491,7 +491,7 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white px-4 py-8 sm:px-6 lg:px-8">
+      <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-4">
           {/* Dashboard Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
