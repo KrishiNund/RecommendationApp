@@ -516,21 +516,21 @@ export default function BoardPage() {
       <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-2">
           {/* Hero Header */}
-          <div className="relative py-8 sm:py-16">
+          <div className="relative py-0 sm:py-8">
             <div className="relative z-10 space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 drop-shadow-sm">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[hsl(28,20%,10%)] drop-shadow-sm">
                       {boardName}
                     </h1>
                   </div>
                   {boardDescription && (
-                    <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">
+                    <p className="text-lg text-[hsl(28,15%,48%)] leading-relaxed max-w-3xl">
                       {boardDescription}
                     </p>
                   )}
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-4 text-sm text-[hsl(28,12%,48%)]">
                     <span>Created on {boardCreatedAt.split('T')[0]}</span>
                     <span>•</span>
                     <span>{recommendations.length} {recommendations.length === 1 ? 'recommendation' : 'recommendations'}</span>
@@ -550,7 +550,7 @@ export default function BoardPage() {
                 }}>
                   <DialogTrigger asChild>
                     <Button 
-                      className="h-10 px-6 rounded-lg bg-[#bc6c25] hover:bg-[#a05a1f] text-white shadow-sm"
+                      className="h-10 px-6 rounded-lg bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] shadow-sm cursor-pointer"
                       disabled={!canCreateRec || isLoading}
                     >
                       <Plus className="w-4 h-4 mr-2" />

@@ -1,4 +1,3 @@
-// board.tsx
 import {
   Card,
   CardContent,
@@ -34,25 +33,6 @@ import { supabase } from "@/lib/supabase"
 import { toast } from "sonner"
 import { useState } from "react"
 
-// // copies link to clipboard if possible else shows a dialog to allow manual copying
-// function CopyLinkComponent({ public_id }: { public_id: string }) {
-//   const { handleCopy, DialogFallback } = useCopyLinkHandler(public_id)
-
-//   return (
-//     <>
-//       <Button
-//         variant="ghost"
-//         className="w-full h-8 flex items-center space-x-1 text-gray-800 justify-start cursor-pointer"
-//         onClick={handleCopy}
-//       >
-//         <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
-//         <span>Copy Link</span>
-//       </Button>
-
-//       <DialogFallback />
-//     </>
-//   )
-// }
 function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId: string }) {
   const [isLoading, setIsLoading] = useState(false)
   const { handleCopy, DialogFallback } = useCopyLinkHandler();
@@ -61,7 +41,6 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
     setIsLoading(true);
     const link = `${window.location.origin}/public/${public_id}`;
 
-    // 1. Fetch recommendations for the board
     const { data: recs, error: fetchError } = await supabase
       .from("recommendations")
       .select("id, thumbnail")
@@ -73,7 +52,6 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
       return;
     }
 
-    // 2. Create signed URLs
     const updates = await Promise.all(
       recs.map(async (rec) => {
         if (!rec.thumbnail) return null;
@@ -94,7 +72,6 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
 
     const cleaned = updates.filter(Boolean);
 
-    // 3. Batch update
     if (cleaned.length > 0) {
       for (const rec of cleaned) {
         const { error: updateError } = await supabase
@@ -110,7 +87,6 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
       }
     }
 
-    // 4. Copy the final link
     handleCopy(link);
     setIsLoading(false);
   };
@@ -126,8 +102,6 @@ function CopyLinkComponent({ public_id, boardId }: { public_id: string, boardId:
         }}
         disabled={isLoading}
       >
-        {/* <LinkIcon className="w-4 h-4 mr-1 text-gray-500" />
-        <span>Copy Link</span> */}
         {isLoading ? 
           <Loader2 className="w-4 h-4 animate-spin" /> 
         : 
@@ -170,7 +144,6 @@ const categoryColors = {
   "TV shows": "bg-violet-200 text-violet-900"
 };
 
-// all parameters that can be passed to the board component
 type BoardProps = {
   id: string;
   public_id: string;
@@ -198,13 +171,13 @@ export default function Board({
 }: BoardProps) {
   if (variant === "list") {
     return (
-      <Card className="group hover:shadow-sm transition-all duration-300 rounded-lg overflow-hidden">
-        <Link href={`/board/${id}`} className="block">
+      <Card className="group hover:shadow-sm transition-all duration-300 rounded-lg overflow-hidden p-0 bg-[hsl(28,20%,95%)]">
+        <Link href={`/board/${id}`}>
           <CardContent className="p-0">
-            <div className="flex items-center p-4">
-              <div className={`flex-shrink-0 h-16 w-16 rounded-lg ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center mr-4`}>
+            <div className="flex items-center relative gap-x-4">
+              <div className={`flex-shrink-0 h-30 w-30 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center`}>
                 {thumbnail ? (
-                  <img src={thumbnail} alt="Board Thumbnail" className="w-full h-full object-cover rounded-lg" />
+                  <img src={thumbnail} alt="Board Thumbnail" className="w-full h-full object-cover" />
                 ): (
                   <span className="text-xl font-medium">
                     {category.charAt(0).toUpperCase()}
@@ -212,26 +185,31 @@ export default function Board({
                 )}
               </div>
               
-              <div className="flex-grow min-w-0">
-                <CardTitle className="text-lg font-semibold truncate">{name}</CardTitle>
-                <CardDescription className="text-gray-500 text-sm truncate">
-                  {description}
-                </CardDescription>
-                <div className="flex items-center mt-1 space-x-4">
-                  <Badge 
-                    variant="outline" 
-                    className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other}`}
-                  >
-                    {category}
-                  </Badge>
-                  <div className="flex items-center space-x-1 text-xs text-gray-500">
-                    <FileHeart className="h-4 w-4 text-yellow-500" />
-                    <span>{items}</span>
+              <div className="flex-grow min-w-0 h-30 w-30">
+                <div className="flex flex-col items-start justify-around h-full">
+                  <div className="flex flex-col items-start mt-2">
+                    <CardTitle className="text-lg font-semibold truncate pb-0.5 text-[hsl(28,30%,15%)]">{name}</CardTitle>
+                    <CardDescription className="text-sm line-clamp-3 text-[hsl(26,26%,45%)]">
+                      {description}
+                    </CardDescription>
+                  </div>
+                 
+                  <div className="flex items-center mt-1 space-x-4">
+                    <Badge 
+                      variant="outline" 
+                      className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} border-[hsl(28,21%,85%)]`}
+                    >
+                      {category}
+                    </Badge>
+                    <div className="flex items-center space-x-1 text-xs">
+                      <FileHeart className="h-4 w-4 text-[hsl(28,21%,60%)]" />
+                      <span className="text-[hsl(28,23%,50%)]">{items}</span>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-gray-600 ml-4" />
+              <ChevronRight className="h-8 w-8 text-gray-400 group-hover:text-gray-600 mr-6" />
             </div>
           </CardContent>
         </Link>
@@ -239,13 +217,12 @@ export default function Board({
     )
   }
 
-  // by default, if variant is not specified, grid display will be used
   return (
     <motion.div whileHover={{ y: -5 }}>
-      <Card className="group h-82 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border border-gray-100 p-0">
+      <Card className="group h-82 flex flex-col hover:shadow-md transition-all duration-300 rounded-lg overflow-hidden border-6 border-double border-[hsl(28,12%,80%)] p-0 gap-y-0">
         
-          <CardHeader className="p-0">
-            <div className={`h-40 ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
+          <CardHeader className="p-0 block relative h-44">
+            <div className={`h-full ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} flex items-center justify-center relative`}>
               {thumbnail ? (
                   <img src={thumbnail} alt="Board Thumbnail" className="w-full h-full object-cover" />
                 ): (
@@ -259,7 +236,7 @@ export default function Board({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 transition-colors shadow-sm cursor-pointer"
+                      className="p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-700 transition-colors shadow-sm cursor-pointer border-none hover:border-none"
                       onClick={(e) => e.preventDefault()}
                     >
                       <MoreHorizontal className="w-4 h-4" />
@@ -306,9 +283,6 @@ export default function Board({
                       </AlertDialog>
                     </DropdownMenuItem>
 
-                    
-                    {/* adds copy link to clipboard component */}
-                    {/* <CopyLinkComponent public_id={public_id}/> */}
                     <CopyLinkComponent public_id={public_id} boardId={id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -316,27 +290,30 @@ export default function Board({
             </div>
           </CardHeader>
           
-          <Link href={`/board/${id}`} className="block flex-grow">
-            <CardContent className="pl-4 pr-4 pb-2 flex-grow">
-              <CardTitle className="text-lg font-semibold mb-1 truncate">{name}</CardTitle>
-              <CardDescription className="text-gray-600 text-sm line-clamp-2 mb-3">
+          <Link href={`/board/${id}`} className="block flex-grow bg-[hsl(28,20%,95%)] relative">
+            <CardContent className="pt-2 pr-3 pl-3 pb-2 flex-grow">
+              <CardTitle className="text-lg font-semibold truncate text-[hsl(28,30%,15%)]">{name}</CardTitle>
+              <CardDescription className="text-[hsl(26,26%,45%)] text-sm line-clamp-2 pt-2">
                 {description}
               </CardDescription>
-              
-              <div className="flex justify-between items-center mt-6">
-                <Badge 
-                  variant="outline" 
-                  className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other}`}
-                >
-                  {category}
-                </Badge>
-                
-                <div className="flex items-center space-x-1 text-xs text-gray-500">
-                  <FileHeart className="h-4 w-4 text-yellow-500" />
-                  <span>{items}</span>
-                </div>
-              </div>
             </CardContent>
+            <div className="absolute bottom-2 w-full pl-2 pr-2">
+              <div className="flex justify-between items-center">
+                  <div>
+                    <Badge 
+                      variant="outline" 
+                      className={`px-2 py-0.5 text-xs ${categoryColors[category as keyof typeof categoryColors] || categoryColors.other} border-[hsl(28,21%,85%)]`}
+                    >
+                      {category}
+                    </Badge>
+                  </div>
+    
+                  <div className="flex items-center space-x-1 text-xs">
+                    <FileHeart className="h-4 w-4 text-[hsl(28,21%,60%)]" />
+                    <span className="text-[hsl(28,23%,50%)]">{items}</span>
+                  </div>
+              </div>
+            </div>
           </Link>
       </Card>
     </motion.div>

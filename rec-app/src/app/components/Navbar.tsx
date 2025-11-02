@@ -104,7 +104,7 @@ export default function Navbar() {
               <>
                 <Button 
                   onClick={() => router.push('/dashboard')}
-                  className="bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] flex items-center space-x-2 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  className="bg-[hsl(28,60%,50%)] hover:bg-[hsl(28,50%,60%)] text-[hsl(28,20%,15%)] flex items-center space-x-2 shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   <span>Dashboard</span>
@@ -113,13 +113,13 @@ export default function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center space-x-2 focus:outline-none group">
-                      <Avatar className="h-9 w-9 border  group-hover:border-[#bc6c25] transition-colors">
+                      <Avatar className="h-9 w-9 border-2 border-[hsl(28,25%,85%)]  group-hover:border-[#bc6c25] cursor-pointer transition-colors">
                         <AvatarImage src={user.user_metadata?.avatar_url} />
                         <AvatarFallback className="bg-[#faedcd] text-[#bc6c25]">
                           {user.email?.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#bc6c25] transition-colors" />
+                      <ChevronDown className="h-4 w-4 text-[hsl(28,15%,75%)] group-hover:text-[#bc6c25] transition-colors" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 mt-2 border border-gray-100 shadow-lg rounded-lg">

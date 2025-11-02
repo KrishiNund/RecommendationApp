@@ -496,13 +496,13 @@ export default function Dashboard() {
           {/* Dashboard Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Boards</h1>
-              <p className="text-gray-500 mt-1">Create and manage your recommendation boards</p>
+              <h1 className="text-3xl font-bold text-[hsl(28,15%,15%)]">My Boards</h1>
+              <p className="text-[hsl(28,12%,45%)] mt-1">Create and manage your recommendation boards</p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[hsl(28,10%,70%)]"/>
                 <Input
                   placeholder="Search boards..."
                   className="pl-10"
@@ -528,7 +528,7 @@ export default function Dashboard() {
                       if (canCreateBoard) setIsDialogOpen(true);
                     }}
                     disabled={!canCreateBoard || isLoading}
-                    className={`bg-[#bc6c25] hover:bg-[#a05a1f] shadow-sm cursor-pointer ${
+                    className={`bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] shadow-sm cursor-pointer ${
                       !canCreateBoard ? 'cursor-not-allowed opacity-50' : ''
                     }`}
                   >
