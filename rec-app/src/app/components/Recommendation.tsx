@@ -52,7 +52,7 @@ export default function Recommendation({
     <motion.div
       whileHover={{ y: -4, boxShadow: "0 6px 24px rgba(0,0,0,0.10)" }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
-      className="relative flex flex-col bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
+      className="relative flex flex-col bg-[hsl(28,20%,95%)] border-8 border-double border-gray-300 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group backdrop-blur-sm"
     >
       {/* Main content (variable height) */}
       <div className="flex flex-col">
@@ -187,20 +187,19 @@ export default function Recommendation({
         {/* Content area */}
         <div className="p-5 space-y-4 flex flex-col">
           <div className="flex justify-between items-start gap-3">
-            <h2 className="text-lg font-semibold text-gray-900 group-hover:text-[#a05a1f] transition-colors flex-1 min-w-0">
+            <h2 className="text-lg font-semibold text-[hsl(28,25%,15%)] group-hover:text-[#a05a1f] transition-colors flex-1 min-w-0">
               <span className="break-words">{name}</span>
             </h2>
             <motion.div
-              whileHover={{ boxShadow: "0 2px 8px #ffe5b4b0" }}
-              className="flex items-center gap-1 px-3 py-1 bg-white/70 backdrop-blur border border-amber-100 rounded-full shadow-sm cursor-default flex-shrink-0"
+              className="flex items-center gap-1 px-3 py-1 bg-[hsl(28,20%,90%)] backdrop-blur border rounded-full inset-shadow-2xs cursor-default flex-shrink-0"
               title={`Rating: ${rating}/10`}
             >
-              <span className="text-base font-bold text-[#bc6c25]">{rating}</span>
-              <Star className="w-4 h-4 ml-1 text-[#f5b342] fill-[#f5b342] drop-shadow-sm flex-shrink-0" />
+              <span className="text-base font-bold text-[hsl(28,50%,50%)]">{rating}</span>
+              <Star className="w-4 h-4 ml-1 text-[hsl(28,50%,50%)] fill-[hsl(28,40%,80%)] drop-shadow-sm flex-shrink-0" />
             </motion.div>
           </div>
           {description && (
-            <p className="text-sm text-gray-600 line-clamp-3 break-words whitespace-pre-wrap">
+            <p className="text-sm text-[hsl(28,22%,50%)] line-clamp-3 break-words whitespace-pre-wrap">
               {description}
             </p>
           )}

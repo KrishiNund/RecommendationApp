@@ -126,9 +126,6 @@ export default function Dashboard() {
 
     getCurrentUserAndBoards();
   }, []);
-
-  // state to check if boards can be created or not
-  const canCreateBoard = userPlan === "pro" || (userPlan === "free" && boards.length < 3);
   
   // board object properties
   type BoardType = {
@@ -524,13 +521,8 @@ export default function Dashboard() {
                 
                 <DialogTrigger asChild>
                   <Button
-                    onClick={() => {
-                      if (canCreateBoard) setIsDialogOpen(true);
-                    }}
-                    disabled={!canCreateBoard || isLoading}
-                    className={`bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] shadow-sm cursor-pointer ${
-                      !canCreateBoard ? 'cursor-not-allowed opacity-50' : ''
-                    }`}
+                    disabled={isLoading}
+                    className={`bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] shadow-sm cursor-pointer`}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Create Board
@@ -795,17 +787,6 @@ export default function Dashboard() {
 
             </div>
           </div>
-
-          {/* place alert here if cannot create boards anymore */}
-          {(!canCreateBoard && !isLoading) && (
-            <Alert>
-              <AlertCircle />
-                <AlertTitle>Board limit reached</AlertTitle>
-                <AlertDescription>
-                You've reached the limit of 3 boards on the free plan. Upgrade to Pro to create more boards.
-                </AlertDescription>
-            </Alert>
-          )}
 
           {/* View Controls */}
           <div className="flex justify-between items-center mb-6">

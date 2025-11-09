@@ -37,9 +37,6 @@ export default function Navbar() {
   const authPages = ['/signup', '/login']
   const useAuthBg = authPages.includes(currentPath)
 
-  const policyPages = ['/terms-of-service', 'privacy-policy']
-  const usePolicyBg = policyPages.includes(currentPath)
-
   const landingPage = ['/']
   const useLandingBg = landingPage.includes(currentPath)
   
@@ -91,10 +88,6 @@ export default function Navbar() {
               <Link href="#how-it-works" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
               after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">
                   <p>How It Works</p>
-              </Link>
-              <Link href="#pricing" className="text-[hsl(28,10%,15%)] cursor-pointer relative transition-transform duration-200 hover:scale-105
-              after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-[hsl(28,60%,50%)] after:w-0 hover:after:w-full after:transition-all after:duration-300 after:ease-out">      
-                  <p>Pricing</p>
               </Link>
             </div>
           )}
@@ -279,18 +272,6 @@ export default function Navbar() {
                             </svg>
                         </div>
                         <span className="font-medium text-[hsl(28,20%,15%)]">How It Works</span>
-                      </Link>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem className="px-3 py-2 rounded-lg hover:bg-[#faedcd]/50 focus:bg-[#faedcd]/50 transition-colors">
-                      <Link href="#pricing" className="w-full flex items-center space-x-3">
-                        <div className="p-2 bg-[hsl(28,20%,80%)] rounded-lg">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(28,20%,20%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                          </svg>
-                        </div>
-                        <span className="font-medium text-[hsl(28,20%,15%)]">Pricing</span>
                       </Link>
                     </DropdownMenuItem>
  

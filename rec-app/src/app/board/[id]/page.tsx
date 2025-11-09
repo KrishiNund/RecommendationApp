@@ -161,8 +161,6 @@ export default function BoardPage() {
     fetchBoard();
   }, [user, board_id]);
   
-  // state to check if recommendations can be created or not
-  const canCreateRec = userPlan === "pro" || (userPlan === "free" && recommendations.length < 20);
 
   // add a recommendation
   const addRec = async (e?: React.MouseEvent) => {
@@ -513,7 +511,7 @@ export default function BoardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+      <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-2">
           {/* Hero Header */}
           <div className="relative py-0 sm:py-8">
@@ -551,7 +549,7 @@ export default function BoardPage() {
                   <DialogTrigger asChild>
                     <Button 
                       className="h-10 px-6 rounded-lg bg-[hsl(28,70%,50%)] hover:bg-[hsl(28,70%,60%)] text-[hsl(28,20%,15%)] shadow-sm cursor-pointer"
-                      disabled={!canCreateRec || isLoading}
+                      disabled={isLoading}
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Recommendation
@@ -794,7 +792,7 @@ export default function BoardPage() {
                 
               </div>
               {/* place alert here if cannot create boards anymore */}
-              {(!canCreateRec && !isLoading) && (
+              {/* {(!canCreateRec && !isLoading) && (
                 <Alert>
                   <AlertCircle />
                     <AlertTitle>Recommendation limit reached</AlertTitle>
@@ -802,7 +800,7 @@ export default function BoardPage() {
                     You've reached the limit of 20 recommendations per board on the free plan. Upgrade to Pro to add more recommendations.
                     </AlertDescription>
                 </Alert>
-              )}
+              )} */}
             </div> 
           </div>
           

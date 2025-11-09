@@ -217,32 +217,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Plan Info */}
-          <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-amber-50">
-                <Zap className="w-4 h-4 text-[#bc6c25]" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-800">Your Plan</h2>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <p className="text-gray-600">
-                  You're currently on the <span className="font-medium text-[#bc6c25]">{userPlan}</span> plan
-                </p>
-                <p className="text-sm text-gray-500 mt-1">Upgrade for unlimited boards and features</p>
-              </div>
-              <Button 
-                asChild
-                className="bg-gradient-to-r from-[#bc6c25] to-[#a05a1f] hover:from-[#a05a1f] hover:to-[#8a4e1a] shadow-sm"
-              >
-                <Link href="/#pricing">
-                  View Plans <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-
           {/* Danger Zone */}
           <div className="bg-white rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-red-100">
             <div className="flex items-center gap-3 mb-4">

@@ -14,11 +14,7 @@ const faqs = [
   },
   {
     q: "Is the app free to use?",
-    a: "Yes! You can sign up and create up to 3 boards for free with each being able to accommodate up to 20 recommedations."
-  },
-  {
-    q: "What do I get with the Pro upgrade?",
-    a: "The Pro plan unlocks the ability to create unlimited boards and gives you early access to upcoming features. It's a one-time upgrade for those who want to support the app."
+    a: "Yes. You can sign up and create unlimited number of boards, each with unlimited number of recommendations!."
   },
   {
     q: "How do I share a board?",
