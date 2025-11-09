@@ -52,7 +52,10 @@ export default function LoginPage() {
   }
 
   const loginWithGoogle = async () => {
-    const redirectTo = `${window.location.origin}/dashboard`;
+    // const redirectTo = `${window.location.origin}/dashboard`;
+    const redirectTo = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000/dashboard'
+    : 'https://recommendation-app-fawn.vercel.app/dashboard';
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
