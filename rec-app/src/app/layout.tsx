@@ -8,7 +8,7 @@ import Script from "next/script";
 
 const body_font = Fredoka({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // You can add more weights as needed, e.g. ["400", "700"]
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Recoards",
     images: [
       {
-        url: "/icon/social-preview.png", // <-- new image just for social thumbnails
+        url: "/icon/social-preview.png",
         alt: "Recoards - make pretty recommendation boards"
       }
     ],
@@ -41,21 +41,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Google Analytics Tag */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-EVN1WXDYD6"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-EVN1WXDYD6');
-          `}
-        </Script>
-      </head>
       <body className={body_font.className}>
         <AppLayout>{children}</AppLayout>
         <Toaster richColors position="top-right" />
